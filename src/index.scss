@@ -5,21 +5,15 @@
 @import '/style/base';
 
 :root {
-  --color-text: #222;
-  --color-background: #EFEFEF;
+  --color-text: white;
+  --color-background: black;
 
-  --font-family-sans: system-ui, sans-serif, apple color emoji, segoe ui emoji, segoe ui symbol;
-  --font-family-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', menlo, consolas, 'DejaVu Sans Mono', monospace;
-  --font-size: 1.3rem;
-  --line-height: 1.3;
-}
+  --space-1: 2rem;
+  --space-gutter: var(--space-1);
 
-.speed-range {
-  --ui-border-radius: 0;
-  --ui-color-text: var(--color-text);
-  --ui-color-background: var(--color-background);
+  --ui-font-size: 2rem;
+  --ui-font-family: system-ui, sans-serif;
 
-  position: fixed;
-  bottom: 0;
-  width: 100%;
+  --body-font-size: 3rem;
+  --body-font-family: system-ui, sans-serif;
 }

@@ -267,6 +267,11 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/retry/-/retry-0.4.2.tgz#1860473de7dfa1546767448f333db80cb0ff2161"
   integrity sha512-xeO57FpIu4p1Ri3Jq/EXq4ClRm86dVF2z/+kvFnyqVYRavTZmaFaUBbWCOuuTh0o/g7DSsk6kc2vrS4Vl5oPOQ==
 
+"@internet/raf@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@internet/raf/-/raf-0.2.1.tgz#0b26a1acbf93885f8d67d0899c9df54657e7b59d"
+  integrity sha512-8ATSs0PSYkWKGro7PMvc09F2aO3qf+ydt0cuo1gQexMI6CD9Um0JcfnLpXtQOGL9Z6QS9dZbzuNMRj4vUM1Aug==
+
 "@modelcontextprotocol/sdk@^1.8.0":
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/@modelcontextprotocol/sdk/-/sdk-1.11.0.tgz#9f1762efe6f3365f0bf3b019cc9bd1629d19bc50"
@@ -418,10 +423,10 @@
     estraverse "^5.3.0"
     picomatch "^4.0.2"
 
-"@tooooools/ui@^1.7.0":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@tooooools/ui/-/ui-1.7.0.tgz#f9aba355457b8935241925f0733ca86a948f5b2d"
-  integrity sha512-zuXTnaFfluYuoSBDdsLZKP4iqafA/KM7XRIytFro4FrvTgGOcXgRdeu1wxLueSZqAUVWD0PCe9lQh993CjLfdQ==
+"@tooooools/ui@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@tooooools/ui/-/ui-2.3.1.tgz#687c49a46285a89245afe2b475c52acc95b18afb"
+  integrity sha512-9hbvM+UB/UvSRgKBTyIKLwvKfsdilKkk818qTApQX8ueyOHN/B39G2+fAffSVkweAtsL5A5bBKsaFSeaO4wvmQ==
   dependencies:
     debounce "^1.2.1"
 
@@ -1932,6 +1937,11 @@ http-errors@2.0.0, http-errors@^2.0.0:
     statuses "2.0.1"
     toidentifier "1.0.1"
 
+iconoir@^7.11.0:
+  version "7.11.0"
+  resolved "https://registry.yarnpkg.com/iconoir/-/iconoir-7.11.0.tgz#798c1913f29d5941274d2bd46c38188b63295800"
+  integrity sha512-F9T/E08aJBaQ+VOBjn+ChWKn3hFwsaK5VZ024OFMxdDaxKjLGDpU/OsU7MO9wXM+mDs4ZImypdXIn0fFZAXKmA==
+
 iconv-lite@0.6.3, iconv-lite@^0.6.3:
   version "0.6.3"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.6.3.tgz#a52f80bf38da1952eb5c681790719871a1a72501"
@@ -2474,6 +2484,11 @@ minimist@^1.2.0:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.8.tgz#c1a464e7693302e082a075cee0c057741ac4772c"
   integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==
+
+missing-math@^3.5.1:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/missing-math/-/missing-math-3.5.1.tgz#841f8dcf1eec23d6d6855a014f9244e6ba8f300b"
+  integrity sha512-YmpBLPgbUjX5YWs7vz+GWvRUrrR4x2ieIky8cN1V7+UUFFAXGIUculxWUkkCpPHHREkYmvj26phABKdjXnMxLA==
 
 ms@^2.1.1, ms@^2.1.3:
   version "2.1.3"
@@ -3445,6 +3460,11 @@ tapable@^2.2.0:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/tapable/-/tapable-2.2.1.tgz#1967a73ef4060a82f12ab96af86d52fdb76eeca0"
   integrity sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==
+
+tiny-emitter@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/tiny-emitter/-/tiny-emitter-2.1.0.tgz#1d1a56edfc51c43e863cbb5382a72330e3555423"
+  integrity sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q==
 
 tinyglobby@^0.2.13:
   version "0.2.13"

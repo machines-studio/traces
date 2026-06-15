@@ -1,0 +1,125 @@
+import './GamepadRow.scss'
+
+import { Component, Props } from '@tooooools/ui'
+import { $ } from '@tooooools/ui/state'
+import { clamp } from 'missing-math'
+
+import Gamepad from '/controllers/Gamepad'
+
+const $ROWS = $()
+const $INDEX = $(0)
+
+window.$ROWS = $ROWS
+window.$INDEX = $INDEX
+
+Gamepad.on('up', () => { $INDEX.value = Math.max(0, $INDEX.value - 1) })
+Gamepad.on('down', () => { $INDEX.value = Math.min($INDEX.value + 1, $ROWS.value.length - 1) })
+$ROWS.subscribe((rows = []) => { $INDEX.value = clamp($INDEX.value, 0, rows.length - 1) })
+
+export default class Row extends Component {
+  static props = {
+    initial: Props.enum('start', 'proportional')
+  }
+
+  $index = $(0)
+  $hasFocus = $([$ROWS, $INDEX], ([rows = [], index]) => index === rows.indexOf(this))
+
+  template (props) {
+    return (
+      <section
+        class={[
+          'gamepad-row',
+          props.class,
+          { 'has-focus': this.$hasFocus }
+        ]}
+      >
+        {props.children}
+      </section>
+    )
+  }
+
+  get selection () {
+    return this.$hasFocus.value
+      ? this._collector.components[this.$index]
+      : null
+  }
+
+  register () {
+    $ROWS.value = [...$ROWS.value ?? [], this]
+
+    Gamepad.on('a', this.#handleGamepadA)
+    Gamepad.on('left', this.#handleGamepadLeft)
+    Gamepad.on('right', this.#handleGamepadRight)
+  }
+
+  unregister () {
+    Gamepad.off('a', this.#handleGamepadA)
+    Gamepad.off('left', this.#handleGamepadLeft)
+    Gamepad.off('right', this.#handleGamepadRight)
+
+    // Remove row from $ROWS
+    $ROWS.value = [
+      ...$ROWS.value.slice(0, $ROWS.value.indexOf(this)),
+      ...$ROWS.value.slice($ROWS.value.indexOf(this) + 1)
+    ]
+  }
+
+  afterMount () {
+    this.register()
+    this.watch(this.$hasFocus, this.#handleFocus, { immediate: true })
+    this.watch([this.$hasFocus, this.$index], this.#update, { immediate: true })
+  }
+
+  beforeDestroy () {
+    this.unregister()
+  }
+
+  #handleGamepadA = () => (this.selection?.base ?? this.selection)?.click()
+
+  #handleGamepadLeft = () => {
+    if (!this.$hasFocus.value) return
+
+    this.$index.value = this.props.loop
+      ? (this.$index.value + this._collector.components.length - 1) % this._collector.components.length
+      : Math.max(0, this.$index.value - 1)
+  }
+
+  #handleGamepadRight = () => {
+    if (!this.$hasFocus.value) return
+
+    this.$index.value = this.props.loop
+      ? (this.$index.value + 1) % this._collector.components.length
+      : Math.min(this.$index.value + 1, this._collector.components.length - 1)
+  }
+
+  #handleFocus = () => {
+    if (!this.$hasFocus.value) return
+
+    // Update index based on opt props.initial
+    switch (this.props.initial) {
+      case 'start':
+        this.$index.value = 0
+        break
+      case 'proportional': {
+        const lastRow = $ROWS.value?.[$INDEX.previous]
+        if (!lastRow) break
+        const n = lastRow.$index / (lastRow._collector.components.length - 1)
+        this.$index.value = Math.round(n * (this._collector.components.length - 1))
+        break
+      }
+    }
+  }
+
+  #update = () => {
+    // Set selection class and scroll into view
+    const components = this._collector.components
+    for (let index = 0; index < components.length; index++) {
+      const element = components[index].base ?? components[index]
+
+      if (this.$hasFocus.value && index === this.$index.value) {
+        element.classList.add('is-selected')
+        element.scrollIntoView({ block: 'nearest' })
+      } else element.classList.remove('is-selected')
+    }
+  }
+}

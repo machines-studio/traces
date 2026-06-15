@@ -1,0 +1,16 @@
+.gamepad-row {
+  display: flex;
+  gap: 1rem;
+
+  @include has-debug('gamepad') {
+    &.has-focus {
+      @include debug(var(--space-gutter));
+    }
+  }
+
+  .is-selected {
+    // TODO
+    z-index: 1;
+    background: red;
+  }
+}

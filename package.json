@@ -29,6 +29,10 @@
     "vite": "^4.2.1"
   },
   "dependencies": {
-    "@tooooools/ui": "^1.7.0"
+    "@internet/raf": "^0.2.1",
+    "@tooooools/ui": "^2.3.1",
+    "iconoir": "^7.11.0",
+    "missing-math": "^3.5.1",
+    "tiny-emitter": "^2.1.0"
   }
 }
