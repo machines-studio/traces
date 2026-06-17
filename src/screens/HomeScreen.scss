@@ -1,8 +1,34 @@
 .home-screen {
+  @include fade-in;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: var(--space-gutter);
   height: 100vh;
-  gap: 1rem;
+
+  .gamepad-row {
+    margin-top: 20vw;
+  }
+
+  &.is-leaving .gamepad-row > * {
+    @include easing((transform, opacity, filter));
+
+    opacity: 0;
+    filter: blur(16px);
+    transition-delay: calc(100ms * (1 + var(--gamepad-row-index)));
+  }
+
+  footer {
+    @include font('code');
+    position: fixed;
+    right: var(--space-gutter);
+    bottom: var(--space-gutter);
+  }
+
+  &.is-leaving footer {
+    @include easing(opacity);
+    opacity: 0;
+  }
 }

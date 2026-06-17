@@ -1,3 +1,9 @@
+@mixin screen ($screen) {
+  @at-root .app[data-screen*='#{$screen}'] & {
+    @content;
+  }
+}
+
 @mixin has-debug ($debug: '') {
   @at-root main[data-debug*='#{$debug}'] & {
     @content;

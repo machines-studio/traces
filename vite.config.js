@@ -43,6 +43,7 @@ export default defineConfig(({ mode }) => {
           additionalData: `
             @use '/style/_helpers' as *;
             @use '/style/_devices' as *;
+            @use '/style/_animations' as *;
             $env: ${mode};
           `
         }

@@ -68,6 +68,11 @@ export default class Row extends Component {
     this.register()
     this.watch(this.$hasFocus, this.#handleFocus, { immediate: true })
     this.watch([this.$hasFocus, this.$index], this.#update, { immediate: true })
+
+    this.base.querySelectorAll(':scope > *').forEach((child, index, children) => {
+      child.style.setProperty('--gamepad-row-index', index)
+      child.style.setProperty('--gamepad-row-nindex', index / (children.length - 1))
+    })
   }
 
   beforeDestroy () {

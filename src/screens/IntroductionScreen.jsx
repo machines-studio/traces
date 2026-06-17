@@ -1,7 +1,8 @@
 import './IntroductionScreen.scss'
-import { Component, Props } from '@tooooools/ui'
-import i18n from '/data/i18n'
 
+import { Component, Props } from '@tooooools/ui'
+
+import i18n from '/data/i18n'
 import Gamepad from '/controllers/Gamepad'
 
 export default class IntroductionScreen extends Component {

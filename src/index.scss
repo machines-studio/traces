@@ -1,19 +1,70 @@
 @import '@tooooools/ui/style';
 @import '/style/reset';
-@import '/style/animations';
 @import '/style/fonts';
 @import '/style/base';
 
 :root {
+  // Colors
+
+  // SEE /app.config.js for --color-<NAME>
   --color-text: white;
   --color-background: black;
 
-  --space-1: 2rem;
+  // Spacing
+
+  --space-1: 2vw;
   --space-gutter: var(--space-1);
 
-  --ui-font-size: 2rem;
-  --ui-font-family: system-ui, sans-serif;
+  // Animations
 
-  --body-font-size: 3rem;
-  --body-font-family: system-ui, sans-serif;
+  --easing: 600ms;
+  --easing-fast: 300ms;
+  --easing-slow: 6000ms;
+  --easing-ease-back: cubic-bezier(0.35, 1.5, 0.65, 1);
+  --easing-ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --easing-ease-accelerate: cubic-bezier(0.9, 0, 0.5, 0.9);
+
+  // Fonts
+
+  --body-font-family: inter, system-ui, sans-serif;
+  --body-font-size: 3vw;
+
+  --ui-font-family: var(--body-font-family);
+  --ui-font-weight: 480;
+  --ui-font-size: 2.4vw;
+  --ui-height: auto;
+  --ui-line-height: 1.1;
+
+  --code-font-family: monospace;
+  --code-font-size: 1.2vw;
+}
+
+[data-color='yellow'] { --color: var(--color-yellow); }
+[data-color='green'] { --color: var(--color-green); }
+[data-color='blue'] { --color: var(--color-blue); }
+[data-color='red'] { --color: var(--color-red); }
+[data-color='pink'] { --color: var(--color-pink); }
+
+[class^='ui-button-'] {
+  @include font('ui');
+  @include easing((background, box-shadow, transform), var(--easing-fast), var(--easing-ease-back));
+
+  --ui-color-text: black;
+  --ui-color-accent: var(--color);
+  --ui-color-accent-contrast: var(--ui-color-text);
+  --ui-color-background: var(--color);
+
+  box-shadow: 0 0 0 var(--color);
+
+  &:hover,
+  &.is-selected {
+    --ui-color-background: var(--color);
+    z-index: 1;
+    transform:
+      scale(1.1)
+      rotate(calc(3deg * cos(3.14 + var(--gamepad-row-nindex) * 3.14)))
+      // translateY(-10%)
+    ;
+    box-shadow: 0 0 2vw var(--color);
+  }
 }

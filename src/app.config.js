@@ -3,10 +3,18 @@ export const DEBUG = (
 ).get('debug')
 
 export const LANGUAGES = [
-  { code: 'en', name: 'English', locale: 'en_US' },
-  { code: 'fr', name: 'Français', locale: 'fr_FR' },
-  { code: 'nl', name: 'Nederlands', locale: 'nl_NL' },
+  { code: 'en', name: 'english', locale: 'en_US' },
+  { code: 'fr', name: 'français', locale: 'fr_FR' },
+  { code: 'nl', name: 'nederlands', locale: 'nl_NL' },
 ]
+
+export const COLORS = {
+  yellow: '#FC0',
+  green: '#00B944',
+  blue: '#007FFF',
+  red: '#FF4F00',
+  pink: '#FF83FE'
+}
 
 export const GAMEPAD = {
   buttons: {

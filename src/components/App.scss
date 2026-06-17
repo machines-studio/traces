@@ -1,1 +1,69 @@
-.app {}
+.app {
+  &__title {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+
+    width: 75vw;
+
+    transform: translateX(-50%) translateY(-70%);
+    will-change: transform, filter, opacity;
+
+    @include screen('home') {
+      @include easing(transform, var(--easing), var(--easing-ease-smooth));
+      filter: none;
+    }
+
+    @include screen('introduction') {
+      @include easing((transform, opacity, filter), var(--easing-slow), var(--easing-ease-accelerate));
+      opacity: 0;
+      filter: blur(128px);
+      transform: translateX(-50%) translateY(-70%) scale(10);
+    }
+  }
+
+  &__stars {
+    position: fixed;
+    z-index: -1;
+    top: 50%;
+    left: 50%;
+
+    width: 100vw;
+    height: 100vw;
+    contain: layout paint;
+
+    transform: translateX(-50%) translateY(-50%);
+
+    img {
+      position: absolute;
+      will-change: transform, opacity;
+
+      @include screen('home') {
+        @include easing(transform, var(--easing), var(--easing-ease-smooth));
+
+        @for $i from 0 through 3 {
+          &:nth-child(#{$i}) {
+            transform: rotate(calc(10deg * #{0.5 * $i}));
+          }
+        }
+
+        @include stagger(1s, 3) {
+          animation: fade-in 3s linear alternate infinite both;
+        }
+
+        &:first-child {
+          animation: none;
+        }
+      }
+
+      @include screen('introduction') {
+        @include easing(transform, var(--easing-slow), var(--easing-ease-accelerate));
+        @for $i from 0 through 3 {
+          &:nth-child(#{$i}) {
+            transform: scale(calc(2 + #{0.5 * $i}));
+          }
+        }
+      }
+    }
+  }
+}

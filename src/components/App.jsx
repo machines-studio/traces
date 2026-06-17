@@ -2,9 +2,10 @@
 import './App.scss'
 
 import { Component } from '@tooooools/ui'
-import { $ } from '@tooooools/ui/state'
+import { $, persist } from '@tooooools/ui/state'
 
-import { DEBUG } from '/app.config'
+import { COLORS, DEBUG } from '/app.config'
+import SVGHeadline from '/headline.svg?raw'
 import HomeScreen from '/screens/HomeScreen'
 import IntroductionScreen from '/screens/IntroductionScreen'
 
@@ -14,8 +15,8 @@ const SCREENS = {
 }
 
 export default class App extends Component {
-  $screen = $('home')
-  $language = $(undefined)
+  $screen = import.meta.env.DEV ? persist('home', 'app.screen') : $('home')
+  $language = $(import.meta.env.DEV ? { code: 'en' } : undefined)
 
   template () {
     return (
@@ -23,12 +24,34 @@ export default class App extends Component {
         class='app'
         data-debug={DEBUG}
         data-screen={this.$screen}
-      />
+        style={{
+          // Add all --color-<NAME> from app.config
+          ...Object.entries(COLORS).reduce((acc, [key, value]) => ({
+            ...acc,
+            [`--color-${key}`]: value
+          }), {})
+        }}
+      >
+        <section class='app__stars'>
+          {
+            [
+              '/images/stars-1.png',
+              '/images/stars-2.png',
+              '/images/stars-3.png'
+            ].map(src => (<img src={src} />))
+          }
+        </section>
+
+        <h1
+          class='app__title'
+          innerHTML={SVGHeadline}
+        />
+      </main>
     )
   }
 
   afterRender () {
-    this.watch(this.$language, this.#handleLanguage)
+    this.watch(this.$language, this.#handleLanguage, { immediate: true })
     this.watch(this.$screen, this.#handleScreen, { immediate: true })
   }
 

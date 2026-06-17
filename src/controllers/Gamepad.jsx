@@ -1,6 +1,7 @@
-import { DEBUG, GAMEPAD } from '/app.config'
-import Emitter from 'tiny-emitter'
 import { raf } from '@internet/raf'
+import Emitter from 'tiny-emitter'
+
+import { DEBUG, GAMEPAD } from '/app.config'
 
 const emitter = new Emitter()
 export default emitter
