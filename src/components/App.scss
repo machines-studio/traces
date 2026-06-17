@@ -21,6 +21,10 @@
       filter: blur(128px);
       transform: translateX(-50%) translateY(-70%) scale(10);
     }
+
+    @include app.screen('question') {
+      display: none;
+    }
   }
 
   &__stars {
@@ -56,7 +60,10 @@
         }
       }
 
-      @include app.screen('introduction') {
+      @include app.screens(
+        'introduction',
+        'question'
+      ) {
         @include easing((transform, opacity), var(--easing-slow), var(--easing-ease-accelerate));
         opacity: 1;
 
@@ -76,14 +83,13 @@
     right: var(--space-gutter);
     bottom: var(--space-gutter);
 
+    display: none;
+
     font-family: monospace;
     font-size: small;
 
-    opacity: 0;
-
     @include app.screen('home') {
-      opacity: 1;
+      display: block;
     }
   }
-
 }

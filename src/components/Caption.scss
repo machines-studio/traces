@@ -2,6 +2,7 @@
   --caption-word-duration: 900ms;
   --caption-word-delay: 100ms;
   --caption-hint-delay: 600ms;
+  --caption-buttons-delay: 100ms;
 }
 
 .caption {
@@ -58,6 +59,8 @@
   }
 
   .gamepad-row > * {
-    animation: fade-in var(--caption-word-duration) calc(var(--caption-hint-delay) + (var(--tokens-length) + 1) * var(--caption-word-delay)) var(--easing-ease-smooth) both;
+    @include animations.stagger (100ms, 3, calc(var(--caption-buttons-delay) + (var(--tokens-length) + 1) * var(--caption-word-delay))) {
+      animation: fade-in var(--caption-word-duration) var(--easing-ease-smooth) both;
+    }
   }
 }

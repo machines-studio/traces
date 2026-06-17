@@ -1,9 +1,9 @@
-@mixin stagger ($delay, $len) {
+@mixin stagger ($delay, $len, $initial: 0ms) {
   @content;
 
   @for $i from 0 through $len {
     &:nth-child(#{$i}) {
-      animation-delay: $i * $delay;
+      animation-delay: calc(#{$initial} + $i * $delay);
     }
   }
 }

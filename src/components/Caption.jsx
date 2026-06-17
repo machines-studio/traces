@@ -3,8 +3,6 @@ import { Component, Props } from '@tooooools/ui'
 import { Button } from '@tooooools/ui/components'
 import { $, not } from '@tooooools/ui/state'
 
-import GamepadRow from '/components/GamepadRow'
-
 // ??? play voice sound with caption__text animation ?
 
 export default class Caption extends Component {
@@ -15,23 +13,27 @@ export default class Caption extends Component {
   }
 
   template ({ text, hint }) {
-    const $tokens = $(text, text => text
-      .replace(/\n/g, '<br>') // Handle line-breaks
+    const $tokens = $(text, (text = '') => text
+      ?.replace(/\n/g, '<br>') // Handle line-breaks
       .split(/(<[^>]+>|\s+)/) // Split by words or tags
       .filter(token => token && !/^\s+$/.test(token))
       .map((token, index) => /^<[^>]+>$/.test(token)
         ? token
         : `<span style='--token-index: ${index}'>${token}</span>`
-      )
+      ) ?? []
     )
 
+    $($tokens, tokens => tokens.length + 1).subscribe(this.log)
+
     return (
-      <section class='caption'>
+      <section
+        class='caption'
+        style={{
+          '--tokens-length': $($tokens, tokens => tokens.length + 1)
+        }}
+      >
         <div
           class='caption__text'
-          style={{
-            '--tokens-length': $($tokens, tokens => tokens.length + 1)
-          }}
           innerHTML={$($tokens, tokens => tokens.join(' '))}
         />
 
@@ -41,9 +43,7 @@ export default class Caption extends Component {
           label={hint}
         />
 
-        <GamepadRow>
-          {this.props.children}
-        </GamepadRow>
+        {this.props.children}
       </section>
     )
   }

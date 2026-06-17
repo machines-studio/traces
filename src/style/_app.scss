@@ -4,6 +4,15 @@
   }
 }
 
+@mixin screens ($screens...) {
+  @each $screen in $screens {
+    @at-root .app[data-screen*='#{$screen}'] & {
+      @content;
+    }
+  }
+}
+
+
 @mixin debug ($debug: '') {
   @at-root main[data-debug*='#{$debug}'] & {
     @content;

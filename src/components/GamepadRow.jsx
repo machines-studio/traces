@@ -18,7 +18,7 @@ $ROWS.subscribe((rows = []) => { $INDEX.value = clamp($INDEX.value, 0, rows.leng
 
 export default class Row extends Component {
   static props = {
-    initial: Props.enum('start', 'proportional')
+    initial: Props.enum('start', 'proportional', 'end')
   }
 
   $index = $(0)
@@ -116,6 +116,9 @@ export default class Row extends Component {
         this.$index.value = Math.round(n * (this.selectable.length - 1))
         break
       }
+      case 'end':
+        this.$index.value = this.selectable.length - 1
+        break
     }
   }
 

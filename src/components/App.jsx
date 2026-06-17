@@ -2,21 +2,25 @@
 import './App.scss'
 
 import { Component } from '@tooooools/ui'
-import { $ } from '@tooooools/ui/state'
+import { $, persist } from '@tooooools/ui/state'
 
 import { COLORS, DEBUG } from '/app.config'
 import SVGHeadline from '/headline.svg?raw'
 import HomeScreen from '/screens/HomeScreen'
 import IntroductionScreen from '/screens/IntroductionScreen'
+import QuestionScreen from '/screens/QuestionScreen'
+
+// TODO goto home when more than X seconds without interaction (prompt?)
 
 const SCREENS = {
   home: HomeScreen,
-  introduction: IntroductionScreen
+  introduction: IntroductionScreen,
+  question: QuestionScreen
 }
 
 export default class App extends Component {
   $screen = $(new URLSearchParams(window.location.search).get('screen') ?? 'home')
-  $language = $(import.meta.env.DEV ? { code: 'en' } : undefined)
+  $language = persist(undefined, 'app.language')
 
   template () {
     return (
@@ -54,7 +58,6 @@ export default class App extends Component {
         <div
           class='app__version'
           innerText={__VERSION__}
-          ref={this.refArray('waitForTransition')}
         />
       </main>
     )
