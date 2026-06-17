@@ -1,3 +1,9 @@
 .introduction-screen {
-  @include fade-in;
+  @include animations.fade-in;
+
+  .eyes {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+  }
 }

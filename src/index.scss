@@ -7,13 +7,16 @@
   // Colors
 
   // SEE /app.config.js for --color-<NAME>
+  --color-gray: #d9d9d9;
   --color-text: white;
   --color-background: black;
 
   // Spacing
 
+  --space-0: 1vw;
   --space-1: 2vw;
   --space-2: 4vw;
+  --space-3: 6vw;
   --space-gutter: var(--space-1);
 
   // Animations
@@ -32,27 +35,24 @@
 
   --ui-font-family: var(--body-font-family);
   --ui-font-weight: 480;
-  --ui-font-size: 2.4vw;
+  --ui-font-size: 1.2vw;
   --ui-height: auto;
   --ui-line-height: 1.1;
+
+  --ui-big-font-size: 2.2vw;
+  --ui-big-font-weight: 480;
 
   --caption-font-family: cabinet;
   --caption-line-height: 0.8;
   --caption-font-size: 5vw;
   --caption-font-weight: 500;
-
 }
-
-[data-color='yellow'] { --color: var(--color-yellow); }
-[data-color='green'] { --color: var(--color-green); }
-[data-color='blue'] { --color: var(--color-blue); }
-[data-color='red'] { --color: var(--color-red); }
-[data-color='pink'] { --color: var(--color-pink); }
 
 [class^='ui-button-'] {
   @include font('ui');
   @include easing((background, box-shadow, transform), var(--easing-fast), var(--easing-ease-back));
 
+  --color: var(--color-gray);
   --ui-color-text: black;
   --ui-color-accent: var(--color);
   --ui-color-accent-contrast: var(--ui-color-text);
@@ -72,3 +72,9 @@
     box-shadow: 0 0 2vw var(--color);
   }
 }
+
+[data-color='yellow'] { --color: var(--color-yellow); }
+[data-color='green'] { --color: var(--color-green); }
+[data-color='blue'] { --color: var(--color-blue); }
+[data-color='red'] { --color: var(--color-red); }
+[data-color='pink'] { --color: var(--color-pink); }

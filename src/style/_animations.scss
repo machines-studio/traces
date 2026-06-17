@@ -1,21 +1,3 @@
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fade-out {
-  from { opacity: 1; filter: none; }
-  to { opacity: 0; filter: blur(16px); }
-}
-
-@mixin fade-in ($duration: var(--easing)) {
-  animation: fade-in $duration var(--easing-ease-smooth) both;
-}
-
-@mixin fade-out ($duration: var(--easing)) {
-  animation: fade-out $duration var(--easing-ease-smooth) both;
-}
-
 @mixin stagger ($delay, $len) {
   @content;
 
@@ -24,4 +6,49 @@
       animation-delay: $i * $delay;
     }
   }
+}
+
+// fade-in
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@mixin fade-in ($duration: var(--easing)) {
+  animation: fade-in $duration var(--easing-ease-smooth) both;
+}
+
+// fade-out
+
+@keyframes fade-out {
+  from { opacity: 1; filter: none; }
+  to { opacity: 0; filter: blur(16px); }
+}
+
+@mixin fade-out ($duration: var(--easing)) {
+  animation: fade-out $duration var(--easing-ease-smooth) both;
+}
+
+// float
+
+@keyframes float {
+  from {
+    transform:
+      translateY(var(--float-amount))
+      rotate(-1deg)
+    ;
+  }
+
+  to {
+    transform:
+      translateY(calc(-1 * var(--float-amount)))
+      rotate(1deg)
+    ;
+  }
+}
+
+@mixin float ($amt: 10%, $duration: 3s) {
+  --float-amount: #{-$amt};
+  animation: float $duration ease-in-out infinite alternate;
 }

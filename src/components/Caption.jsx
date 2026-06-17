@@ -1,35 +1,49 @@
 import './Caption.scss'
 import { Component, Props } from '@tooooools/ui'
-import { $ } from '@tooooools/ui/state'
 import { Button } from '@tooooools/ui/components'
+import { $, not } from '@tooooools/ui/state'
 
-// TODO play voice sound with animation
+import GamepadRow from '/components/GamepadRow'
+
+// ??? play voice sound with caption__text animation ?
 
 export default class Caption extends Component {
   static props = {
     // TODO data-dir
     text: Props.required([Props.string, Props.Signal]),
-    cta: [Props.string, Props.Signal]
+    hint: [Props.string, Props.Signal],
   }
 
-  template ({ text, cta }) {
+  template ({ text, hint }) {
+    const $tokens = $(text, text => text
+      .replace(/\n/g, '<br>') // Handle line-breaks
+      .split(/(<[^>]+>|\s+)/) // Split by words or tags
+      .filter(token => token && !/^\s+$/.test(token))
+      .map((token, index) => /^<[^>]+>$/.test(token)
+        ? token
+        : `<span style='--token-index: ${index}'>${token}</span>`
+      )
+    )
+
     return (
       <section class='caption'>
         <div
           class='caption__text'
-          innerHTML={$(text, text => text
-            .replace(/\n/g, '<br>') // Handle line-breaks
-            .split(/(<[^>]+>|\s+)/) // Split by words or tags
-            .filter(token => token && !/^\s+$/.test(token))
-            .map(token => /^<[^>]+>$/.test(token)
-              ? token
-              : `<span class='word'>${token}</span>`
-            )
-            .join(' ')
-          )}
+          style={{
+            '--tokens-length': $($tokens, tokens => tokens.length + 1)
+          }}
+          innerHTML={$($tokens, tokens => tokens.join(' '))}
         />
 
-        <Button text={cta} />
+        <Button
+          class='caption__hint'
+          hidden={not($(hint))}
+          label={hint}
+        />
+
+        <GamepadRow>
+          {this.props.children}
+        </GamepadRow>
       </section>
     )
   }

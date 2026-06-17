@@ -2,7 +2,7 @@
 import './App.scss'
 
 import { Component } from '@tooooools/ui'
-import { $, persist } from '@tooooools/ui/state'
+import { $ } from '@tooooools/ui/state'
 
 import { COLORS, DEBUG } from '/app.config'
 import SVGHeadline from '/headline.svg?raw'
@@ -15,7 +15,7 @@ const SCREENS = {
 }
 
 export default class App extends Component {
-  $screen = $('home') // import.meta.env.DEV ? persist('home', 'app.screen') : $('home')
+  $screen = $(new URLSearchParams(window.location.search).get('screen') ?? 'home')
   $language = $(import.meta.env.DEV ? { code: 'en' } : undefined)
 
   template () {
@@ -32,7 +32,10 @@ export default class App extends Component {
           }), {})
         }}
       >
-        <section class='app__stars'>
+        <section
+          class='app__stars'
+          ref={this.refArray('waitForTransition')}
+        >
           {
             [
               '/images/stars-1.png',
@@ -51,6 +54,7 @@ export default class App extends Component {
         <div
           class='app__version'
           innerText={__VERSION__}
+          ref={this.refArray('waitForTransition')}
         />
       </main>
     )
@@ -66,6 +70,10 @@ export default class App extends Component {
   #handleScreen = async screen => {
     this.refs.screen?.destroy()
 
+    this.base.classList.add('is-transitioning')
+    await this.#waitForTransitions()
+    this.base.classList.remove('is-transitioning')
+
     window.document.title = `TRACES → ${screen}`
 
     this.render(
@@ -77,4 +85,22 @@ export default class App extends Component {
       this.base
     )
   }
+
+  // Wait until CSS transitions triggered by the `data-screen` change
+  // (on direct children of `.app` tracked in refs.waitForTransition)
+  #waitForTransitions = () => Promise.all(
+    this.refs.waitForTransition
+      .filter(el => parseFloat(getComputedStyle(el).transitionDuration) > 0)
+      .map(el => new Promise(resolve => {
+        const done = e => {
+          if (e.target !== el) return
+          el.removeEventListener('transitionend', done)
+          el.removeEventListener('transitioncancel', done)
+          resolve()
+        }
+
+        el.addEventListener('transitionend', done)
+        el.addEventListener('transitioncancel', done)
+      }))
+  )
 }

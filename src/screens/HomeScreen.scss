@@ -1,5 +1,5 @@
 .home-screen {
-  @include fade-in;
+  @include animations.fade-in;
 
   display: flex;
   flex-direction: column;
@@ -9,18 +9,23 @@
   height: 100vh;
 
   .gamepad-row {
+    gap: var(--space-gutter);
     margin-top: 20vw;
+
+    > * {
+      @include font('ui-big');
+    }
   }
 
   &.is-leaving .gamepad-row > * {
-    @include fade-out(var(--easing-fast));
+    @include animations.fade-out(var(--easing-fast));
 
     &.is-selected {
       transform: scale(2);
     }
 
     &:not(.is-selected) {
-      @include stagger(100ms, 2);
+      @include animations.stagger(100ms, 2);
     }
   }
 }

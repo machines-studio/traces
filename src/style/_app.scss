@@ -4,7 +4,7 @@
   }
 }
 
-@mixin has-debug ($debug: '') {
+@mixin debug ($debug: '') {
   @at-root main[data-debug*='#{$debug}'] & {
     @content;
   }

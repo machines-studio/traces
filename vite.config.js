@@ -43,8 +43,8 @@ export default defineConfig(({ mode }) => {
         scss: {
           additionalData: `
             @use '/style/_helpers' as *;
-            @use '/style/_devices' as *;
-            @use '/style/_animations' as *;
+            @use '/style/_app' as app;
+            @use '/style/_animations' as animations;
             $env: ${mode};
           `
         }

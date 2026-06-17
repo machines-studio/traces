@@ -10,12 +10,12 @@
     transform: translateX(-50%) translateY(-70%);
     will-change: transform, filter, opacity;
 
-    @include screen('home') {
+    @include app.screen('home') {
       @include easing(transform, var(--easing), var(--easing-ease-smooth));
       filter: none;
     }
 
-    @include screen('introduction') {
+    @include app.screen('introduction') {
       @include easing((transform, opacity, filter), var(--easing-slow), var(--easing-ease-accelerate));
       opacity: 0;
       filter: blur(128px);
@@ -38,7 +38,7 @@
     img {
       position: absolute;
 
-      @include stagger(1s, 3) {
+      @include animations.stagger(1s, 3) {
         animation: fade-in 3s linear alternate infinite both;
 
         &:first-child {
@@ -46,7 +46,7 @@
         }
       }
 
-      @include screen('home') {
+      @include app.screen('home') {
         @include easing(transform, var(--easing), var(--easing-ease-smooth));
 
         @for $i from 0 through 3 {
@@ -56,7 +56,7 @@
         }
       }
 
-      @include screen('introduction') {
+      @include app.screen('introduction') {
         @include easing((transform, opacity), var(--easing-slow), var(--easing-ease-accelerate));
         opacity: 1;
 
@@ -81,7 +81,7 @@
 
     opacity: 0;
 
-    @include screen('home') {
+    @include app.screen('home') {
       opacity: 1;
     }
   }

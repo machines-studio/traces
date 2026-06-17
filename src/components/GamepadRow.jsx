@@ -38,9 +38,13 @@ export default class Row extends Component {
     )
   }
 
+  get selectable () {
+    return this._collector.components.filter(c => (c.base ?? c).checkVisibility())
+  }
+
   get selection () {
     return this.$hasFocus.value
-      ? this._collector.components[this.$index]
+      ? this.selectable[this.$index]
       : null
   }
 
@@ -85,7 +89,7 @@ export default class Row extends Component {
     if (!this.$hasFocus.value) return
 
     this.$index.value = this.props.loop
-      ? (this.$index.value + this._collector.components.length - 1) % this._collector.components.length
+      ? (this.$index.value + this.selectable.length - 1) % this.selectable.length
       : Math.max(0, this.$index.value - 1)
   }
 
@@ -93,8 +97,8 @@ export default class Row extends Component {
     if (!this.$hasFocus.value) return
 
     this.$index.value = this.props.loop
-      ? (this.$index.value + 1) % this._collector.components.length
-      : Math.min(this.$index.value + 1, this._collector.components.length - 1)
+      ? (this.$index.value + 1) % this.selectable.length
+      : Math.min(this.$index.value + 1, this.selectable.length - 1)
   }
 
   #handleFocus = () => {
@@ -109,7 +113,7 @@ export default class Row extends Component {
         const lastRow = $ROWS.value?.[$INDEX.previous]
         if (!lastRow) break
         const n = lastRow.$index / (lastRow._collector.components.length - 1)
-        this.$index.value = Math.round(n * (this._collector.components.length - 1))
+        this.$index.value = Math.round(n * (this.selectable.length - 1))
         break
       }
     }
@@ -117,7 +121,7 @@ export default class Row extends Component {
 
   #update = () => {
     // Set selection class and scroll into view
-    const components = this._collector.components
+    const components = this.selectable
     for (let index = 0; index < components.length; index++) {
       const element = components[index].base ?? components[index]
 
