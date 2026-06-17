@@ -1,6 +1,6 @@
 export const translations = {
   en: {
-    'introduction.debug': 'This is English',
+    'introduction.debug': 'Hello stranger, welcome to TRACES.\nI’ll be your companion memory',
   },
 
   fr: {

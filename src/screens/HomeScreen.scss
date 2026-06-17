@@ -13,22 +13,14 @@
   }
 
   &.is-leaving .gamepad-row > * {
-    @include easing((transform, opacity, filter));
+    @include fade-out(var(--easing-fast));
 
-    opacity: 0;
-    filter: blur(16px);
-    transition-delay: calc(100ms * (1 + var(--gamepad-row-index)));
-  }
+    &.is-selected {
+      transform: scale(2);
+    }
 
-  footer {
-    @include font('code');
-    position: fixed;
-    right: var(--space-gutter);
-    bottom: var(--space-gutter);
-  }
-
-  &.is-leaving footer {
-    @include easing(opacity);
-    opacity: 0;
+    &:not(.is-selected) {
+      @include stagger(100ms, 2);
+    }
   }
 }

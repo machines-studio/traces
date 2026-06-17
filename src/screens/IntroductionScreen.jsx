@@ -3,6 +3,7 @@ import './IntroductionScreen.scss'
 import { Component, Props } from '@tooooools/ui'
 
 import i18n from '/data/i18n'
+import Caption from '/components/Caption'
 import Gamepad from '/controllers/Gamepad'
 
 export default class IntroductionScreen extends Component {
@@ -16,7 +17,7 @@ export default class IntroductionScreen extends Component {
       <section
         class='introduction-screen screen'
       >
-        {i18n('introduction.debug')}
+        <Caption text={i18n('introduction.debug')} />
       </section>
     )
   }

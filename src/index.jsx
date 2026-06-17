@@ -1,5 +1,4 @@
 import '/index.scss'
-
 import { render } from '@tooooools/ui'
 import { Toast } from '@tooooools/ui/components'
 

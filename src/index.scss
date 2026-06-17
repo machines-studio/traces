@@ -13,6 +13,7 @@
   // Spacing
 
   --space-1: 2vw;
+  --space-2: 4vw;
   --space-gutter: var(--space-1);
 
   // Animations
@@ -35,8 +36,11 @@
   --ui-height: auto;
   --ui-line-height: 1.1;
 
-  --code-font-family: monospace;
-  --code-font-size: 1.2vw;
+  --caption-font-family: cabinet;
+  --caption-line-height: 1;
+  --caption-font-size: 5vw;
+  --caption-font-weight: 500;
+
 }
 
 [data-color='yellow'] { --color: var(--color-yellow); }

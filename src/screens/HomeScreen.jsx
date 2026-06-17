@@ -1,4 +1,3 @@
-/* global __VERSION__ */
 import './HomeScreen.scss'
 
 import { Component, Props } from '@tooooools/ui'
@@ -17,9 +16,7 @@ export default class HomeScreen extends Component {
   template () {
     const colors = shuffle(Object.keys(COLORS))
     return (
-      <section
-        class='home-screen screen'
-      >
+      <section class='home-screen screen'>
         <GamepadRow initial='start' loop>
           {LANGUAGES.map((language, index) => (
             <Button
@@ -29,8 +26,6 @@ export default class HomeScreen extends Component {
             />
           ))}
         </GamepadRow>
-
-        <footer>{__VERSION__}</footer>
       </section>
     )
   }
@@ -42,7 +37,7 @@ export default class HomeScreen extends Component {
     if (!e.isTrusted) {
       // Wait for buttons transition before leaving screen
       await Promise.all(
-        [...e.target.parentNode.children].map(el => new Promise(resolve => el.addEventListener('transitionend', resolve)))
+        [...e.target.parentNode.children].map(el => new Promise(resolve => el.addEventListener('animationend', resolve)))
       )
     }
 

@@ -3,8 +3,17 @@
   to { opacity: 1; }
 }
 
-@mixin fade-in {
-  animation: fade-in var(--easing) var(--easing-ease-smooth) both;
+@keyframes fade-out {
+  from { opacity: 1; filter: none; }
+  to { opacity: 0; filter: blur(16px); }
+}
+
+@mixin fade-in ($duration: var(--easing)) {
+  animation: fade-in $duration var(--easing-ease-smooth) both;
+}
+
+@mixin fade-out ($duration: var(--easing)) {
+  animation: fade-out $duration var(--easing-ease-smooth) both;
 }
 
 @mixin stagger ($delay, $len) {

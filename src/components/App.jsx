@@ -1,4 +1,4 @@
-/* global h */
+/* global h, __VERSION__ */
 import './App.scss'
 
 import { Component } from '@tooooools/ui'
@@ -46,6 +46,11 @@ export default class App extends Component {
           class='app__title'
           innerHTML={SVGHeadline}
         />
+
+        <div
+          class='app__version'
+          innerText={__VERSION__}
+        />
       </main>
     )
   }
@@ -59,6 +64,8 @@ export default class App extends Component {
 
   #handleScreen = screen => {
     this.refs.screen?.destroy()
+
+    window.document.title = `TRACES → ${screen}`
 
     this.render(
       h(SCREENS[screen], {

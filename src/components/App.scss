@@ -5,6 +5,7 @@
     left: 50%;
 
     width: 75vw;
+    contain: layout paint;
 
     transform: translateX(-50%) translateY(-70%);
     will-change: transform, filter, opacity;
@@ -36,7 +37,14 @@
 
     img {
       position: absolute;
-      will-change: transform, opacity;
+
+      @include stagger(1s, 3) {
+        animation: fade-in 3s linear alternate infinite both;
+
+        &:first-child {
+          animation: none;
+        }
+      }
 
       @include screen('home') {
         @include easing(transform, var(--easing), var(--easing-ease-smooth));
@@ -46,18 +54,12 @@
             transform: rotate(calc(10deg * #{0.5 * $i}));
           }
         }
-
-        @include stagger(1s, 3) {
-          animation: fade-in 3s linear alternate infinite both;
-        }
-
-        &:first-child {
-          animation: none;
-        }
       }
 
       @include screen('introduction') {
-        @include easing(transform, var(--easing-slow), var(--easing-ease-accelerate));
+        @include easing((transform, opacity), var(--easing-slow), var(--easing-ease-accelerate));
+        opacity: 1;
+
         @for $i from 0 through 3 {
           &:nth-child(#{$i}) {
             transform: scale(calc(2 + #{0.5 * $i}));
@@ -66,4 +68,22 @@
       }
     }
   }
+
+  &__version {
+    @include easing(opacity);
+
+    position: fixed;
+    right: var(--space-gutter);
+    bottom: var(--space-gutter);
+
+    font-family: monospace;
+    font-size: small;
+
+    opacity: 0;
+
+    @include screen('home') {
+      opacity: 1;
+    }
+  }
+
 }
