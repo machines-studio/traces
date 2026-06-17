@@ -41,6 +41,7 @@
 
   --ui-big-font-size: 2.2vw;
   --ui-big-font-weight: 480;
+  --ui-big-line-height: 1;
 
   --caption-font-family: cabinet;
   --caption-line-height: 0.8;
@@ -67,7 +68,7 @@
     transform:
       scale(1.1)
       rotate(calc(3deg * cos(3.14 + var(--gamepad-row-nindex) * 3.14)))
-      // translateY(-10%)
+      translateY(-10%)
     ;
     box-shadow: 0 0 2vw var(--color);
   }
