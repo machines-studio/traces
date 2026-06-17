@@ -17,7 +17,10 @@ export default class IntroductionScreen extends Component {
       <section
         class='introduction-screen screen'
       >
-        <Caption text={i18n('introduction.debug')} />
+        <Caption
+          text={i18n('introduction.debug')}
+          cta='touch the stick'
+        />
       </section>
     )
   }

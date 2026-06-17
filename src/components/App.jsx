@@ -15,7 +15,7 @@ const SCREENS = {
 }
 
 export default class App extends Component {
-  $screen = import.meta.env.DEV ? persist('home', 'app.screen') : $('home')
+  $screen = $('home') // import.meta.env.DEV ? persist('home', 'app.screen') : $('home')
   $language = $(import.meta.env.DEV ? { code: 'en' } : undefined)
 
   template () {
@@ -38,13 +38,14 @@ export default class App extends Component {
               '/images/stars-1.png',
               '/images/stars-2.png',
               '/images/stars-3.png'
-            ].map(src => (<img src={src} />))
+            ].map(src => <img src={src} />)
           }
         </section>
 
         <h1
           class='app__title'
           innerHTML={SVGHeadline}
+          ref={this.refArray('waitForTransition')}
         />
 
         <div
@@ -62,7 +63,7 @@ export default class App extends Component {
 
   #handleLanguage = lang => { document.documentElement.lang = lang?.code }
 
-  #handleScreen = screen => {
+  #handleScreen = async screen => {
     this.refs.screen?.destroy()
 
     window.document.title = `TRACES → ${screen}`

@@ -34,7 +34,7 @@ export default class HomeScreen extends Component {
     this.props.language.value = language
     this.base.classList.add('is-leaving')
 
-    if (!e.isTrusted) {
+    if (!e.isTrusted) { // Only if triggered from GamepadRow.#handleGamepadA
       // Wait for buttons transition before leaving screen
       await Promise.all(
         [...e.target.parentNode.children].map(el => new Promise(resolve => el.addEventListener('animationend', resolve)))
