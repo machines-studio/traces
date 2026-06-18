@@ -1,5 +1,7 @@
 .home-screen {
-  @include animations.fade-in;
+  @include animations.use(
+    animations.$fade-in
+  );
 
   display: flex;
   flex-direction: column;
@@ -18,14 +20,16 @@
   }
 
   &.is-leaving .gamepad-row > * {
-    @include animations.fade-out(var(--easing-fast));
+    @include animations.use(
+      (preset: animations.$fade-out, duration: var(--easing-fast))
+    );
 
     &.is-selected {
       transform: scale(2);
     }
 
     &:not(.is-selected) {
-      @include animations.stagger(100ms, 2);
+      @include animations.stagger(fade-out, 100ms, 3);
     }
   }
 }

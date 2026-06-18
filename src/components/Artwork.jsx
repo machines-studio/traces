@@ -7,15 +7,35 @@ export default class Artwork extends Component {
   }
 
   template () {
+    // TODO dynamic
+    const tags = [
+      'picture',
+      'colors',
+      'foo',
+      'bar'
+    ]
     return (
       <section
         class='artwork'
         event-click={this.#handleClick}
         data-color='blue'
       >
-        <img src='/images/bb.png' />
-        <div class='artwork__tag'>picture</div>
-        <div class='artwork__tag'>colors</div>
+        <div class='artwork__wrapper'>
+          <img src='/images/bb.png' />
+          <ul class='artwork__tags'>
+            {
+              tags.map(tag => (
+                <li
+                  class='artwork__tag'
+                  innerText={tag}
+                  style={{
+                    '--seed': Math.random()
+                  }}
+                />
+              ))
+            }
+          </ul>
+        </div>
       </section>
     )
   }

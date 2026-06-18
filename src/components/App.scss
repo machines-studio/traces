@@ -40,15 +40,17 @@
     transform: translateX(-50%) translateY(-50%);
 
     img {
+      @include animations.stagger(fade-in, -1s, 3);
+      @include animations.use(
+        (
+          preset: animations.$fade-in,
+          duration: 3s,
+          easing: linear,
+          iteration-count: infinite,
+          direction: alternate
+        )
+      );
       position: absolute;
-
-      @include animations.stagger(1s, 3) {
-        animation: fade-in 3s linear alternate infinite both;
-
-        &:first-child {
-          animation: none;
-        }
-      }
 
       @include app.screen('home') {
         @include easing(transform, var(--easing), var(--easing-ease-smooth));
@@ -73,6 +75,10 @@
           }
         }
       }
+    }
+
+    img:first-child {
+      animation: none;
     }
   }
 

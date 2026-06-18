@@ -1,5 +1,5 @@
 .introduction-screen {
-  @include animations.fade-in;
+  @include animations.use(animations.$fade-in);
 
   .eyes {
     position: fixed;

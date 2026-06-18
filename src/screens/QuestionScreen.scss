@@ -16,7 +16,10 @@
     justify-content: center;
 
     .artwork {
-      // warp the linear angle so artworks land closer to equal arc-length
+      @include animations.shuffle(artwork-appears, 50ms, 4);
+      @include animations.stagger(animations.$float, 3s, 4);
+
+      // Warp the linear angle so artworks land closer to equal arc-length
       // spacing on the ellipse: theta = t*pi + k*sin(2*t*pi), with k derived
       // from the rx/ry ratio (pulls points toward the minor-axis middle)
       --theta-linear: calc(pi * var(--gamepad-row-nindex));

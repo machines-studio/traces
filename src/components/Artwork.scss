@@ -1,43 +1,128 @@
-// WIP
+@use 'sass:math';
 
 :root {
   --artwork-size: 16vw;
 }
 
 .artwork {
+  @include animations.use(
+    (
+      name: artwork-appears,
+      duration: var(--easing),
+      easing: var(--easing-ease-back),
+      fill-mode: backwards
+    ),
+    animations.$float,
+  );
+
+  --artwork-image-scale: 1; // Will be changed when is-selected
+  --animation-float-amount: 2%;
+
+  position: relative;
   width: var(--artwork-size);
   height: var(--artwork-size);
-  animation-composition: add, accumulate;
-
-  @keyframes artwork-appears {
-    from { transform: translateY(-50vh) scale(0); }
-    to { transform: none; }
-  }
-
-  @include animations.stagger(120ms, 4) {
-    animation: artwork-appears var(--easing) 0ms var(--easing-ease-back) both;
-  }
-
-  // @include animations.stagger(3s, 4) {
-  //   @include animations.float(10%, 10s);
-  // }
+  animation-composition: add;
 
   img {
-    @include easing(transform);
+    @include easing((transform, box-shadow));
     border-radius: 100%;
+    transform: scale(var(--artwork-image-scale));
+    box-shadow: 0 0 0 var(--color);
   }
 
-  &.is-selected img {
-    transform: scale(1.3);
+  &__wrapper {
+    @include easing(transform, var(--easing-fast), var(--easing-ease-back));
   }
 
-  // WIP tags
+  &.is-selected {
+    z-index: 1;
+  }
+
+  &.is-selected &__wrapper {
+    transform: scale(1.5);
+
+    img {
+      box-shadow: 0 0 4vw var(--color);
+    }
+  }
+
+  &__tags {
+    position: absolute;
+    inset: 0;
+  }
+
   &__tag {
     @include font('ui');
+    @include animations.use(
+      (
+        name: artwork-tag-orbitates,
+        duration: 10s,
+        easing: ease-in-out,
+        iteration-count: infinite,
+        stagger: (
+          delay: calc(1s - 10s * var(--seed)),
+          length: 10
+        )
+      )
+    );
+
+    --artwork-tag-orbite-angle: calc(90deg + 30deg * var(--seed));
+    --artwork-tag-orbit-radius: calc(var(--artwork-size) / 2);
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
     width: min-content;
     padding: 0.5em;
+
     color: var(--ui-color-text);
+
     background: var(--color);
     border-radius: var(--ui-border-radius);
+    transform: translateX(-50%) translateY(-50%);
+
+    animation-composition: add, accumulate;
+  }
+}
+
+@keyframes artwork-appears {
+  from { transform: scale(0); }
+  to { transform: none; }
+}
+
+@keyframes artwork-tag-orbitates {
+  0% {
+    z-index: 1;
+    transform:
+      rotate(var(--artwork-tag-orbite-angle))
+      translateX(calc(-1 * var(--artwork-tag-orbit-radius)))
+      translateY(calc(-1 * var(--artwork-tag-orbit-radius)))
+      rotate(calc(-1 * var(--artwork-tag-orbite-angle)))
+    ;
+  }
+
+  50% {
+    z-index: 1;
+    transform:
+      rotate(var(--artwork-tag-orbite-angle))
+      translateX(var(--artwork-tag-orbit-radius))
+      translateY(var(--artwork-tag-orbit-radius))
+      rotate(calc(-1 * var(--artwork-tag-orbite-angle)))
+    ;
+  }
+
+  51% {
+    z-index: -1;
+  }
+
+  100% {
+    z-index: -1;
+    transform:
+      rotate(var(--artwork-tag-orbite-angle))
+      translateX(calc(-1 * var(--artwork-tag-orbit-radius)))
+      translateY(calc(-1 * var(--artwork-tag-orbit-radius)))
+      rotate(calc(-1 * var(--artwork-tag-orbite-angle)))
+    ;
   }
 }
