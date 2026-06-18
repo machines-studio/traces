@@ -78,7 +78,7 @@
     outline-offset: 2px;
     transform:
       scale(1.1)
-      rotate(calc(3deg * cos(pi + var(--gamepad-row-nindex) * 3.14)))
+      rotate(calc(3deg * cos(pi + var(--gamepad-row-nindex) * pi)))
       translateY(-10%)
     ;
     box-shadow: 0 0 4vw var(--color);

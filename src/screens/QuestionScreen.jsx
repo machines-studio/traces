@@ -16,6 +16,14 @@ export default class QuestionScreen extends Component {
   }
 
   template () {
+    // TODO dynamic
+    const mockArtworks = [
+      { vector: 'type', tags: ['color', 'picture', 'weird'] },
+      { vector: 'emotion', tags: ['color', 'picture', 'weird'] },
+      { vector: 'date', tags: ['color', 'picture', 'weird'] },
+      { vector: 'description', tags: ['color', 'picture', 'weird'] },
+    ]
+
     return (
       <section class='question-screen screen'>
         <Eyes />
@@ -25,10 +33,12 @@ export default class QuestionScreen extends Component {
           initial='none'
           class='artworks'
         >
-          <Artwork />
-          <Artwork />
-          <Artwork />
-          <Artwork />
+          {mockArtworks.map(artwork => (
+            <Artwork
+              vector={artwork.vector}
+              tags={artwork.tags}
+            />
+          ))}
         </GamepadRow>
 
         <Caption

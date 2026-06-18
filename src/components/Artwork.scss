@@ -2,6 +2,7 @@
 
 :root {
   --artwork-size: 16vw;
+  --artwork-selected-scale: 1.6;
 }
 
 .artwork {
@@ -15,7 +16,6 @@
     animations.$float,
   );
 
-  --artwork-image-scale: 1; // Will be changed when is-selected
   --animation-float-amount: 2%;
 
   position: relative;
@@ -23,27 +23,22 @@
   height: var(--artwork-size);
   animation-composition: add;
 
-  img {
-    @include easing((transform, box-shadow));
-    border-radius: 100%;
-    transform: scale(var(--artwork-image-scale));
-    box-shadow: 0 0 0 var(--color);
-  }
-
   &__wrapper {
     @include easing(transform, var(--easing-fast), var(--easing-ease-back));
   }
 
-  &.is-selected {
-    z-index: 1;
+  &.is-selected &__wrapper {
+    transform: scale(var(--artwork-selected-scale));
   }
 
-  &.is-selected &__wrapper {
-    transform: scale(1.5);
+  img {
+    @include easing((transform, box-shadow));
+    border-radius: 100%;
+    box-shadow: 0 0 2vw var(--color);
+  }
 
-    img {
-      box-shadow: 0 0 4vw var(--color);
-    }
+  &.is-selected img {
+    box-shadow: 0 0 10vw var(--color);
   }
 
   &__tags {
@@ -66,7 +61,7 @@
       )
     );
 
-    --artwork-tag-orbite-angle: calc(90deg + 30deg * var(--seed));
+    --artwork-tag-orbite-angle: calc(90deg + 45deg * var(--seed));
     --artwork-tag-orbit-radius: calc(var(--artwork-size) / 2);
 
     position: absolute;
@@ -81,6 +76,7 @@
     background: var(--color);
     border-radius: var(--ui-border-radius);
     transform: translateX(-50%) translateY(-50%);
+    box-shadow: 0 0 4vw var(--color);
 
     animation-composition: add, accumulate;
   }

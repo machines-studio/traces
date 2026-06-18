@@ -1,24 +1,26 @@
 import './Artwork.scss'
 import { Component, Props } from '@tooooools/ui'
 
+// Assign a color to each vector
+const COLORS = {
+  type: 'green',
+  emotion: 'red',
+  date: 'yellow',
+  description: 'blue'
+}
+
 export default class Artwork extends Component {
   static props = {
-    //
+    tags: Props.array,
+    vector: Props.enum('type', 'emotion', 'date', 'description')
   }
 
-  template () {
-    // TODO dynamic
-    const tags = [
-      'picture',
-      'colors',
-      'foo',
-      'bar'
-    ]
+  template ({ vector, tags = [] }) {
     return (
       <section
         class='artwork'
         event-click={this.#handleClick}
-        data-color='blue'
+        data-color={COLORS[vector]}
       >
         <div class='artwork__wrapper'>
           <img src='/images/bb.png' />
