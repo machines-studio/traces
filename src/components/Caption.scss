@@ -12,6 +12,20 @@
   }
 }
 
+@keyframes caption-word {
+  from {
+    opacity: 0;
+    filter: blur(16px);
+    transform: translateY(50%);
+  }
+
+  to {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
+
 .caption {
   --tokens-length: 1;
 
@@ -35,39 +49,29 @@
   }
 
   &__text > * {
-    @include animations.float;
+    @include animations.use((animations.$float));
     --token-index: 0;
+    --animation-float-amount: 100%;
 
     display: inline-block;
     white-space: pre;
     animation: caption-word var(--caption-word-duration) calc(var(--token-index) * var(--caption-word-delay)) var(--easing-ease-smooth) both;
-
-    @keyframes caption-word {
-      from {
-        opacity: 0;
-        filter: blur(16px);
-        transform: translateY(50%);
-      }
-
-      to {
-        opacity: 1;
-        filter: none;
-        transform: none;
-      }
-    }
   }
 
   &__hint {
-    @include animations.float;
-    animation:
-      fade-in var(--caption-word-duration) calc(var(--caption-hint-delay) + (var(--tokens-length) + 1) * var(--caption-word-delay)) var(--easing-ease-smooth) both,
-      float 3s ease-in-out infinite alternate
-    ;
+    @include animations.use(
+      animations.$fade-in,
+      animations.$float
+    );
   }
 
   .gamepad-row > * {
-    @include animations.stagger (100ms, 3, calc(var(--caption-buttons-delay) + (var(--tokens-length) + 1) * var(--caption-word-delay))) {
-      animation: fade-in var(--caption-word-duration) var(--easing-ease-smooth) both;
-    }
+    @include animations.use(
+      (
+        preset: animations.$fade-in,
+        delay: calc(var(--caption-buttons-delay) + (var(--tokens-length) + 1) * var(--caption-word-delay))
+      )
+    );
+    @include animations.stagger(animations.$fade-in, 100ms, 3);
   }
 }
