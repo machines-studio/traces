@@ -1,0 +1,43 @@
+// WIP
+
+:root {
+  --artwork-size: 16vw;
+}
+
+.artwork {
+  width: var(--artwork-size);
+  height: var(--artwork-size);
+  animation-composition: add, accumulate;
+
+  @keyframes artwork-appears {
+    from { transform: translateY(-50vh) scale(0); }
+    to { transform: none; }
+  }
+
+  @include animations.stagger(120ms, 4) {
+    animation: artwork-appears var(--easing) 0ms var(--easing-ease-back) both;
+  }
+
+  // @include animations.stagger(3s, 4) {
+  //   @include animations.float(10%, 10s);
+  // }
+
+  img {
+    @include easing(transform);
+    border-radius: 100%;
+  }
+
+  &.is-selected img {
+    transform: scale(1.3);
+  }
+
+  // WIP tags
+  &__tag {
+    @include font('ui');
+    width: min-content;
+    padding: 0.5em;
+    color: var(--ui-color-text);
+    background: var(--color);
+    border-radius: var(--ui-border-radius);
+  }
+}

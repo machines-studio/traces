@@ -1,10 +1,11 @@
 :root {
-  --eyes-width: 60vw;
+  --eyes-width: 40vw;
   --eyes-height: calc(var(--eyes-width) * 0.5);
 }
 
 .eyes {
   @include debug;
+
   width: var(--eyes-width);
   height: var(--eyes-height);
 

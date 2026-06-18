@@ -1,9 +1,9 @@
 @mixin stagger ($delay, $len, $initial: 0ms) {
   @content;
 
-  @for $i from 0 through $len {
+  @for $i from 1 through $len {
     &:nth-child(#{$i}) {
-      animation-delay: calc(#{$initial} + $i * $delay);
+      animation-delay: calc(#{$initial} + ($i - 1) * $delay);
     }
   }
 }
@@ -35,20 +35,20 @@
 @keyframes float {
   from {
     transform:
-      translateY(var(--float-amount))
+      translateY(var(--animation-float-amount))
       rotate(-1deg)
     ;
   }
 
   to {
     transform:
-      translateY(calc(-1 * var(--float-amount)))
+      translateY(calc(-1 * var(--animation-float-amount)))
       rotate(1deg)
     ;
   }
 }
 
 @mixin float ($amt: 10%, $duration: 3s) {
-  --float-amount: #{-$amt};
-  animation: float $duration ease-in-out infinite alternate;
+  --animation-float-amount: #{-$amt};
+  animation: float $duration ease-in-out infinite alternate both;
 }

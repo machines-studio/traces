@@ -3,6 +3,13 @@
   --caption-word-delay: 100ms;
   --caption-hint-delay: 600ms;
   --caption-buttons-delay: 100ms;
+
+  @include app.debug('fast', &) {
+    --caption-word-duration: 0ms;
+    --caption-word-delay: 0ms;
+    --caption-hint-delay: 0ms;
+    --caption-buttons-delay: 0ms;
+  }
 }
 
 .caption {

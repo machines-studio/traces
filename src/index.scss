@@ -34,7 +34,7 @@
   --body-font-size: 3vw;
 
   --ui-font-family: var(--body-font-family);
-  --ui-font-weight: 480;
+  --ui-font-weight: 600;
   --ui-font-size: 1.2vw;
   --ui-height: auto;
   --ui-line-height: 1.1;
@@ -44,33 +44,44 @@
   --ui-big-line-height: 1;
 
   --caption-font-family: cabinet;
-  --caption-line-height: 0.8;
-  --caption-font-size: 5vw;
+  --caption-font-size: 4vw;
+  --caption-line-height: 0.9;
   --caption-font-weight: 500;
+
+  @include app.debug('fast', &) {
+    --easing: 0ms;
+    --easing-fast: 0ms;
+    --easing-slow: 0ms;
+  }
 }
 
 [class^='ui-button-'] {
   @include font('ui');
-  @include easing((background, box-shadow, transform), var(--easing-fast), var(--easing-ease-back));
+  @include easing((background, box-shadow, transform, outline-offset), var(--easing-fast), var(--easing-ease-back));
 
   --color: var(--color-gray);
   --ui-color-text: black;
+  --ui-padding-container: 0.5em 0.5em;
   --ui-color-accent: var(--color);
   --ui-color-accent-contrast: var(--ui-color-text);
   --ui-color-background: var(--color);
+  --ui-border-radius: 4px;
 
+  outline-offset: 0;
   box-shadow: 0 0 0 var(--color);
 
   &:hover,
   &.is-selected {
     --ui-color-background: var(--color);
     z-index: 1;
+    outline: 2px solid var(--color);
+    outline-offset: 2px;
     transform:
       scale(1.1)
-      rotate(calc(3deg * cos(3.14 + var(--gamepad-row-nindex) * 3.14)))
+      rotate(calc(3deg * cos(pi + var(--gamepad-row-nindex) * 3.14)))
       translateY(-10%)
     ;
-    box-shadow: 0 0 2vw var(--color);
+    box-shadow: 0 0 4vw var(--color);
   }
 }
 

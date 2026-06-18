@@ -12,9 +12,14 @@
   }
 }
 
-
-@mixin debug ($debug: '') {
-  @at-root main[data-debug*='#{$debug}'] & {
-    @content;
+@mixin debug ($debug: '', $root: null) {
+  @if $root {
+    @at-root #{$root}:has(main[data-debug*='#{$debug}']) {
+      @content;
+    }
+  } @else {
+    @at-root main[data-debug*='#{$debug}'] & {
+      @content;
+    }
   }
 }

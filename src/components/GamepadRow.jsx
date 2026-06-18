@@ -18,7 +18,12 @@ $ROWS.subscribe((rows = []) => { $INDEX.value = clamp($INDEX.value, 0, rows.leng
 
 export default class Row extends Component {
   static props = {
-    initial: Props.enum('start', 'proportional', 'end')
+    initial: Props.enum(
+      'start',
+      'proportional',
+      'end',
+      'none'
+    )
   }
 
   $index = $(0)
@@ -89,7 +94,7 @@ export default class Row extends Component {
     if (!this.$hasFocus.value) return
 
     this.$index.value = this.props.loop
-      ? (this.$index.value + this.selectable.length - 1) % this.selectable.length
+      ? (Math.max(0, this.$index.value) + this.selectable.length - 1) % this.selectable.length
       : Math.max(0, this.$index.value - 1)
   }
 
@@ -106,6 +111,9 @@ export default class Row extends Component {
 
     // Update index based on opt props.initial
     switch (this.props.initial) {
+      case 'none':
+        this.$index.value = -1
+        break
       case 'start':
         this.$index.value = 0
         break

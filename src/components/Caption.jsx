@@ -23,8 +23,6 @@ export default class Caption extends Component {
       ) ?? []
     )
 
-    $($tokens, tokens => tokens.length + 1).subscribe(this.log)
-
     return (
       <section
         class='caption'
