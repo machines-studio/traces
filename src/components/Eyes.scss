@@ -12,4 +12,20 @@
   // Position from center
   margin-top: calc(var(--eyes-height) * -0.5);
   margin-left: calc(var(--eyes-width) * -0.5);
+
+  &__pupil {
+    @include easing(transform, var(--easing), var(--easing-ease-accelerate));
+
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: translateX(0);
+
+    &.is-left {
+      transform: translateX(-30px);
+    }
+
+    &.is-right {
+      transform: translateX(30px);
+    }
+  }
 }
