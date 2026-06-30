@@ -51,16 +51,16 @@ Quick reference for the public API of the `Eyes` component (props + CSS variable
 ```jsx
 <Eyes
   mirror={boolean | $signal}
-  positionX={number | $signal}
-  positionY={number | $signal}
+  lookAt={Element | $signal}
 />
 ```
 
 | Prop | Type | Values | Default | Effect |
 |---|---|---|---|---|
 | `mirror` | `boolean` or signal | `true` / `false` | `false` | When active, the second (right) eye's gaze is horizontally mirrored relative to the first (left) eye. Never enabled automatically: the caller is responsible for triggering it (e.g. during a specific screen animation sequence). |
-| `positionX` | `number` or signal | `-1` (far left) to `1` (far right) | `null` (disabled) | Drives the pupils' horizontal position continuously/progressively. If `null`/not provided, the default behaviour takes over (gamepad left/right + automatic idle loop, binary -1/0/1 movement). Useful to make the gaze follow a selection among N elements: `positionX = index / (length - 1) * 2 - 1`. Compatible with `mirror` (the right pupil receives `-positionX`). |
-| `positionY` | `number` or signal | `-1` (up) to `1` (down) | `null` (no offset) | Drives the pupils' vertical position. No automatic logic attached (no gamepad/idle equivalent for Y) — entirely driven by the caller. |
+| `lookAt` | DOM `Element` or signal | A DOM element, or `null`/`undefined` | `null` (disabled) | `Eyes` computes the gaze direction towards this element itself (center-to-center delta with `Eyes`, recomputed on `resize`). If `null`/not provided, the default behaviour takes over (gamepad left/right + automatic idle loop). Compatible with `mirror`. The caller only ever hands over an element, never raw coordinates — `Eyes` fully owns the position math internally. |
+
+`positionX`/`positionY` are no longer public props — they're purely internal now, derived from `lookAt`.
 
 ### CSS variables (`Eyes.scss`, in `:root`)
 
@@ -69,10 +69,33 @@ Quick reference for the public API of the `Eyes` component (props + CSS variable
 | `--eyes-width` | `18vw` | Width of one eye. Height (`--eyes-height`) and spacing (`--eyes-gap`) are derived/should be adjusted accordingly if needed. |
 | `--eyes-height` | `calc(var(--eyes-width) * 0.5)` | Height of one eye, derived from the width. |
 | `--eyes-gap` | `2vw` | Horizontal spacing between the two eyes. |
-| `--eyes-pupil-range-x` | `30px` | Max horizontal travel of the pupil (reached when `positionX`/`--position-x` is `-1` or `1`). |
-| `--eyes-pupil-range-y` | `12px` | Max vertical travel of the pupil (reached when `positionY`/`--position-y` is `-1` or `1`). |
+| `--eyes-pupil-range-x` | `30px` | Max horizontal travel of the pupil (reached when `--position-x` is `-1` or `1`). |
+| `--eyes-pupil-range-y` | `15px` | Max vertical travel of the pupil. Asymmetrical range: `--position-y` goes from `-1` (up) to `3` (down) — the pupil's resting position in the SVG sits near the top of the eye, so it needs more downward travel to visually reach the bottom. |
 
 These variables are global (`:root`) — overridable from any other SCSS file in the project without touching `Eyes.scss`.
+
+### Wiring `lookAt` with `GamepadRow`
+
+`GamepadRow` exposes a `$selection` signal (currently selected DOM element, or `null`), updated automatically on every focus/index change. Pattern used in `QuestionScreen.jsx`:
+
+```jsx
+$artworksSelection = $(null)
+
+template () {
+  return (
+    <>
+      <Eyes lookAt={this.$artworksSelection} />
+      <GamepadRow ref={this.ref('artworksRow')}>...</GamepadRow>
+    </>
+  )
+}
+
+afterMount () {
+  this.watch(this.refs.artworksRow.$selection, selection => {
+    this.$artworksSelection.value = selection
+  }, { immediate: true })
+}
+```
 
 ### Blinking
 
@@ -90,7 +113,8 @@ Fully automatic, internal behaviour, with no exposed prop or signal — both eye
 
 ### Usage notes
 
-- None of the newer props (`mirror`, `positionX`, `positionY`) are wired up automatically on an existing screen (`QuestionScreen.jsx`, `IntroductionScreen.jsx`) — they were tested ad hoc and then removed to stay within the `Eyes.jsx`/`Eyes.scss` scope. It's up to the project owner to wire them up where relevant.
+- `mirror` isn't wired up automatically on any existing screen — it's up to the project owner to trigger it where relevant.
+- `lookAt` is wired up on `QuestionScreen.jsx` (follows `GamepadRow`'s selection) — see "Wiring `lookAt`" above.
 - With no props at all, `<Eyes />` keeps 100% of its original behaviour (gamepad + idle loop, binary left/center/right gaze) plus the automatic blinking, which has no prop to disable it.
 
 ## Credits

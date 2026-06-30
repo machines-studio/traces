@@ -3,7 +3,7 @@
   --eyes-height: calc(var(--eyes-width) * 0.5);
   --eyes-gap: 2.5vw;
   --eyes-pupil-range-x: 30px;
-  --eyes-pupil-range-y: 15px;
+  --eyes-pupil-range-y: 30px;
 }
 
 .eyes {
@@ -41,7 +41,7 @@
     @include easing(transform, var(--easing), var(--easing-ease-accelerate));
 
     --position-x: 0; // -1 (left) to 1 (right)
-    --position-y: 3; // -1 (up) to 3 (down)
+    --position-y: 0; // -1 (up) to 1 (down)
 
     transform-box: fill-box;
     transform-origin: center;

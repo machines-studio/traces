@@ -11,21 +11,22 @@ const BLINK_DURATION_CLOSE = 90
 const BLINK_INTERVAL_MIN = 1000
 const BLINK_INTERVAL_MAX = 6000
 
+const clamp = (value, min, max) => Math.min(Math.max(value, min), max)
+
 export default class Eyes extends Component {
   static props = {
     mirror: [Props.boolean, Props.Signal],
-    // -1 (left) to 1 (right), or null/undefined to keep the default
+    // Element to look at, or null/undefined to keep the default
     // gamepad/idle-driven behaviour
-    positionX: [Props.number, Props.Signal],
-    // -1 (up) to 1 (down), or null/undefined for no vertical offset
-    positionY: [Props.number, Props.Signal]
+    lookAt: [Props.object, Props.Signal]
   }
 
   $direction = $(0) // -1 left, 0 center, 1 right
   $blink = $(false)
   $mirror = $(this.props.mirror ?? false) // driven externally by the caller
-  $positionX = $(this.props.positionX ?? null) // driven externally by the caller
-  $positionY = $(this.props.positionY ?? null) // driven externally by the caller
+  $lookAt = $(this.props.lookAt ?? null) // driven externally by the caller
+  $positionX = $(null) // derived from $lookAt
+  $positionY = $(null) // derived from $lookAt
 
   #eye (id) {
     return (
@@ -80,11 +81,13 @@ export default class Eyes extends Component {
 
   afterMount () {
     this.watch(this.$direction, this.#updatePupil, { immediate: true })
-    this.watch(this.$positionX, this.#updatePupil, { immediate: true })
-    this.watch(this.$positionY, this.#updatePupilY, { immediate: true })
+    this.watch(this.$positionX, this.#updatePupil)
+    this.watch(this.$positionY, this.#updatePupilY)
     this.watch(this.$mirror, this.#updatePupil)
+    this.watch(this.$lookAt, this.#updateLookAt, { immediate: true })
     Gamepad.on('left', this.#handleGamepadLeft)
     Gamepad.on('right', this.#handleGamepadRight)
+    window.addEventListener('resize', this.#updateLookAt)
     this.#resetIdleTimer()
     this.#resetBlinkTimer()
   }
@@ -92,6 +95,7 @@ export default class Eyes extends Component {
   beforeDestroy () {
     Gamepad.off('left', this.#handleGamepadLeft)
     Gamepad.off('right', this.#handleGamepadRight)
+    window.removeEventListener('resize', this.#updateLookAt)
     clearTimeout(this.idleTimer)
     clearTimeout(this.idleLoopTimer)
     clearTimeout(this.blinkTimer)
@@ -160,6 +164,39 @@ export default class Eyes extends Component {
     this.$blink.value = true
     setTimeout(() => { this.$blink.value = false }, BLINK_DURATION_CLOSE)
     this.#resetBlinkTimer()
+  }
+
+  #updateLookAt = () => {
+    const target = this.$lookAt.value
+
+    if (!target) {
+      this.$positionX.value = null
+      this.$positionY.value = null
+      return
+    }
+
+    const eyesRect = this.base.getBoundingClientRect()
+    const targetRect = target.getBoundingClientRect()
+
+    const eyesCenterX = eyesRect.left + eyesRect.width / 2
+    const eyesCenterY = eyesRect.top + eyesRect.height / 2
+    const targetCenterX = targetRect.left + targetRect.width / 2
+    const targetCenterY = targetRect.top + targetRect.height / 2
+
+    const deltaX = targetCenterX - eyesCenterX
+    const deltaY = targetCenterY - eyesCenterY
+
+    // Normalize against the available space on the side the target is on,
+    // so the eyes only reach their extreme positions at the actual screen
+    // edges, regardless of where Eyes sits on screen.
+    const rangeX = deltaX < 0 ? eyesCenterX : window.innerWidth - eyesCenterX
+    const rangeY = deltaY < 0 ? eyesCenterY : window.innerHeight - eyesCenterY
+
+    // --position-y's resting range isn't symmetrical (-1 up to 3 down): the
+    // pupil's neutral SVG position sits near the top of the eye, so it needs
+    // a wider downward range to visually reach the bottom of the eye.
+    this.$positionX.value = clamp(rangeX ? deltaX / rangeX : 0, -1, 1)
+    this.$positionY.value = clamp(rangeY ? deltaY / rangeY : 0, -1, 1) * (deltaY < 0 ? 1 : 3)
   }
 
   #updatePupilY = () => {

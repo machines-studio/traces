@@ -1,6 +1,7 @@
 import './QuestionScreen.scss'
 
 import { Component, Props } from '@tooooools/ui'
+import { $ } from '@tooooools/ui/state'
 
 import i18n from '/data/i18n'
 import Artwork from '/components/Artwork'
@@ -15,12 +16,15 @@ export default class QuestionScreen extends Component {
     screen: Props.required(Props.Signal)
   }
 
+  $artworksSelection = $(null)
+
   template () {
     return (
       <section class='question-screen screen'>
-        <Eyes />
+        <Eyes lookAt={this.$artworksSelection} />
 
         <GamepadRow
+          ref={this.ref('artworksRow')}
           loop
           initial='none'
           class='artworks'
@@ -37,5 +41,11 @@ export default class QuestionScreen extends Component {
         />
       </section>
     )
+  }
+
+  afterMount () {
+    this.watch(this.refs.artworksRow.$selection, selection => {
+      this.$artworksSelection.value = selection
+    }, { immediate: true })
   }
 }
