@@ -9,7 +9,8 @@ export default class ArtworkScreen extends Component {
   static props = {
     artwork: Props.required(Props.Signal),
     language: Props.required(Props.Signal),
-    screen: Props.required(Props.Signal)
+    screen: Props.required(Props.Signal),
+    question: Props.required(Props.Signal)
   }
 
   template ({ artwork }) {

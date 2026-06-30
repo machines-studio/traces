@@ -1,7 +1,7 @@
 import './QuestionScreen.scss'
 
 import { Component, Props } from '@tooooools/ui'
-import { $ } from '@tooooools/ui/state'
+import { $, slot } from '@tooooools/ui/state'
 
 import i18n from '/data/i18n'
 import Artwork from '/components/Artwork'
@@ -13,23 +13,14 @@ import widont from '/utils/string-widont'
 export default class QuestionScreen extends Component {
   static props = {
     language: Props.required(Props.Signal),
-    screen: Props.required(Props.Signal)
-  }
-
-  $artworksSelection = $(null)
-
-  template () {
-    return (
-      <section class='question-screen screen'>
-        <Eyes lookAt={this.$artworksSelection} />
-
-        <GamepadRow
-          ref={this.ref('artworksRow')}
     screen: Props.required(Props.Signal),
     artwork: Props.required(Props.Signal),
+    question: Props.required(Props.Signal)
   }
 
-  template () {
+  $selection = slot(null)
+
+  template ({ question, language }) {
     // TODO dynamic
     const mockArtworks = [
       { vector: 'type', tags: ['color', 'picture', 'weird'] },
@@ -40,12 +31,13 @@ export default class QuestionScreen extends Component {
 
     return (
       <section class='question-screen screen'>
-        <Eyes />
+        <Eyes lookAt={this.$selection} />
 
         <GamepadRow
           loop
           initial='none'
           class='artworks'
+          ref={this.ref('artworksRow')}
         >
           {mockArtworks.map(artwork => (
             <Artwork
@@ -57,7 +49,7 @@ export default class QuestionScreen extends Component {
         </GamepadRow>
 
         <Caption
-          text={widont('What is the first memory that comes to mind when you think about your childhood?')}
+          text={$(question, ([question, language]) => widont(question?.[language.code]))}
           hint={i18n('question.hint')}
         />
       </section>
@@ -65,8 +57,12 @@ export default class QuestionScreen extends Component {
   }
 
   afterMount () {
-    this.watch(this.refs.artworksRow.$selection, selection => {
-      this.$artworksSelection.value = selection
-    }, { immediate: true })
+    this.$selection.fill(this.refs.artworksRow.$selection)
+  }
+
+  #handleArtwork = artwork => async e => {
+    // WIP
+    this.props.artwork.value = artwork
+    this.props.screen.value = 'artwork'
   }
 }

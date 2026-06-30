@@ -3,7 +3,7 @@
 
   .eyes {
     position: fixed;
-    top: 50%;
+    top: calc(50% - var(--eyes-height));
     left: 50%;
   }
 }

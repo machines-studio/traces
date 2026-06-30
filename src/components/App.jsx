@@ -23,6 +23,8 @@ const SCREENS = {
 export default class App extends Component {
   $screen = $(new URLSearchParams(window.location.search).get('screen') ?? 'home')
   $language = persist('app.language')
+
+  $question = import.meta.env.DEV ? persist('app.question') : $(undefined)
   $artwork = import.meta.env.DEV ? persist('app.artwork') : $(undefined)
 
   template () {
@@ -87,7 +89,8 @@ export default class App extends Component {
         ref: this.ref('screen'),
         screen: this.$screen,
         language: this.$language,
-        artwork: this.$artwork,
+        question: this.$question,
+        artwork: this.$artwork
       }),
       this.base
     )
