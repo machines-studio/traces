@@ -12,7 +12,8 @@ import widont from '/utils/string-widont'
 export default class QuestionScreen extends Component {
   static props = {
     language: Props.required(Props.Signal),
-    screen: Props.required(Props.Signal)
+    screen: Props.required(Props.Signal),
+    artwork: Props.required(Props.Signal),
   }
 
   template () {
@@ -37,6 +38,7 @@ export default class QuestionScreen extends Component {
             <Artwork
               vector={artwork.vector}
               tags={artwork.tags}
+              event-click={this.#handleArtwork(artwork)}
             />
           ))}
         </GamepadRow>
@@ -47,5 +49,11 @@ export default class QuestionScreen extends Component {
         />
       </section>
     )
+  }
+
+  #handleArtwork = artwork => async e => {
+    this.log('foo')
+    this.props.artwork.value = artwork
+    this.props.screen.value = 'artwork'
   }
 }

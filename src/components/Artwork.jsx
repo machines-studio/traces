@@ -1,16 +1,11 @@
 import './Artwork.scss'
 import { Component, Props } from '@tooooools/ui'
 
-// Assign a color to each vector
-const COLORS = {
-  type: 'green',
-  emotion: 'red',
-  date: 'yellow',
-  description: 'blue'
-}
+import { COLORS } from '/app.config'
 
 export default class Artwork extends Component {
   static props = {
+    'event-click': Props.required(Props.function),
     tags: Props.array,
     vector: Props.enum('type', 'emotion', 'date', 'description')
   }
@@ -19,8 +14,8 @@ export default class Artwork extends Component {
     return (
       <section
         class='artwork'
-        event-click={this.#handleClick}
-        data-color={COLORS[vector]}
+        event-click={this.props['event-click']}
+        data-color={COLORS.vectors[vector]}
       >
         <div class='artwork__wrapper'>
           <img src='/images/bb.png' />
@@ -40,9 +35,5 @@ export default class Artwork extends Component {
         </div>
       </section>
     )
-  }
-
-  #handleClick = e => {
-    this.log('click')
   }
 }

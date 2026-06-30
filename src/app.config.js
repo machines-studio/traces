@@ -13,7 +13,15 @@ export const COLORS = {
   green: '#00B944',
   blue: '#007FFF',
   red: '#FF4F00',
-  pink: '#FF83FE'
+  pink: '#FF83FE',
+
+  // Assign a color to each vector
+  vectors: {
+    type: 'green',
+    emotion: 'red',
+    date: 'yellow',
+    description: 'blue'
+  }
 }
 
 export const GAMEPAD = {
