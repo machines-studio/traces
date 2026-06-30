@@ -25,14 +25,35 @@ export default class QuestionScreen extends Component {
 
         <GamepadRow
           ref={this.ref('artworksRow')}
+    screen: Props.required(Props.Signal),
+    artwork: Props.required(Props.Signal),
+  }
+
+  template () {
+    // TODO dynamic
+    const mockArtworks = [
+      { vector: 'type', tags: ['color', 'picture', 'weird'] },
+      { vector: 'emotion', tags: ['color', 'picture', 'weird'] },
+      { vector: 'date', tags: ['color', 'picture', 'weird'] },
+      { vector: 'description', tags: ['color', 'picture', 'weird'] },
+    ]
+
+    return (
+      <section class='question-screen screen'>
+        <Eyes />
+
+        <GamepadRow
           loop
           initial='none'
           class='artworks'
         >
-          <Artwork />
-          <Artwork />
-          <Artwork />
-          <Artwork />
+          {mockArtworks.map(artwork => (
+            <Artwork
+              vector={artwork.vector}
+              tags={artwork.tags}
+              event-click={this.#handleArtwork(artwork)}
+            />
+          ))}
         </GamepadRow>
 
         <Caption

@@ -30,6 +30,10 @@
 
       position: absolute;
       transform: translate(var(--x), var(--y));
+
+      &.is-selected {
+        z-index: 1;
+      }
     }
   }
 }

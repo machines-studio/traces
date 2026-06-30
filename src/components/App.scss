@@ -22,8 +22,16 @@
       transform: translateX(-50%) translateY(-70%) scale(10);
     }
 
-    @include app.screen('question') {
+    @include app.screens(
+      'question',
+      'artwork'
+    ) {
       display: none;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
     }
   }
 
@@ -64,7 +72,8 @@
 
       @include app.screens(
         'introduction',
-        'question'
+        'question',
+        'artwork'
       ) {
         @include easing((transform, opacity), var(--easing-slow), var(--easing-ease-accelerate));
         opacity: 1;

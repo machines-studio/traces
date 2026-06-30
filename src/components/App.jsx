@@ -6,6 +6,7 @@ import { $, persist } from '@tooooools/ui/state'
 
 import { COLORS, DEBUG } from '/app.config'
 import SVGHeadline from '/headline.svg?raw'
+import ArtworkScreen from '/screens/ArtworkScreen'
 import HomeScreen from '/screens/HomeScreen'
 import IntroductionScreen from '/screens/IntroductionScreen'
 import QuestionScreen from '/screens/QuestionScreen'
@@ -13,6 +14,7 @@ import QuestionScreen from '/screens/QuestionScreen'
 // TODO goto home when more than X seconds without interaction (prompt?)
 
 const SCREENS = {
+  artwork: ArtworkScreen,
   home: HomeScreen,
   introduction: IntroductionScreen,
   question: QuestionScreen
@@ -20,7 +22,8 @@ const SCREENS = {
 
 export default class App extends Component {
   $screen = $(new URLSearchParams(window.location.search).get('screen') ?? 'home')
-  $language = persist(undefined, 'app.language')
+  $language = persist('app.language')
+  $artwork = import.meta.env.DEV ? persist('app.artwork') : $(undefined)
 
   template () {
     return (
@@ -83,7 +86,8 @@ export default class App extends Component {
       h(SCREENS[screen], {
         ref: this.ref('screen'),
         screen: this.$screen,
-        language: this.$language
+        language: this.$language,
+        artwork: this.$artwork,
       }),
       this.base
     )
