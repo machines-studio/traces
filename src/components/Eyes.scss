@@ -18,6 +18,10 @@
   &__eye {
     width: var(--eyes-width);
     height: var(--eyes-height);
+
+    svg {
+      overflow: visible;
+    }
   }
 
   &__lid {

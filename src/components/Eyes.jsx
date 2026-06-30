@@ -31,6 +31,18 @@ export default class Eyes extends Component {
   #eye (id) {
     return (
       <svg viewBox='0 0 170 83' fill='none' xmlns='http://www.w3.org/2000/svg'>
+        <defs>
+          <filter id={`glow_${id}`} x='-100%' y='-100%' width='300%' height='300%'>
+            <feFlood flood-color='#FFF' flood-opacity='0.8' result='glow-color' />
+            <feComposite in='glow-color' in2='SourceAlpha' operator='in' result='glow-shape' />
+            <feGaussianBlur in='glow-shape' stdDeviation='30' result='glow-blur' />
+            <feMerge>
+              <feMergeNode in='glow-blur' />
+              <feMergeNode in='SourceGraphic' />
+            </feMerge>
+          </filter>
+        </defs>
+
         <mask
           id={`mask0_${id}`} style='mask-type:alpha' maskUnits='userSpaceOnUse' x='1' y='0
         ' width='168' height='83'
@@ -43,23 +55,25 @@ export default class Eyes extends Component {
           />
         </mask>
 
-        <g mask={`url(#mask0_${id})`}>
-          <mask id={`mask1_${id}`} style='mask-type:alpha' maskUnits='userSpaceOnUse' x='0' y='0' width='171' height='120'>
-            <path d='M170.342 59.6197C170.342 92.5468 132.21 119.239 85.171 119.239C38.1324 119.239 0 92.5468 0 59.6197C0 26.6927 38.1324 0 85.171 0C132.21 0 170.342 26.6927 170.342 59.6197Z' fill='white' />
-          </mask>
+        <g filter={`url(#glow_${id})`}>
+          <g mask={`url(#mask0_${id})`}>
+            <mask id={`mask1_${id}`} style='mask-type:alpha' maskUnits='userSpaceOnUse' x='0' y='0' width='171' height='120'>
+              <path d='M170.342 59.6197C170.342 92.5468 132.21 119.239 85.171 119.239C38.1324 119.239 0 92.5468 0 59.6197C0 26.6927 38.1324 0 85.171 0C132.21 0 170.342 26.6927 170.342 59.6197Z' fill='white' />
+            </mask>
 
-          <g class='eyes__blanc' mask={`url(#mask1_${id})`}>
-            <path d='M170.341 41.5C170.341 64.4198 132.208 83 85.1698 83C38.1311 83 -0.00125948 64.4198 -0.00125948 41.5C-0.00125948 18.5802 38.1311 0 85.1698 0C132.208 0 170.341 18.5802 170.341 41.5Z' fill='#FFF' />
+            <g class='eyes__blanc' mask={`url(#mask1_${id})`}>
+              <path d='M170.341 41.5C170.341 64.4198 132.208 83 85.1698 83C38.1311 83 -0.00125948 64.4198 -0.00125948 41.5C-0.00125948 18.5802 38.1311 0 85.1698 0C132.208 0 170.341 18.5802 170.341 41.5Z' fill='#FFF' />
+            </g>
+
+            <circle
+              ref={this.ref(`pupil-${id}`)}
+              class='eyes__pupil'
+              cx='85.171'
+              cy='24.0916'
+              r='22.91'
+              fill='black'
+            />
           </g>
-
-          <circle
-            ref={this.ref(`pupil-${id}`)}
-            class='eyes__pupil'
-            cx='85.171'
-            cy='24.0916'
-            r='22.91'
-            fill='black'
-          />
         </g>
       </svg>
     )
