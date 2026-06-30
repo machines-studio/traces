@@ -1,6 +1,11 @@
 .introduction-screen {
   @include animations.use(animations.$fade-in);
 
+  .caption {
+    position: fixed;
+    inset: auto 0 0;
+  }
+
   .eyes {
     position: fixed;
     top: calc(50% - var(--eyes-height));

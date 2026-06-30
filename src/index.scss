@@ -8,15 +8,25 @@
 
   // SEE /app.config.js for --color-<NAME>
   --color-gray: #d9d9d9;
-  --color-text: white;
-  --color-background: black;
+  --color-white: white;
+  --color-black: black;
+
+  --color-text: var(--color-white);
+  --color-background: var(--color-black);
+
+  // Cosmetics
+
+  --border-radius: var(--space-gutter);
+  --border-radius-large: calc(var(--border-radius) + var(--space-0));
+  --box-shadow: 0 0 4vw;
+  --box-shadow-none: 0 0 0;
 
   // Spacing
 
-  --space-0: 1vw;
-  --space-1: 2vw;
-  --space-2: 4vw;
-  --space-3: 6vw;
+  --space-0: 0.5vw;
+  --space-1: 1vw;
+  --space-2: 2vw;
+  --space-3: 4vw;
   --space-gutter: var(--space-1);
 
   // Animations
@@ -34,7 +44,7 @@
   --body-font-size: 3vw;
 
   --ui-font-family: var(--body-font-family);
-  --ui-font-weight: 600;
+  --ui-font-weight: 500;
   --ui-font-size: 1.2vw;
   --ui-height: auto;
   --ui-line-height: 1.1;
@@ -61,14 +71,14 @@
 
   --color: var(--color-gray);
   --ui-color-text: black;
-  --ui-padding-container: 0.5em 0.5em;
+  --ui-padding-container: 0.4em 0.5em;
   --ui-color-accent: var(--color);
   --ui-color-accent-contrast: var(--ui-color-text);
   --ui-color-background: var(--color);
-  --ui-border-radius: 4px;
+  --ui-border-radius: var(--border-radius);
 
   outline-offset: 0;
-  box-shadow: 0 0 0 var(--color);
+  box-shadow: var(--box-shadow-none) var(--color);
 
   &:hover,
   &.is-selected {
@@ -81,7 +91,7 @@
       rotate(calc(3deg * cos(pi + var(--gamepad-row-nindex) * pi)))
       translateY(-10%)
     ;
-    box-shadow: 0 0 4vw var(--color);
+    box-shadow: var(--box-shadow) var(--color);
   }
 }
 

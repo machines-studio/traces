@@ -3,7 +3,7 @@ import './QuestionScreen.scss'
 import { Component, Props } from '@tooooools/ui'
 import { $, slot } from '@tooooools/ui/state'
 
-import i18n from '/data/i18n'
+import I18N from '/data/I18N'
 import Artwork from '/components/Artwork'
 import Caption from '/components/Caption'
 import Eyes from '/components/Eyes'
@@ -20,13 +20,21 @@ export default class QuestionScreen extends Component {
 
   $selection = slot(null)
 
+  beforeRender () {
+    // WIP[back]
+    this.props.question.value = {
+      fr: 'Quel est le premier souvenir qui vous vient à l’esprit lorsque vous pensez à votre enfance?',
+      en: 'What is the first memory that comes to mind when you think about your childhood?'
+    }
+  }
+
   template ({ question, language }) {
-    // TODO dynamic
+    // WIP[back]
     const mockArtworks = [
-      { vector: 'type', tags: ['color', 'picture', 'weird'] },
-      { vector: 'emotion', tags: ['color', 'picture', 'weird'] },
-      { vector: 'date', tags: ['color', 'picture', 'weird'] },
-      { vector: 'description', tags: ['color', 'picture', 'weird'] },
+      { vector: 'type', tags: ['color', 'picture', 'weird'], },
+      { vector: 'emotion', tags: ['color', 'picture', 'weird'], },
+      { vector: 'date', tags: ['color', 'picture', 'weird'], },
+      { vector: 'description', tags: ['color', 'picture', 'weird'], },
     ]
 
     return (
@@ -49,8 +57,9 @@ export default class QuestionScreen extends Component {
         </GamepadRow>
 
         <Caption
-          text={$(question, ([question, language]) => widont(question?.[language.code]))}
-          hint={i18n('question.hint')}
+          position='bottom'
+          text={$(question, question => widont(I18N.translate(question)))}
+          hint={I18N('question.hint')}
         />
       </section>
     )
@@ -61,7 +70,6 @@ export default class QuestionScreen extends Component {
   }
 
   #handleArtwork = artwork => async e => {
-    // WIP
     this.props.artwork.value = artwork
     this.props.screen.value = 'artwork'
   }

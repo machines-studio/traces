@@ -4,11 +4,12 @@ import { Component, Props } from '@tooooools/ui'
 import { Button } from '@tooooools/ui/components'
 import { $, not } from '@tooooools/ui/state'
 
-import i18n from '/data/i18n'
+import I18N from '/data/I18N'
 import Caption from '/components/Caption'
 import Eyes from '/components/Eyes'
 import GamepadRow from '/components/GamepadRow'
 import Gamepad from '/controllers/Gamepad'
+import widont from '/utils/string-widont'
 
 export default class IntroductionScreen extends Component {
   static props = {
@@ -26,8 +27,9 @@ export default class IntroductionScreen extends Component {
         <Eyes />
 
         <Caption
-          text={$(this.$step, step => i18n(`introduction.${step}`, null))}
-          hint={$(this.$step, step => i18n(`introduction.${step}.hint`, null))}
+          position='bottom'
+          text={$(this.$step, step => widont(I18N(`introduction.${step}`, null)))}
+          hint={$(this.$step, step => widont(I18N(`introduction.${step}.hint`, null)))}
           ref={this.ref('caption')}
         />
       </section>
@@ -56,13 +58,13 @@ export default class IntroductionScreen extends Component {
     this.$step.value++
 
     // Go to next screen when no more text to show
-    if (i18n(`introduction.${this.$step.value}`, false)) return
+    if (I18N(`introduction.${this.$step.value}`, false)) return
     this.props.screen.value = 'question'
   }
 
   #handleStep = step => {
-    const $prev = $(this.$step, step => i18n(`introduction.${step}.prev`, null))
-    const $next = $(this.$step, step => i18n(`introduction.${step}.next`, null))
+    const $prev = $(this.$step, step => I18N(`introduction.${step}.prev`, null))
+    const $next = $(this.$step, step => I18N(`introduction.${step}.next`, null))
 
     this.refs.buttons?.destroy()
     this.refs.caption.render((

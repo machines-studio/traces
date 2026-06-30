@@ -1,4 +1,5 @@
 :root {
+  --caption-background-direction: to top;
   --caption-word-duration: 900ms;
   --caption-word-delay: 100ms;
   --caption-hint-delay: 600ms;
@@ -29,23 +30,30 @@
 .caption {
   --tokens-length: 1;
 
-  position: fixed;
-  inset: auto 0 0;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: var(--space-gutter);
+  gap: var(--space-2);
   padding: var(--space-2);
-  padding-top: var(--space-3);
 
   text-align: center;
 
-  background: linear-gradient(to top, rgba(0 0 0 / 90%) 75%, transparent);
+  background: smooth-gradient(var(--caption-background-direction), 0 0 0, transparent);
+
+  &[data-position='top'] {
+    --caption-background-direction: to bottom;
+    padding-block: var(--space-2);
+  }
+
+  &[data-position='bottom'] {
+    --caption-background-direction: to top;
+    padding-top: var(--space-3);
+  }
 
   &__text {
     @include font('caption');
+    text-wrap: balance;
   }
 
   &__text > * {

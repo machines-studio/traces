@@ -1,5 +1,7 @@
 // TODO[build] test for translations keys equality
 
+import { LANGUAGES } from '/app.config'
+
 export const translations = {
   en: {
     'introduction.0': 'Hello stranger, welcome to TRACES.\nI’ll be your companion memory',
@@ -19,10 +21,17 @@ export const translations = {
   },
 
   nl: {
-    // TODO[i18n]
+    // TODO[I18N]
   }
 }
 
-export default function (key, fallback = key, lang = document.documentElement.lang) {
-  return translations[lang]?.[key] ?? fallback
-}
+const I18N = (key, fallback = key, lang = document.documentElement.lang) => translations[lang]?.[key] ?? fallback
+I18N.translate = (translations, lang = document.documentElement.lang) =>
+  typeof translations === 'object'
+    ? translations[lang]
+    : translations
+
+I18N.date = (timestamp, lang = document.documentElement.lang) =>
+  new Intl.DateTimeFormat(lang, LANGUAGES.find(({ code }) => code === lang)?.date).format(new Date(timestamp))
+
+export default I18N

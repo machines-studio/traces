@@ -5,25 +5,22 @@ import { $ } from '@tooooools/ui/state'
 import { clamp } from 'missing-math'
 
 import Gamepad from '/controllers/Gamepad'
+import scrollIntoViewNearest from '/utils/scroll-into-view-nearest'
 
 const $ROWS = $()
 const $INDEX = $(0)
-
-window.$ROWS = $ROWS
-window.$INDEX = $INDEX
 
 Gamepad.on('up', () => { $INDEX.value = Math.max(0, $INDEX.value - 1) })
 Gamepad.on('down', () => { $INDEX.value = Math.min($INDEX.value + 1, $ROWS.value.length - 1) })
 $ROWS.subscribe((rows = []) => { $INDEX.value = clamp($INDEX.value, 0, rows.length - 1) })
 
 export default class Row extends Component {
+  static $ROWS = $ROWS
+  static $INDEX = $INDEX
+
   static props = {
-    initial: Props.enum(
-      'start',
-      'proportional',
-      'end',
-      'none'
-    )
+    initial: Props.enum('start', 'proportional', 'end', 'none'),
+    scroll: Props.object
   }
 
   $index = $(0)
@@ -45,7 +42,8 @@ export default class Row extends Component {
   }
 
   get selectable () {
-    return this._collector.components.filter(c => (c.base ?? c).checkVisibility())
+    return Array.from(this.base.querySelectorAll(':scope > *'))
+      .filter(element => element.checkVisibility())
   }
 
   get selection () {
@@ -79,7 +77,7 @@ export default class Row extends Component {
     this.watch(this.$hasFocus, this.#handleFocus, { immediate: true })
     this.watch([this.$hasFocus, this.$index], this.#update, { immediate: true })
 
-    this.base.querySelectorAll(':scope > *').forEach((child, index, children) => {
+    this.selectable.forEach((child, index, children) => {
       child.style.setProperty('--gamepad-row-index', index)
       child.style.setProperty('--gamepad-row-nindex', index / (children.length - 1))
     })
@@ -133,15 +131,19 @@ export default class Row extends Component {
 
   #update = () => {
     // Set selection class and scroll into view
-    const components = this.selectable
+    const elements = this.selectable
     let selectedElement = null
 
-    for (let index = 0; index < components.length; index++) {
-      const element = components[index].base ?? components[index]
+    for (let index = 0; index < elements.length; index++) {
+      const element = elements[index]
 
       if (this.$hasFocus.value && index === this.$index.value) {
         element.classList.add('is-selected')
-        element.scrollIntoView({ block: 'nearest' })
+
+        if (this.props.scroll) {
+          scrollIntoViewNearest(element, this.props.scroll)
+        }
+
         selectedElement = element
       } else element.classList.remove('is-selected')
     }

@@ -10,9 +10,10 @@ export default class Caption extends Component {
     // TODO data-dir
     text: Props.required([Props.string, Props.Signal]),
     hint: [Props.string, Props.Signal],
+    position: Props.required(Props.enum('top', 'bottom'))
   }
 
-  template ({ text, hint }) {
+  template ({ text, hint, position }) {
     const $tokens = $(text, (text = '') => text
       ?.replace(/\n/g, '<br>') // Handle line-breaks
       .split(/(<[^>]+>|\s+)/) // Split by words or tags
@@ -26,6 +27,7 @@ export default class Caption extends Component {
     return (
       <section
         class='caption'
+        data-position={position}
         style={{
           '--tokens-length': $($tokens, tokens => tokens.length + 1)
         }}

@@ -18,7 +18,7 @@ export default class Artwork extends Component {
         data-color={COLORS.vectors[vector]}
       >
         <div class='artwork__wrapper'>
-          <img src='/images/bb.png' />
+          <img src='/images/bb.png' /* WIP[back] */ />
           <ul class='artwork__tags'>
             {
               tags.map(tag => (

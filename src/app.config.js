@@ -3,9 +3,9 @@ export const DEBUG = (
 ).get('debug')
 
 export const LANGUAGES = [
-  { code: 'en', name: 'english', locale: 'en_US' },
-  { code: 'fr', name: 'français', locale: 'fr_FR' },
-  { code: 'nl', name: 'nederlands', locale: 'nl_NL' },
+  { code: 'en', name: 'english', locale: 'en_US', date: { year: 'numeric', month: 'long', day: 'numeric' } },
+  { code: 'fr', name: 'français', locale: 'fr_FR', date: { year: 'numeric', month: 'long', day: 'numeric' } },
+  { code: 'nl', name: 'nederlands', locale: 'nl_NL', date: { year: 'numeric', month: 'long', day: 'numeric' } },
 ]
 
 export const COLORS = {
@@ -22,6 +22,13 @@ export const COLORS = {
     date: 'yellow',
     description: 'blue'
   }
+}
+
+export const TESTIMONY = {
+  scrollDelay: 500, // ms, before marquee starts
+  scrollSpeed: 40, // px/s, marquee
+  manualScrollDuration: 600, // ms, gamepad left/right
+  manualScrollStep: 200 // px per gamepad left/right press
 }
 
 export const GAMEPAD = {
