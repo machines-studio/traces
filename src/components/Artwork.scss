@@ -1,0 +1,137 @@
+@use 'sass:math';
+
+:root {
+  --artwork-size: 16vw;
+  --artwork-selected-scale: 1.6;
+}
+
+.artwork {
+  @include animations.use(
+    (
+      name: artwork-appears,
+      duration: var(--easing),
+      easing: var(--easing-ease-back),
+      fill-mode: backwards
+    ),
+    animations.$float,
+  );
+
+  --animation-float-amount: 2%;
+
+  position: relative;
+  width: var(--artwork-size);
+  height: var(--artwork-size);
+  animation-composition: add;
+
+  &__wrapper {
+    @include easing(transform, var(--easing-fast), var(--easing-ease-back));
+
+    // Sphere shadows
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 60% 60%, transparent 60%, rgba(255 255 255 / 60%) 70%),
+        radial-gradient(circle at 40% 40%, transparent 60%, rgba(0 0 0 / 40%) 70%),
+        radial-gradient(circle at 50% 50%, transparent 50%, rgba(0 0 0 / 20%) 90%),
+      ;
+      border-radius: 100%;
+    }
+  }
+
+  &.is-selected &__wrapper {
+    transform: scale(var(--artwork-selected-scale));
+  }
+
+  img {
+    @include easing((transform, box-shadow));
+    border-radius: 100%;
+    box-shadow: 0 0 2vw var(--color);
+  }
+
+  &.is-selected img {
+    box-shadow: 0 0 10vw var(--color);
+  }
+
+  &__tags {
+    position: absolute;
+    inset: 0;
+  }
+
+  &__tag {
+    @include font('ui');
+    @include animations.use(
+      (
+        name: artwork-tag-orbitates,
+        duration: 10s,
+        easing: ease-in-out,
+        iteration-count: infinite,
+        stagger: (
+          delay: calc(1s - 10s * var(--seed)),
+          length: 10
+        )
+      )
+    );
+
+    --artwork-tag-orbite-angle: calc(90deg + 45deg * var(--seed));
+    --artwork-tag-orbit-radius: calc(var(--artwork-size) / 2);
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    width: min-content;
+    padding: 0.5em;
+
+    color: var(--ui-color-text);
+
+    background: var(--color);
+    border-radius: var(--ui-border-radius);
+    transform: translateX(-50%) translateY(-50%);
+    box-shadow: 0 0 4vw var(--color);
+
+    animation-composition: add, accumulate;
+  }
+}
+
+@keyframes artwork-appears {
+  from { transform: scale(0); }
+  to { transform: none; }
+}
+
+@keyframes artwork-tag-orbitates {
+  0% {
+    z-index: 1;
+    transform:
+      rotate(var(--artwork-tag-orbite-angle))
+      translateX(calc(-1 * var(--artwork-tag-orbit-radius)))
+      translateY(calc(-1 * var(--artwork-tag-orbit-radius)))
+      rotate(calc(-1 * var(--artwork-tag-orbite-angle)))
+    ;
+  }
+
+  50% {
+    z-index: 1;
+    transform:
+      rotate(var(--artwork-tag-orbite-angle))
+      translateX(var(--artwork-tag-orbit-radius))
+      translateY(var(--artwork-tag-orbit-radius))
+      rotate(calc(-1 * var(--artwork-tag-orbite-angle)))
+    ;
+  }
+
+  51% {
+    z-index: -1;
+  }
+
+  100% {
+    z-index: -1;
+    transform:
+      rotate(var(--artwork-tag-orbite-angle))
+      translateX(calc(-1 * var(--artwork-tag-orbit-radius)))
+      translateY(calc(-1 * var(--artwork-tag-orbit-radius)))
+      rotate(calc(-1 * var(--artwork-tag-orbite-angle)))
+    ;
+  }
+}

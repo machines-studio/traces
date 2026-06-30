@@ -1,0 +1,10 @@
+.gamepad-row {
+  display: flex;
+  gap: var(--space-gutter);
+
+  @include app.debug('gamepad') {
+    &.has-focus {
+      @include debug(var(--space-gutter));
+    }
+  }
+}

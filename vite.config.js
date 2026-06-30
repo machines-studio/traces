@@ -1,5 +1,6 @@
-import path from 'path'
 import { defineConfig, loadEnv } from 'vite'
+
+import path from 'path'
 
 // If a backend is needed, see https://vitejs.dev/guide/backend-integration.html
 
@@ -42,7 +43,8 @@ export default defineConfig(({ mode }) => {
         scss: {
           additionalData: `
             @use '/style/_helpers' as *;
-            @use '/style/_devices' as *;
+            @use '/style/_app' as app;
+            @use '/style/_animations' as animations;
             $env: ${mode};
           `
         }

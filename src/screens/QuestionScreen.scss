@@ -1,0 +1,39 @@
+.question-screen {
+  .eyes {
+    position: fixed;
+    top: calc(var(--eyes-height) * 0.5);
+    left: 50vw;
+  }
+
+  .artworks {
+    --ellipse-radius-x: 40vw;
+    --ellipse-radius-y: 40vh;
+    --ellipse-ratio: calc(var(--ellipse-radius-x) / var(--ellipse-radius-y));
+
+    position: fixed;
+    top: 20vh;
+    left: 50vw;
+    justify-content: center;
+
+    .artwork {
+      @include animations.shuffle(artwork-appears, 50ms, 4);
+      @include animations.stagger(animations.$float, 3s, 4);
+
+      // Warp the linear angle so artworks land closer to equal arc-length
+      // spacing on the ellipse: theta = t*pi + k*sin(2*t*pi), with k derived
+      // from the rx/ry ratio (pulls points toward the minor-axis middle)
+      --theta-linear: calc(pi * var(--gamepad-row-nindex));
+      --theta-k: calc(clamp(-0.5, (var(--ellipse-ratio) - 1) / (var(--ellipse-ratio) + 1) * 0.5, 0.5));
+      --theta: calc(var(--theta-linear) + var(--theta-k) * sin(2 * var(--theta-linear)));
+      --x: calc(-1 * cos(var(--theta)) * (var(--ellipse-radius-x) - var(--artwork-size) / 2));
+      --y: calc(sin(var(--theta)) * (var(--ellipse-radius-y) - var(--artwork-size) / 2));
+
+      position: absolute;
+      transform: translate(var(--x), var(--y));
+
+      &.is-selected {
+        z-index: 1;
+      }
+    }
+  }
+}

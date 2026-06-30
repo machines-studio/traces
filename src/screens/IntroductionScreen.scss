@@ -1,0 +1,9 @@
+.introduction-screen {
+  @include animations.use(animations.$fade-in);
+
+  .eyes {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+  }
+}

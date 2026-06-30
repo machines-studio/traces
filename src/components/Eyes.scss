@@ -1,0 +1,15 @@
+:root {
+  --eyes-width: 40vw;
+  --eyes-height: calc(var(--eyes-width) * 0.5);
+}
+
+.eyes {
+  @include debug;
+
+  width: var(--eyes-width);
+  height: var(--eyes-height);
+
+  // Position from center
+  margin-top: calc(var(--eyes-height) * -0.5);
+  margin-left: calc(var(--eyes-width) * -0.5);
+}
