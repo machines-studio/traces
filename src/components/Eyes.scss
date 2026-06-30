@@ -3,7 +3,7 @@
   --eyes-height: calc(var(--eyes-width) * 0.5);
   --eyes-gap: 2.5vw;
   --eyes-pupil-range-x: 30px;
-  --eyes-pupil-range-y: 12px;
+  --eyes-pupil-range-y: 15px;
 }
 
 .eyes {
@@ -22,11 +22,26 @@
     height: var(--eyes-height);
   }
 
+  &__lid {
+    @include easing(transform, 220ms, var(--easing-ease-smooth));
+
+    --blink-y: 0;
+
+    transform-box: fill-box;
+    transform: translateY(var(--blink-y));
+
+    &.is-blinking {
+      @include easing(transform, 90ms, var(--easing-ease-accelerate));
+
+      --blink-y: 83px;
+    }
+  }
+
   &__pupil {
     @include easing(transform, var(--easing), var(--easing-ease-accelerate));
 
     --position-x: 0; // -1 (left) to 1 (right)
-    --position-y: 3; // -1 (up) to 1 (down)
+    --position-y: 3; // -1 (up) to 3 (down)
 
     transform-box: fill-box;
     transform-origin: center;

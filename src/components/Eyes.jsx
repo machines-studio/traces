@@ -7,6 +7,10 @@ import Gamepad from '/controllers/Gamepad'
 const IDLE_TIMEOUT = 2000
 const IDLE_PAUSE = 1000
 
+const BLINK_DURATION_CLOSE = 90
+const BLINK_INTERVAL_MIN = 1000
+const BLINK_INTERVAL_MAX = 6000
+
 export default class Eyes extends Component {
   static props = {
     mirror: [Props.boolean, Props.Signal],
@@ -18,6 +22,7 @@ export default class Eyes extends Component {
   }
 
   $direction = $(0) // -1 left, 0 center, 1 right
+  $blink = $(false)
   $mirror = $(this.props.mirror ?? false) // driven externally by the caller
   $positionX = $(this.props.positionX ?? null) // driven externally by the caller
   $positionY = $(this.props.positionY ?? null) // driven externally by the caller
@@ -25,8 +30,16 @@ export default class Eyes extends Component {
   #eye (id) {
     return (
       <svg viewBox='0 0 170 83' fill='none' xmlns='http://www.w3.org/2000/svg'>
-        <mask id={`mask0_${id}`} style='mask-type:alpha' maskUnits='userSpaceOnUse' x='1' y='0' width='168' height='83'>
-          <path d='M86.4719 0.0078125C127.684 0.465279 161.785 21.4127 168.9 48.9346C161.708 68.3064 126.923 83 85.093 83C43.265 83 8.47973 68.3081 1.28634 48.9375C8.47801 21.1082 43.2641 0.00141551 85.093 0.000976562C85.5535 0.000976562 86.0131 0.00426456 86.4719 0.0078125Z' fill='white' />
+        <mask
+          id={`mask0_${id}`} style='mask-type:alpha' maskUnits='userSpaceOnUse' x='1' y='0
+        ' width='168' height='83'
+        >
+          <path
+            ref={this.ref(`lid-${id}`)}
+            class={['eyes__lid', { 'is-blinking': this.$blink }]}
+            d='M86.4719 0.0078125C127.684 0.465279 161.785 21.4127 168.9 48.9346C161.708 68.3064 126.923 83 85.093 83C43.265 83 8.47973 68.3081 1.28634 48.9375C8.47801 21.1082 43.2641 0.00141551 85.093 0.000976562C85.5535 0.000976562 86.0131 0.00426456 86.4719 0.0078125Z'
+            fill='white'
+          />
         </mask>
 
         <g mask={`url(#mask0_${id})`}>
@@ -73,6 +86,7 @@ export default class Eyes extends Component {
     Gamepad.on('left', this.#handleGamepadLeft)
     Gamepad.on('right', this.#handleGamepadRight)
     this.#resetIdleTimer()
+    this.#resetBlinkTimer()
   }
 
   beforeDestroy () {
@@ -80,6 +94,7 @@ export default class Eyes extends Component {
     Gamepad.off('right', this.#handleGamepadRight)
     clearTimeout(this.idleTimer)
     clearTimeout(this.idleLoopTimer)
+    clearTimeout(this.blinkTimer)
   }
 
   #handleGamepadLeft = () => {
@@ -133,6 +148,18 @@ export default class Eyes extends Component {
     this.refs['pupil-right'].classList.remove('is-left', 'is-right')
     this.refs['pupil-left'].style.setProperty('--position-x', position)
     this.refs['pupil-right'].style.setProperty('--position-x', this.$mirror.value ? -position : position)
+  }
+
+  #resetBlinkTimer = () => {
+    clearTimeout(this.blinkTimer)
+    const delay = BLINK_INTERVAL_MIN + Math.random() * (BLINK_INTERVAL_MAX - BLINK_INTERVAL_MIN)
+    this.blinkTimer = setTimeout(this.#blink, delay)
+  }
+
+  #blink = () => {
+    this.$blink.value = true
+    setTimeout(() => { this.$blink.value = false }, BLINK_DURATION_CLOSE)
+    this.#resetBlinkTimer()
   }
 
   #updatePupilY = () => {
