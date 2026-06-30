@@ -1,6 +1,7 @@
 import './QuestionScreen.scss'
 
 import { Component, Props } from '@tooooools/ui'
+import { $ } from '@tooooools/ui/state'
 
 import i18n from '/data/i18n'
 import Artwork from '/components/Artwork'
@@ -12,6 +13,18 @@ import widont from '/utils/string-widont'
 export default class QuestionScreen extends Component {
   static props = {
     language: Props.required(Props.Signal),
+    screen: Props.required(Props.Signal)
+  }
+
+  $artworksSelection = $(null)
+
+  template () {
+    return (
+      <section class='question-screen screen'>
+        <Eyes lookAt={this.$artworksSelection} />
+
+        <GamepadRow
+          ref={this.ref('artworksRow')}
     screen: Props.required(Props.Signal),
     artwork: Props.required(Props.Signal),
   }
@@ -51,9 +64,9 @@ export default class QuestionScreen extends Component {
     )
   }
 
-  #handleArtwork = artwork => async e => {
-    this.log('foo')
-    this.props.artwork.value = artwork
-    this.props.screen.value = 'artwork'
+  afterMount () {
+    this.watch(this.refs.artworksRow.$selection, selection => {
+      this.$artworksSelection.value = selection
+    }, { immediate: true })
   }
 }

@@ -1,15 +1,73 @@
 :root {
-  --eyes-width: 40vw;
+  --eyes-width: 15vw;
   --eyes-height: calc(var(--eyes-width) * 0.5);
+  --eyes-gap: 2.5vw;
+  --eyes-pupil-range-x: 30px;
+  --eyes-pupil-range-y: 30px;
 }
 
 .eyes {
   @include debug;
 
-  width: var(--eyes-width);
-  height: var(--eyes-height);
+  display: flex;
+  align-items: center;
+  gap: var(--eyes-gap);
 
   // Position from center
   margin-top: calc(var(--eyes-height) * -0.5);
-  margin-left: calc(var(--eyes-width) * -0.5);
+  margin-left: calc((var(--eyes-width) * 2 + var(--eyes-gap)) * -0.5);
+
+  &__eye {
+    width: var(--eyes-width);
+    height: var(--eyes-height);
+  }
+
+  &__lid {
+    @include easing(transform, 220ms, var(--easing-ease-smooth));
+
+    --blink-y: 0;
+
+    transform-box: fill-box;
+    transform: translateY(var(--blink-y));
+
+    &.is-blinking {
+      @include easing(transform, 90ms, var(--easing-ease-accelerate));
+
+      --blink-y: 83px;
+    }
+  }
+
+  &__pupil {
+    @include easing(transform, var(--easing), var(--easing-ease-accelerate));
+
+    --position-x: 0; // -1 (left) to 1 (right)
+    --position-y: 0; // -1 (up) to 1 (down)
+
+    transform-box: fill-box;
+    transform-origin: center;
+    transform:
+      translateX(calc(var(--position-x) * var(--eyes-pupil-range-x)))
+      translateY(calc(var(--position-y) * var(--eyes-pupil-range-y)))
+    ;
+
+    &.is-left {
+      --position-x: -1;
+    }
+
+    &.is-right {
+      --position-x: 1;
+    }
+  }
+
+  // When the eyes section is in mirror mode, the right eye's pupil
+  // moves in the opposite horizontal direction of the left eye's.
+  &.mirror &__eye--right &__pupil {
+    &.is-left {
+      --position-x: 1;
+    }
+
+    &.is-right {
+      --position-x: -1;
+    }
+  }
 }

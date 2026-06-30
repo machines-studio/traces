@@ -28,6 +28,7 @@ export default class Row extends Component {
 
   $index = $(0)
   $hasFocus = $([$ROWS, $INDEX], ([rows = [], index]) => index === rows.indexOf(this))
+  $selection = $(null) // currently selected element, or null when none is selected
 
   template (props) {
     return (
@@ -133,13 +134,18 @@ export default class Row extends Component {
   #update = () => {
     // Set selection class and scroll into view
     const components = this.selectable
+    let selectedElement = null
+
     for (let index = 0; index < components.length; index++) {
       const element = components[index].base ?? components[index]
 
       if (this.$hasFocus.value && index === this.$index.value) {
         element.classList.add('is-selected')
         element.scrollIntoView({ block: 'nearest' })
+        selectedElement = element
       } else element.classList.remove('is-selected')
     }
+
+    this.$selection.value = selectedElement
   }
 }
