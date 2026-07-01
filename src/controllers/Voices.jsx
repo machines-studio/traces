@@ -1,33 +1,6 @@
-// --- Tweak these constants to change the default sound ---
+import Config from './Config'
 
-// Voice pitch multiplier. Below 1.0 = deep, above 1.6 = high-pitched.
-const DEFAULT_PITCH = 1.5
-
-// Duration of each character blip in milliseconds. Lower = faster speech.
-const DEFAULT_STEP_MS = 25
-
-// How many blips are played per word. 1 = one blip per letter (full word).
-// 2 = only every other letter, 3 = every third, etc. Higher = sparser, faster feel.
-const DEFAULT_BLIPS_PER_WORD = 5
-
-// Reverb: length of the impulse response in seconds. 0 = no reverb.
-const DEFAULT_REVERB_DURATION = 0.8
-
-// Reverb: dry/wet mix. 0 = fully dry, 1 = fully wet.
-const DEFAULT_REVERB_MIX = 0.5
-
-// Lowpass filter cutoff in Hz. Lower = more muffled voice.
-const FILTER_FREQUENCY = 900
-
-// Peak gain per blip (0–1). Lower = quieter.
-const BLIP_GAIN = 0.3
-
-// How fast the pitch drops during a blip (ratio). 0.42 = drops to 42% of start freq.
-// Values below 1.0 = pitch falls (soft landing). Above 1.0 = pitch rises (harsh).
-const BLIP_PITCH_DROP = 0.55
-
-// Extra silence added between words, as a multiplier of step duration.
-const WORD_GAP_MULTIPLIER = 1.4
+const cfg = () => Config.VOICES ?? {}
 
 // --- Internal helpers ---
 
@@ -71,16 +44,16 @@ function scheduleBlip (ctx, freq, dur, when, reverbNodes) {
   const filter = ctx.createBiquadFilter()
 
   filter.type = 'lowpass'
-  filter.frequency.value = FILTER_FREQUENCY
+  filter.frequency.value = cfg().filterFrequency ?? 900
 
   // 'sine' = round/soft, 'triangle' = slightly warmer, 'sawtooth' = harsh/bright
   osc.type = 'sine'
   osc.frequency.setValueAtTime(freq, when)
   // Pitch drops over the blip duration for a percussive feel
-  osc.frequency.linearRampToValueAtTime(freq * BLIP_PITCH_DROP, when + dur)
+  osc.frequency.linearRampToValueAtTime(freq * (cfg().blipPitchDrop ?? 0.55), when + dur)
 
   gain.gain.setValueAtTime(0.0001, when)
-  gain.gain.linearRampToValueAtTime(BLIP_GAIN, when + dur * 0.15)
+  gain.gain.linearRampToValueAtTime(cfg().blipGain ?? 0.3, when + dur * 0.15)
   gain.gain.exponentialRampToValueAtTime(0.0001, when + dur)
 
   osc.connect(filter)
@@ -111,11 +84,11 @@ function stop () {
 }
 
 export function speak (phrase, {
-  pitch = DEFAULT_PITCH,
-  speed = DEFAULT_STEP_MS,
-  blipsPerWord = DEFAULT_BLIPS_PER_WORD,
-  reverbDuration = DEFAULT_REVERB_DURATION,
-  reverbMix = DEFAULT_REVERB_MIX
+  pitch = cfg().pitch ?? 1.5,
+  speed = cfg().stepMs ?? 25,
+  blipsPerWord = cfg().blipsPerWord ?? 5,
+  reverbDuration = cfg().reverbDuration ?? 0.8,
+  reverbMix = cfg().reverbMix ?? 0.5
 } = {}) {
   stop()
 
@@ -132,7 +105,7 @@ export function speak (phrase, {
 
   for (const ch of phrase) {
     if (ch === ' ') {
-      t += speed / 1000 * WORD_GAP_MULTIPLIER
+      t += speed / 1000 * (cfg().wordGapMultiplier ?? 1.4)
       letterIndex = 0
       continue
     }
