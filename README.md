@@ -117,6 +117,64 @@ Fully automatic, internal behaviour, with no exposed prop or signal — both eye
 - `lookAt` is wired up on `QuestionScreen.jsx` (follows `GamepadRow`'s selection) — see "Wiring `lookAt`" above.
 - With no props at all, `<Eyes />` keeps 100% of its original behaviour (gamepad + idle loop, binary left/center/right gaze) plus the automatic blinking, which has no prop to disable it.
 
+## Voices component
+
+Animalese-style text-to-sound component. No visual output — purely audio.
+
+Automatically wired into `Caption`: any screen using `<Caption text={...} />` will play the voice sound when the text changes.
+
+> **Browser note:** the Web Audio API requires a prior user interaction before playing sound. The very first text displayed before any click will be silent — this is a browser constraint, not a bug.
+
+### JSX props
+
+```jsx
+<Voices
+  phrase={string | $signal}
+  pitch={number | $signal}
+  speed={number | $signal}
+  blipsPerWord={number | $signal}
+  reverbDuration={number | $signal}
+  reverbMix={number | $signal}
+/>
+```
+
+| Prop | Type | Default | Effect |
+|---|---|---|---|
+| `phrase` | `string` or signal | `''` | Phrase to play. Any value change triggers the sound automatically. |
+| `pitch` | `number` or signal | `1.5` | Voice pitch multiplier. Below `1.0` = deep, above `1.6` = high-pitched. |
+| `speed` | `number` or signal | `25` | Duration of one character blip in milliseconds. Lower = faster speech. |
+| `blipsPerWord` | `number` or signal | `5` | Plays 1 blip every N letters. `1` = every letter, `2` = every other, etc. Higher = sparser feel. |
+| `reverbDuration` | `number` or signal | `0.8` | Reverb impulse length in seconds. `0` = no reverb. |
+| `reverbMix` | `number` or signal | `0.5` | Dry/wet reverb mix. `0` = fully dry, `1` = fully wet. |
+
+### Imperative API
+
+```jsx
+// Mount with a ref
+<Voices ref={this.ref('voices')} />
+
+// Then call speak() directly
+this.refs.voices.speak('Hello!')
+```
+
+### Sound tweaking
+
+All sound constants are at the top of `Voices.jsx` and commented:
+
+| Constant | Default | Effect |
+|---|---|---|
+| `DEFAULT_PITCH` | `1.5` | Voice pitch multiplier |
+| `DEFAULT_STEP_MS` | `25` | Blip duration in ms |
+| `DEFAULT_BLIPS_PER_WORD` | `5` | 1 blip every N letters |
+| `DEFAULT_REVERB_DURATION` | `0.8` | Reverb length in seconds |
+| `DEFAULT_REVERB_MIX` | `0.5` | Reverb dry/wet mix |
+| `FILTER_FREQUENCY` | `900` | Lowpass cutoff in Hz — lower = more muffled |
+| `BLIP_GAIN` | `0.3` | Peak volume per blip (0–1) |
+| `BLIP_PITCH_DROP` | `0.55` | Pitch ratio at end of blip — below `1.0` = falls (soft), above `1.0` = rises (harsh) |
+| `WORD_GAP_MULTIPLIER` | `1.4` | Extra silence between words, as a multiplier of `speed` |
+
+The oscillator type (`osc.type`) is set to `'sine'` for a round/soft sound. Switch to `'triangle'` for warmth, or `'sawtooth'` for a harsher retro feel.
+
 ## Credits
 
 JSX and state utils heavily based on [**pqml**](https://github.com/pqml)’s work.

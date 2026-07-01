@@ -3,7 +3,7 @@ import { Component, Props } from '@tooooools/ui'
 import { Button } from '@tooooools/ui/components'
 import { $, not } from '@tooooools/ui/state'
 
-// ??? play voice sound with caption__text animation ?
+import { speak } from '/controllers/Voices'
 
 export default class Caption extends Component {
   static props = {
@@ -11,6 +11,12 @@ export default class Caption extends Component {
     text: Props.required([Props.string, Props.Signal]),
     hint: [Props.string, Props.Signal],
     position: Props.required(Props.enum('top', 'bottom'))
+  }
+
+  afterRender () {
+    this.watch($(this.props.text), text => {
+      if (text) speak(text)
+    }, { immediate: true })
   }
 
   template ({ text, hint, position }) {
