@@ -1,6 +1,3 @@
-import { Component, Props } from '@tooooools/ui'
-import { $ } from '@tooooools/ui/state'
-
 // --- Tweak these constants to change the default sound ---
 
 // Voice pitch multiplier. Below 1.0 = deep, above 1.6 = high-pitched.
@@ -104,87 +101,51 @@ function scheduleBlip (ctx, freq, dur, when, reverbNodes) {
   osc.stop(when + dur + 0.02)
 }
 
-export default class Voices extends Component {
-  static props = {
-    phrase: [Props.string, Props.Signal],
-    // Voice pitch multiplier (see DEFAULT_PITCH)
-    pitch: [Props.number, Props.Signal],
-    // Character blip duration in ms (see DEFAULT_STEP_MS)
-    speed: [Props.number, Props.Signal],
-    // Play 1 blip every N letters (see DEFAULT_BLIPS_PER_WORD)
-    blipsPerWord: [Props.number, Props.Signal],
-    // Reverb duration in seconds (see DEFAULT_REVERB_DURATION)
-    reverbDuration: [Props.number, Props.Signal],
-    // Reverb dry/wet mix 0–1 (see DEFAULT_REVERB_MIX)
-    reverbMix: [Props.number, Props.Signal]
+let ctx = null
+
+function stop () {
+  if (ctx) {
+    ctx.close()
+    ctx = null
   }
+}
 
-  $phrase = $(this.props.phrase ?? '')
-  $pitch = $(this.props.pitch ?? DEFAULT_PITCH)
-  $speed = $(this.props.speed ?? DEFAULT_STEP_MS)
-  $blipsPerWord = $(this.props.blipsPerWord ?? DEFAULT_BLIPS_PER_WORD)
-  $reverbDuration = $(this.props.reverbDuration ?? DEFAULT_REVERB_DURATION)
-  $reverbMix = $(this.props.reverbMix ?? DEFAULT_REVERB_MIX)
+export function speak (phrase, {
+  pitch = DEFAULT_PITCH,
+  speed = DEFAULT_STEP_MS,
+  blipsPerWord = DEFAULT_BLIPS_PER_WORD,
+  reverbDuration = DEFAULT_REVERB_DURATION,
+  reverbMix = DEFAULT_REVERB_MIX
+} = {}) {
+  stop()
 
-  #ctx = null
+  ctx = new (window.AudioContext || window.webkitAudioContext)()
+  if (ctx.state === 'suspended') ctx.resume()
 
-  speak (phrase) {
-    this.#stop()
+  const blips = Math.max(1, Math.round(blipsPerWord))
+  const reverbNodes = reverbDuration > 0 && reverbMix > 0
+    ? createReverb(ctx, reverbDuration, reverbMix)
+    : null
 
-    this.#ctx = new (window.AudioContext || window.webkitAudioContext)()
-    if (this.#ctx.state === 'suspended') this.#ctx.resume()
+  let t = ctx.currentTime + 0.05
+  let letterIndex = 0
 
-    const basePitch = this.$pitch.value
-    const stepMs = this.$speed.value
-    const blipsPerWord = Math.max(1, Math.round(this.$blipsPerWord.value))
-    const reverbDuration = this.$reverbDuration.value
-    const reverbMix = this.$reverbMix.value
-
-    const reverbNodes = reverbDuration > 0 && reverbMix > 0
-      ? createReverb(this.#ctx, reverbDuration, reverbMix)
-      : null
-
-    let t = this.#ctx.currentTime + 0.05
-    let letterIndex = 0 // tracks position within the current word
-
-    for (const ch of (phrase ?? this.$phrase.value)) {
-      if (ch === ' ') {
-        t += stepMs / 1000 * WORD_GAP_MULTIPLIER
-        letterIndex = 0 // reset on new word
-        continue
-      }
-      if (!/[a-zA-Z]/.test(ch)) continue
-
-      // Only play a blip every N letters
-      if (letterIndex % blipsPerWord === 0) {
-        const freq = charFreq(ch, basePitch)
-        const dur = (stepMs / 1000) * 0.9
-        scheduleBlip(this.#ctx, freq, dur, t, reverbNodes)
-      }
-
-      t += stepMs / 1000
-      letterIndex++
+  for (const ch of phrase) {
+    if (ch === ' ') {
+      t += speed / 1000 * WORD_GAP_MULTIPLIER
+      letterIndex = 0
+      continue
     }
-  }
+    if (!/[a-zA-Z]/.test(ch)) continue
 
-  #stop () {
-    if (this.#ctx) {
-      this.#ctx.close()
-      this.#ctx = null
+    // Only play a blip every N letters
+    if (letterIndex % blips === 0) {
+      const freq = charFreq(ch, pitch)
+      const dur = (speed / 1000) * 0.9
+      scheduleBlip(ctx, freq, dur, t, reverbNodes)
     }
-  }
 
-  afterMount () {
-    this.watch(this.$phrase, phrase => {
-      if (phrase) this.speak(phrase)
-    })
-  }
-
-  beforeDestroy () {
-    this.#stop()
-  }
-
-  template () {
-    return null
+    t += speed / 1000
+    letterIndex++
   }
 }
