@@ -33,7 +33,8 @@
       "filterFrequency": 900,
       "blipGain": 0.3,
       "blipPitchDrop": 0.55,
-      "wordGapMultiplier": 1.4
+      "wordGapMultiplier": 1.4,
+      "allowOverlap": true
     },
     "presets": {
       "constello": {

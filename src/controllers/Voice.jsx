@@ -86,26 +86,31 @@ function scheduleBlip (ctx, freq, dur, when, reverbNodes, opts) {
 
 let ctx = null
 
+function getCtx () {
+  if (!ctx || ctx.state === 'closed') {
+    ctx = new (window.AudioContext || window.webkitAudioContext)()
+  }
+  if (ctx.state === 'suspended') ctx.resume()
+  return ctx
+}
+
 export function stop () {
   ctx?.close()
   ctx = null
 }
 
 export function speak (phrase = '', presetOrOptions = {}) {
-  stop()
   if (!phrase.length) return
 
   const opts = resolveOptions(presetOrOptions)
-
-  ctx = new (window.AudioContext || window.webkitAudioContext)()
-  if (ctx.state === 'suspended') ctx.resume()
+  const audioCtx = getCtx()
 
   const blips = Math.max(1, Math.round(opts.blipsPerWord))
   const reverbNodes = opts.reverbDuration > 0 && opts.reverbMix > 0
-    ? createReverb(ctx, opts.reverbDuration, opts.reverbMix)
+    ? createReverb(audioCtx, opts.reverbDuration, opts.reverbMix)
     : null
 
-  let t = ctx.currentTime + 0.05
+  let t = audioCtx.currentTime + 0.05
   let letterIndex = 0
 
   for (const ch of phrase) {
@@ -120,7 +125,7 @@ export function speak (phrase = '', presetOrOptions = {}) {
     if (letterIndex % blips === 0) {
       const freq = charFreq(ch, opts.pitch)
       const dur = (opts.stepMs / 1000) * 0.9
-      scheduleBlip(ctx, freq, dur, t, reverbNodes, opts)
+      scheduleBlip(audioCtx, freq, dur, t, reverbNodes, opts)
     }
 
     t += opts.stepMs / 1000
