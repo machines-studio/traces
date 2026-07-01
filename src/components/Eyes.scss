@@ -16,13 +16,13 @@
   margin-left: calc((var(--eyes-width) * 2 + var(--eyes-gap)) * -0.5);
 
   &__eye {
-    @include animations.delay(eye-appears, 1000ms);
-    @include animations.stagger(eye-appears, 50ms, 2);
     @include animations.use(
       (
         name: eye-appears,
         duration: var(--easing-fast),
         easing: var(--easing-ease-back),
+        delay: 1000ms,
+        stagger: (delay: 50ms, length: 2)
       )
     );
     width: var(--eyes-width);
