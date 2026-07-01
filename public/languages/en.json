@@ -14,11 +14,13 @@
     "introduction.1.prev": "sorry, who are you?",
     "introduction.1.next": "let’s go",
 
-    "quit.title": "Leave the experience?",
-    "quit.message": "You will loose all your progress and go back to the home screen.",
-    "quit.cancel": "I want to continue",
-    "quit.cancel.color": "blue",
-    "quit.confirm": "I want to quit",
-    "quit.confirm.color": "yellow"
+    "session.quit.title": "Leave the experience?",
+    "session.quit.message": "You will loose all your progress and go back to the home screen.",
+    "session.quit.iddle.title": "Still there?",
+    "session.quit.iddle.message": "You have been inactive for a while, you will be sent back to the home screen.",
+    "session.quit.cancel": "I want to continue",
+    "session.quit.cancel.color": "blue",
+    "session.quit.confirm": "I want to quit",
+    "session.quit.confirm.color": "yellow"
   }
 }

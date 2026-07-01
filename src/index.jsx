@@ -6,6 +6,7 @@ import * as Icons from '/data/icons'
 import App from '/components/App'
 import { loadConfig } from '/controllers/Config'
 import { loadTranslations } from '/controllers/I18N'
+import Session from '/controllers/Session'
 
 // Display errors
 window.addEventListener('error', e => {
@@ -36,4 +37,5 @@ console.warn = (...args) => {
   await loadTranslations()
 
   window.App = render(<App />).components[0]
+  Session.bindIddleTimer()
 })()

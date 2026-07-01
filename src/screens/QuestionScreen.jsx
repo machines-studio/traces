@@ -9,7 +9,7 @@ import Eyes from '/components/Eyes'
 import GamepadRow from '/components/GamepadRow'
 import Gamepad from '/controllers/Gamepad'
 import I18N from '/controllers/I18N'
-import Quit from '/controllers/Quit'
+import Session from '/controllers/Session'
 import widont from '/utils/string-widont'
 
 export default class QuestionScreen extends Component {
@@ -69,7 +69,7 @@ export default class QuestionScreen extends Component {
 
   afterMount () {
     this.$selection.fill(this.refs.artworksRow.$selection)
-    Gamepad.on('b', Quit.prompt)
+    Gamepad.on('b', Session.quit)
   }
 
   #handleArtwork = artwork => async e => {
@@ -78,6 +78,6 @@ export default class QuestionScreen extends Component {
   }
 
   beforeDestroy () {
-    Gamepad.off('b', Quit.prompt)
+    Gamepad.off('b', Session.quit)
   }
 }

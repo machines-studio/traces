@@ -47,5 +47,10 @@
       "invertX": true,
       "invertY": true
     }
+  },
+
+  "SESSION": {
+    "iddleDuration": 60000,
+    "iddleConfirmDelay": 10000
   }
 }

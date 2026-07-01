@@ -48,6 +48,7 @@
   --ui-font-size: 1.2vw;
   --ui-height: auto;
   --ui-line-height: 1.1;
+  --ui-font-variant-numeric: tabular-nums;
 
   --ui-big-font-size: 2.2vw;
   --ui-big-font-weight: 480;
@@ -121,6 +122,5 @@
     gap: calc(var(--space-gutter) * 2);
     padding: var(--space-gutter);
     margin-top: calc(var(--space-gutter) * 2);
-
   }
 }
