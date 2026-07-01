@@ -1,6 +1,7 @@
 # tooooools/boilerplate [<img src="https://github.com/tooooools.png?size=100" size="100" align="right">](http://github.com/tooooools/)
 > Vite boilerplate with JSX, SCSS, `eslint`, `stylelint` and a test environment.
 
+
 ## Installation
 
 ### Using as a Github template
