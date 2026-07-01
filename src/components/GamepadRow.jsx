@@ -5,6 +5,7 @@ import { $ } from '@tooooools/ui/state'
 import { clamp } from 'missing-math'
 
 import Gamepad from '/controllers/Gamepad'
+import noop from '/utils/noop'
 import scrollIntoViewNearest from '/utils/scroll-into-view-nearest'
 
 const $ROWS = $()
@@ -107,6 +108,7 @@ export default class Row extends Component {
 
   #handleFocus = () => {
     if (!this.$hasFocus.value) return
+    ;(this.props['event-focus'] ?? noop)(this)
 
     // Update index based on opt props.initial
     switch (this.props.initial) {

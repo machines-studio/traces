@@ -16,6 +16,7 @@
 
     "artwork.hint.explore": "Use the joystick to explore the artwork and other’s testimonies",
     "artwork.hint.scroll-top": "Press <code>B</code> to scroll top",
+    "artwork.record.0": "Use your own voice now:\n\n{{question}}",
 
     "session.quit.title": "Leave the experience?",
     "session.quit.message": "You will loose all your progress and go back to the home screen.",

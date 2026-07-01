@@ -1,14 +1,17 @@
 import './ArtworkScreen.scss'
 
 import { Component, Props } from '@tooooools/ui'
-import { $, not, slot, isSignal } from '@tooooools/ui/state'
+import { $, slot, isSignal } from '@tooooools/ui/state'
 
 import Caption from '/components/Caption'
+import Eyes from '/components/Eyes'
 import GamepadRow from '/components/GamepadRow'
+import Recorder from '/components/Recorder'
 import Testimony from '/components/Testimony'
 import Config from '/controllers/Config'
 import Gamepad from '/controllers/Gamepad'
 import I18N from '/controllers/I18N'
+import lastOf from '/utils/array-last'
 import widont from '/utils/string-widont'
 
 export default class ArtworkScreen extends Component {
@@ -19,7 +22,7 @@ export default class ArtworkScreen extends Component {
     question: Props.required(Props.Signal)
   }
 
-  $hasScrolled = slot()
+  $currentSection = slot() // Will be content, testimonies, or recorder
 
   beforeRender () {
     // WIP[back]
@@ -67,11 +70,12 @@ export default class ArtworkScreen extends Component {
   template ({ artwork, question }) {
     if (!artwork) return 'No artwork found.'
 
-    const text = I18N.translate(artwork.text)
+    const text = I18N.resolve(artwork.text)
 
     return (
       <section
         class='artwork-screen screen'
+        data-section={this.$currentSection}
         data-color={Config.COLORS.vectors[artwork.vector]}
       >
         <header class='artwork-screen__header'>
@@ -79,30 +83,45 @@ export default class ArtworkScreen extends Component {
 
           <Caption
             position='top'
-            text={$(question, question => widont(I18N.translate(question)))}
-            hint={$(this.$hasScrolled, haScrolled => haScrolled ? I18N('artwork.hint.scroll-top') : I18N('artwork.hint.explore'))}
+            text={$([this.$currentSection, question], ([section, question]) => {
+              switch (section) {
+                case 'content':
+                case 'testimonies': return I18N.resolve(question)
+
+                case 'recorder': return I18N('artwork.record.0', { question: I18N.resolve(question) })
+              }
+              widont(I18N.resolve(question))
+            })}
+            hint={$(this.$currentSection, section => {
+              switch (section) {
+                case 'content': return I18N('artwork.hint.explore')
+                case 'testimonies': return I18N('artwork.hint.scroll-top')
+                case 'recorder': return I18N('TODO')
+              }
+            })}
           />
         </header>
 
         <GamepadRow
           class='artwork-screen__content'
           initial='start'
-          scroll={{ inline: 'nearest', block: 'center', ifNeeded: true }}
-          ref={this.ref('contentRow')}
+          scroll={{ inline: 'nearest', ifNeeded: true }}
+          event-focus={() => window.scrollTo(0, 0)}
+          ref={this.refMap('rows', 'content')}
         >
           <div class='panel'>
             <article ref={this.ref('article')}>
               <header>
-                <h1>{I18N.translate(artwork.title)}</h1>
+                <h1>{I18N.resolve(artwork.title)}</h1>
                 <ul class='metas'>
-                  <li>{I18N.translate(artwork.date)}</li>
+                  <li>{I18N.resolve(artwork.date)}</li>
                 </ul>
               </header>
 
               <section ref={this.ref('prose')} class='prose' innerHTML={text} />
 
               <footer>
-                {artwork.tags.map(tag => (<span innerText={I18N.translate(tag)} />))}
+                {artwork.tags.map(tag => (<span innerText={I18N.resolve(tag)} />))}
               </footer>
             </article>
           </div>
@@ -114,15 +133,15 @@ export default class ArtworkScreen extends Component {
                   <div class='panel'>
                     <figure>
                       <img src={src} />
-                      <figcaption innerText={I18N.translate(caption)} />
+                      <figcaption innerText={I18N.resolve(caption)} />
                     </figure>
                   </div>
                 )
 
-                case 'text': return I18N.translate(content) && (
+                case 'text': return I18N.resolve(content) && (
                   <div class='panel'>
                     <figure>
-                      <article>{I18N.translate(content)}</article>
+                      <article>{I18N.resolve(content)}</article>
                     </figure>
                   </div>
                 )
@@ -143,17 +162,27 @@ export default class ArtworkScreen extends Component {
               <GamepadRow
                 initial='start'
                 scroll={{ block: 'center' }}
+                ref={this.refMap('rows', 'testimonies', { multiple: true })}
               >
                 <Testimony
-                  transcript={I18N.translate(testimony.content)}
+                  transcript={I18N.resolve(testimony.content)}
                   translation={testimony.transcript}
                   timestamp={testimony.timestamp}
-                  location={I18N.translate(testimony.location)}
+                  location={I18N.resolve(testimony.location)}
                 />
               </GamepadRow>
             ))
           }
         </section>
+
+        <GamepadRow
+          class='artwork-screen__recorder'
+          scroll={{ block: 'center' }}
+          ref={this.refMap('rows', 'recorder')}
+        >
+          <Recorder ref={this.ref('recorder')} />
+          <Eyes />
+        </GamepadRow>
       </section>
     )
   }
@@ -162,7 +191,16 @@ export default class ArtworkScreen extends Component {
     Gamepad.on('a', this.#handleGamepadA)
     Gamepad.on('b', this.#handleGamepadB)
 
-    this.$hasScrolled.fill(not(this.refs.contentRow.$hasFocus))
+    // Keep track of currently focused section
+    this.$currentSection.fill($([
+      this.refs.rows.get('content').$hasFocus,
+      ...this.refs.rows.get('testimonies').map(row => row.$hasFocus),
+      this.refs.rows.get('recorder').$hasFocus,
+    ], (rows) => {
+      if (rows[0]) return 'content'
+      if (lastOf(rows)) return 'recorder'
+      return 'testimonies'
+    }))
   }
 
   afterMount () {
@@ -170,6 +208,9 @@ export default class ArtworkScreen extends Component {
     const overflowRatio = this.refs.prose.scrollHeight / this.refs.prose.clientHeight
     this.refs.article.classList.toggle('is-large', overflowRatio > 1)
     this.refs.article.style.setProperty('--cols', Math.ceil(overflowRatio + 0.5))
+
+    // DEBUG
+    // GamepadRow.$INDEX.value = GamepadRow.$ROWS.value.indexOf(this.refs.rows.get('recorder'))
   }
 
   #handleGamepadA = () => {

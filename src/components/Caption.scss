@@ -1,4 +1,5 @@
 :root {
+  --caption-width: 80vw;
   --caption-background-direction: to top;
   --caption-word-duration: 900ms;
   --caption-word-delay: 100ms;
@@ -10,20 +11,6 @@
     --caption-word-delay: 0ms;
     --caption-hint-delay: 0ms;
     --caption-buttons-delay: 0ms;
-  }
-}
-
-@keyframes caption-word {
-  from {
-    opacity: 0;
-    filter: blur(16px);
-    transform: translateY(50%);
-  }
-
-  to {
-    opacity: 1;
-    filter: none;
-    transform: none;
   }
 }
 
@@ -54,20 +41,30 @@
   &__text {
     @include font('caption');
     text-wrap: balance;
+    width: var(--caption-width);
   }
 
   &__text > * {
+    @include animations.use(
+      (
+        name: caption-word,
+        duration: var(--caption-word-duration),
+        delay: calc(var(--token-index) * var(--caption-word-delay))
+      )
+    );
     --token-index: 0;
     --animation-float-amount: 100%;
 
     display: inline-block;
     white-space: pre;
-    animation: caption-word var(--caption-word-duration) calc(var(--token-index) * var(--caption-word-delay)) var(--easing-ease-smooth) both;
   }
 
   &__hint {
     @include animations.use(
-      animations.$fade-in,
+      (
+        preset: animations.$fade-in,
+        delay: calc(var(--caption-hint-delay) + (var(--tokens-length) + 1) * var(--caption-word-delay))
+      ),
       animations.$float
     );
 
@@ -83,9 +80,23 @@
     @include animations.use(
       (
         preset: animations.$fade-in,
-        delay: calc(var(--caption-buttons-delay) + (var(--tokens-length) + 1) * var(--caption-word-delay))
+        delay: calc(var(--caption-buttons-delay) + (var(--tokens-length) + 1) * var(--caption-word-delay)),
+        stagger: (delay: 100ms, length: 3)
       )
     );
-    @include animations.stagger(animations.$fade-in, 100ms, 3);
+  }
+}
+
+@keyframes caption-word {
+  from {
+    opacity: 0;
+    filter: blur(16px);
+    transform: translateY(50%);
+  }
+
+  to {
+    opacity: 1;
+    filter: none;
+    transform: none;
   }
 }

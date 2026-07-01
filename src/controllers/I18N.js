@@ -18,8 +18,15 @@ export const loadTranslations = async () => {
   }))
 }
 
-const I18N = (key, fallback = key, lang = document.documentElement.lang) => translations[lang]?.[key] ?? fallback
-I18N.translate = (translations, lang = document.documentElement.lang) =>
+const I18N = (key, vars = {}, fallback = key, lang = document.documentElement.lang) => {
+  const text = translations[lang]?.[key] ?? fallback
+
+  return typeof text === 'string'
+    ? text.replace(/{{\s*(\w+)\s*}}/g, (match, name) => vars[name] ?? match)
+    : text
+}
+
+I18N.resolve = (translations, lang = document.documentElement.lang) =>
   typeof translations === 'object'
     ? translations[lang]
     : translations

@@ -10,39 +10,43 @@
   --artwork-screen-z-header: 10;
   --artwork-screen-z-panel-selected: 9;
   --artwork-screen-z-panel-caption: 1;
+
+  --artwork-screen-content-height: 50vh;
+
+  --artwork-screen-content-faded: 0.2;
+  --artwork-screen-testimony-faded: 0.4;
 }
 
 .artwork-screen {
   width: 100vw;
-  background: rgba(0 0 0 / 70%);
 
   &__header {
-    @include animations.use(animations.$fade-in);
-
     position: sticky;
     z-index: var(--artwork-screen-z-header);
     top: 0;
     margin-bottom: var(--space-3);
+  }
 
-    .caption {
-      --caption-word-delay: 0ms;
-      --caption-word-duration: 0ms;
-    }
+  &[data-section='content'] .caption,
+  &[data-section='testimonies'] .caption {
+    --caption-word-delay: 0ms;
+    --caption-word-duration: 0ms;
   }
 
   &__content {
     @include easing(opacity);
     @include invisible-scroll(x);
 
-    $shadow-radius: 4vw;
+    $overflow-hack-top: 8vw;
+    $overflow-hack-bottom: 8vw;
 
     scroll-behavior: smooth;
 
     width: 100vw;
-    height: calc(50vh + $shadow-radius);
-    padding: var(--space-gutter);
-    padding-block: $shadow-radius;
-    margin-block: -$shadow-radius;
+    height: calc(var(--artwork-screen-content-height) + $overflow-hack-top + $overflow-hack-bottom);
+    padding: $overflow-hack-top var(--space-gutter) $overflow-hack-bottom;
+    margin-top: -$overflow-hack-top;
+    margin-bottom: -$overflow-hack-bottom;
 
     color: var(--color-black);
 
@@ -78,7 +82,7 @@
 
         > :is(article, figure) {
           transform: scale(1.1);
-          box-shadow: 0 0 $shadow-radius var(--color);
+          box-shadow: var(--box-shadow) var(--color);
         }
       }
 
@@ -170,7 +174,7 @@
   }
 
   &:has(.testimony.is-selected) &__content {
-    opacity: 0.2;
+    opacity: var(--artwork-screen-content-faded);
   }
 
   &__testimonies {
@@ -178,7 +182,6 @@
     flex-direction: column;
     gap: var(--space-gutter);
     padding: var(--space-gutter);
-    box-shadow: var(--box-shadow-none) var(--color);
 
     .gamepad-row {
       @include animations.use(
@@ -187,19 +190,30 @@
           stagger: (delay: 50ms, length: 50)
         )
       );
-    }
 
-    .gamepad-row .testimony {
-      @include easing((opacity, box-shadow));
+      .testimony {
+        @include easing((opacity, box-shadow));
+        opacity: var(--artwork-screen-testimony-faded);
+        box-shadow: var(--box-shadow-none) var(--color);
 
-      &.is-selected {
-        z-index: 1;
-        box-shadow: var(--box-shadow) var(--color);
+        &.is-selected {
+          z-index: 1;
+          opacity: 1;
+          box-shadow: var(--box-shadow) var(--color);
+        }
       }
     }
+  }
 
-    &:has(.testimony.is-selected) .testimony:not(.is-selected) {
-      opacity: 0.4;
+  // WIP
+  &__recorder {
+    position: relative;
+    height: 100vh;
+
+    .eyes {
+      position: absolute;
+      bottom: calc(5vh + var(--eyes-height) * 0.5);
+      left: 50%;
     }
   }
 }

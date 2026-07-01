@@ -60,7 +60,7 @@ export default class QuestionScreen extends Component {
 
         <Caption
           position='bottom'
-          text={$(question, question => widont(I18N.translate(question)))}
+          text={$(question, question => widont(I18N.resolve(question)))}
           hint={I18N('question.hint')}
         />
       </section>

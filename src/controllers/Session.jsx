@@ -2,9 +2,10 @@ import { Modal, Button } from '@tooooools/ui/components'
 import { $ } from '@tooooools/ui/state'
 
 import GamepadRow from '/components/GamepadRow'
-import Config from '/controllers/Config'
+import Config, { DEBUG } from '/controllers/Config'
 import Gamepad from '/controllers/Gamepad'
 import I18N from '/controllers/I18N'
+import Voice from '/controllers/Voice'
 
 let modal
 let iddleTimer
@@ -19,6 +20,7 @@ export function bindIddleTimer () {
 export function resetIddleTimer () {
   clearTimeout(iddleTimer)
   if (modal) return
+  if (DEBUG?.includes('no-iddle')) return
   iddleTimer = setTimeout(() => quit({ fromIddle: true }), Config.SESSION.iddleDuration)
 }
 
@@ -51,6 +53,10 @@ export async function quit ({ fromIddle = false } = {}) {
     autoConfirmTimer = setTimeout(confirm, Config.SESSION.iddleConfirmDelay)
   }
 
+  // Stop voice if any
+  Voice.stop()
+
+  // Render actual modal
   await Modal.display({
     ref: c => (modal = c),
     locked: true,
