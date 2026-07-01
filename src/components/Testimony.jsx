@@ -7,6 +7,7 @@ import * as Icons from '/data/icons'
 import Config from '/controllers/Config'
 import Gamepad from '/controllers/Gamepad'
 import I18N from '/controllers/I18N'
+import Voice from '/controllers/Voice'
 
 export default class Testimony extends Component {
   static props = {
@@ -61,16 +62,10 @@ export default class Testimony extends Component {
     Gamepad.on('right', this.#handleGamepadRight)
   }
 
-  beforeDestroy () {
-    this.#observer?.disconnect()
-    clearTimeout(this.#delayTimer)
-    raf.remove(this.#tick)
-
-    Gamepad.off('left', this.#handleGamepadLeft)
-    Gamepad.off('right', this.#handleGamepadRight)
-  }
-
   #scrollTranscript = () => {
+    // TODO randomize voice
+    Voice.speak(this.props.transcript)
+
     const el = this.refs.transcript
     this.#distance = el.scrollWidth - el.clientWidth
     this.#scrolled = 0
@@ -86,6 +81,7 @@ export default class Testimony extends Component {
   }
 
   #resetTranscript = () => {
+    Voice.stop()
     clearTimeout(this.#delayTimer)
     raf.remove(this.#tick)
     this.refs.transcript.scrollLeft = 0
@@ -112,5 +108,15 @@ export default class Testimony extends Component {
     this.#target = Math.min(Math.max(this.#scrolled + delta, 0), this.#distance)
     this.#speed = Math.abs(delta) / (Config.TESTIMONY.manualScrollDuration / 1000)
     raf.add(this.#tick)
+  }
+
+  beforeDestroy () {
+    this.#observer?.disconnect()
+    clearTimeout(this.#delayTimer)
+    raf.remove(this.#tick)
+
+    Voice.stop()
+    Gamepad.off('left', this.#handleGamepadLeft)
+    Gamepad.off('right', this.#handleGamepadRight)
   }
 }
