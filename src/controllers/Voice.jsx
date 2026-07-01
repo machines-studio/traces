@@ -1,9 +1,15 @@
 import Config from './Config'
 
+function resolvePreset (name) {
+  const preset = Config.VOICES?.presets?.[name] ?? {}
+  if (preset.extends) return { ...resolvePreset(preset.extends), ...preset }
+  return preset
+}
+
 function resolveOptions (presetOrOptions = {}) {
   const defaults = Config.VOICES?.defaults ?? {}
   if (typeof presetOrOptions === 'string') {
-    return { ...defaults, ...(Config.VOICES?.presets?.[presetOrOptions] ?? {}) }
+    return { ...defaults, ...resolvePreset(presetOrOptions) }
   }
   return { ...defaults, ...presetOrOptions }
 }

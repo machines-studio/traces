@@ -1,13 +1,13 @@
 {
   "LANGUAGES": ["en", "fr", "nl"],
-
+  
   "COLORS": {
     "yellow": "#FC0",
     "green": "#00B944",
     "blue": "#007FFF",
     "red": "#FF4F00",
     "pink": "#FF83FE",
-
+    
     "vectors": {
       "type": "green",
       "emotion": "red",
@@ -15,14 +15,14 @@
       "description": "blue"
     }
   },
-
+  
   "TESTIMONY": {
     "scrollDelay": 500,
     "scrollSpeed": 40,
     "manualScrollDuration": 600,
     "manualScrollStep": 200
   },
-
+  
   "VOICES": {
     "defaults": {
       "pitch": 1.5,
@@ -46,16 +46,35 @@
         "blipGain": 0.3,
         "blipPitchDrop": 0.55,
         "wordGapMultiplier": 1.4
+      },
+      "nav": {
+        "pitch": 1.5,
+        "stepMs": 25,
+        "blipsPerWord": 5,
+        "reverbDuration": 0.8,
+        "reverbMix": 0.5,
+        "filterFrequency": 900,
+        "blipGain": 0.3,
+        "blipPitchDrop": 0.55,
+        "wordGapMultiplier": 1.4
+      },
+      "yes": {
+        "extends": "nav",
+        "pitch": 4.0
+      },
+      "no": {
+        "extends": "nav",
+        "pitch": 0.2
       }
     }
   },
-
+  
   "GAMEPAD": {
     "buttons": {
       "a": 10,
       "b": 11
     },
-
+    
     "axes": {
       "x": 0,
       "y": 1,
@@ -63,7 +82,7 @@
       "invertY": true
     }
   },
-
+  
   "SESSION": {
     "iddleDuration": 60000,
     "iddleConfirmDelay": 10000
