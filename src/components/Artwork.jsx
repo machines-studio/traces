@@ -1,7 +1,7 @@
 import './Artwork.scss'
 import { Component, Props } from '@tooooools/ui'
 
-import { COLORS } from '/app.config'
+import Config from '/controllers/Config'
 
 export default class Artwork extends Component {
   static props = {
@@ -15,7 +15,7 @@ export default class Artwork extends Component {
       <section
         class='artwork'
         event-click={this.props['event-click']}
-        data-color={COLORS.vectors[vector]}
+        data-color={Config.COLORS.vectors[vector]}
       >
         <div class='artwork__wrapper'>
           <img src='/images/bb.png' /* WIP[back] */ />

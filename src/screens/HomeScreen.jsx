@@ -3,7 +3,7 @@ import './HomeScreen.scss'
 import { Component, Props } from '@tooooools/ui'
 import { Button } from '@tooooools/ui/components'
 
-import { COLORS, LANGUAGES } from '/app.config'
+import Config from '/controllers/Config'
 import GamepadRow from '/components/GamepadRow'
 import shuffle from '/utils/array-shuffle'
 
@@ -14,11 +14,11 @@ export default class HomeScreen extends Component {
   }
 
   template () {
-    const colors = shuffle(Object.keys(COLORS))
+    const colors = shuffle(Object.keys(Config.COLORS))
     return (
       <section class='home-screen screen'>
         <GamepadRow initial='start' loop>
-          {LANGUAGES.map((language, index) => (
+          {Config.LANGUAGES.map((language, index) => (
             <Button
               data-color={colors[index]}
               label={language.name}

@@ -100,3 +100,27 @@
 [data-color='blue'] { --color: var(--color-blue); }
 [data-color='red'] { --color: var(--color-red); }
 [data-color='pink'] { --color: var(--color-pink); }
+
+[class^='ui-modal-'] {
+  @include animations.use(animations.$fade-in);
+  @include font('ui');
+
+  --ui-font-size: 2vw;
+  box-shadow: var(--box-shadow) var(--color-white);
+
+  header {
+    border-bottom: 2px solid var(--color-white);
+  }
+
+  header [class^='ui-button-'] {
+    --ui-color-background: var(--color-white);
+  }
+
+  .gamepad-row {
+    justify-content: center;
+    gap: calc(var(--space-gutter) * 2);
+    padding: var(--space-gutter);
+    margin-top: calc(var(--space-gutter) * 2);
+
+  }
+}

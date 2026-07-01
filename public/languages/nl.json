@@ -1,0 +1,11 @@
+{
+  "name": "nederlands",
+  "locale": "nl_NL",
+  "date": {
+    "year": "numeric",
+    "month": "long",
+    "day": "numeric"
+  },
+
+  "translations": {}
+}

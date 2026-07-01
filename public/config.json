@@ -1,0 +1,39 @@
+{
+  "LANGUAGES": ["en", "fr", "nl"],
+
+  "COLORS": {
+    "yellow": "#FC0",
+    "green": "#00B944",
+    "blue": "#007FFF",
+    "red": "#FF4F00",
+    "pink": "#FF83FE",
+
+    "vectors": {
+      "type": "green",
+      "emotion": "red",
+      "date": "yellow",
+      "description": "blue"
+    }
+  },
+
+  "TESTIMONY": {
+    "scrollDelay": 500,
+    "scrollSpeed": 40,
+    "manualScrollDuration": 600,
+    "manualScrollStep": 200
+  },
+
+  "GAMEPAD": {
+    "buttons": {
+      "a": 10,
+      "b": 11
+    },
+
+    "axes": {
+      "x": 0,
+      "y": 1,
+      "invertX": true,
+      "invertY": true
+    }
+  }
+}

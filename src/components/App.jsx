@@ -4,7 +4,7 @@ import './App.scss'
 import { Component } from '@tooooools/ui'
 import { $, persist } from '@tooooools/ui/state'
 
-import { COLORS, DEBUG } from '/app.config'
+import Config, { DEBUG } from '/controllers/Config'
 import SVGHeadline from '/headline.svg?raw'
 import ArtworkScreen from '/screens/ArtworkScreen'
 import HomeScreen from '/screens/HomeScreen'
@@ -34,8 +34,8 @@ export default class App extends Component {
         data-debug={DEBUG}
         data-screen={this.$screen}
         style={{
-          // Add all --color-<NAME> from app.config
-          ...Object.entries(COLORS).reduce((acc, [key, value]) => ({
+          // Add all --color-<NAME> from config.json
+          ...Object.entries(Config.COLORS).reduce((acc, [key, value]) => ({
             ...acc,
             [`--color-${key}`]: value
           }), {})

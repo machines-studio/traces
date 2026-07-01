@@ -1,10 +1,10 @@
 :root {
   @include font('ui', 'testimony');
   --testimony-font-size: 1.8vw;
-  --testimony-font-weight: normal;
+  --testimony-font-weight: 450;
   --testimony-icon-size: 1.4em;
 
-  --testimony-padding-end: 3vw;
+  --testimony-trim: 4vw;
 }
 
 .testimony {
@@ -37,7 +37,7 @@
       bottom: 0;
       left: 100%;
 
-      width: var(--testimony-padding-end);
+      width: var(--testimony-trim);
 
       background: linear-gradient(to right, var(--color), transparent);
       opacity: 0;
@@ -50,8 +50,15 @@
 
   &__transcript {
     @include invisible-scroll(x);
-    padding-right: var(--testimony-padding-end);
+    padding-block: var(--space-gutter);
+    padding-right: var(--testimony-trim);
     white-space: nowrap;
+  }
+
+  &:has(&__translation:not(:empty)) &__vo {
+    font-style: italic;
+    font-weight: 400;
+    opacity: 0.4;
   }
 
   &__metas {
@@ -59,6 +66,7 @@
 
     display: flex;
     flex-direction: column;
+    justify-content: center;
 
     align-self: stretch;
 
@@ -76,7 +84,7 @@
       right: 100%;
       bottom: 0;
 
-      width: var(--testimony-padding-end);
+      width: var(--testimony-trim);
 
       background: linear-gradient(to left, var(--color), transparent);
     }

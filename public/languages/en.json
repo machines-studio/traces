@@ -1,0 +1,24 @@
+{
+  "name": "english",
+  "locale": "en_US",
+  "date": {
+    "year": "numeric",
+    "month": "long",
+    "day": "numeric"
+  },
+
+  "translations": {
+    "introduction.0": "Hello stranger, welcome to TRACES.\nI’ll be your companion memory",
+    "introduction.0.next": "tell me more",
+    "introduction.1": "Do you want to continue?",
+    "introduction.1.prev": "sorry, who are you?",
+    "introduction.1.next": "let’s go",
+
+    "quit.title": "Leave the experience?",
+    "quit.message": "You will loose all your progress and go back to the home screen.",
+    "quit.cancel": "I want to continue",
+    "quit.cancel.color": "blue",
+    "quit.confirm": "I want to quit",
+    "quit.confirm.color": "yellow"
+  }
+}

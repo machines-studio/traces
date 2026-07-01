@@ -4,7 +4,7 @@ import { Component, Props } from '@tooooools/ui'
 import { Button } from '@tooooools/ui/components'
 import { $, not } from '@tooooools/ui/state'
 
-import I18N from '/data/I18N'
+import I18N from '/controllers/I18N'
 import Caption from '/components/Caption'
 import Eyes from '/components/Eyes'
 import GamepadRow from '/components/GamepadRow'

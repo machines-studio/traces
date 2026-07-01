@@ -3,16 +3,16 @@ import { raf } from '@internet/raf'
 import { Component, Props } from '@tooooools/ui'
 import { $ } from '@tooooools/ui/state'
 
-import { TESTIMONY } from '/app.config'
-import I18N from '/data/I18N'
 import * as Icons from '/data/icons'
+import Config from '/controllers/Config'
 import Gamepad from '/controllers/Gamepad'
+import I18N from '/controllers/I18N'
 
 export default class Testimony extends Component {
   static props = {
     transcript: Props.required(Props.string),
     timestamp: Props.required(Props.number),
-    translation: Props.string, // TODO
+    translation: Props.string,
     // TODO flag if in wait of moderation
   }
 
@@ -21,20 +21,25 @@ export default class Testimony extends Component {
   #distance = 0
   #scrolled = 0
   #target = 0
-  #speed = TESTIMONY.scrollSpeed
+  #speed = Config.TESTIMONY.scrollSpeed
 
   $scrolling = $(false)
 
-  template ({ transcript, timestamp, location }) {
+  template ({ transcript, translation, timestamp, location }) {
     return (
       <section class='testimony'>
         <div class='testimony__icon' innerHTML={Icons.testimony} />
 
         <div
           ref={this.ref('transcript')}
-          class={['testimony__transcript', { 'is-scrolling': this.$scrolling }]}
-          innerText={transcript}
-        />
+          class={[
+            'testimony__transcript',
+            { 'is-scrolling': this.$scrolling }
+          ]}
+        >
+          <div class='testimony__vo' innerText={transcript} />
+          <div class='testimony__translation' innerText={translation} />
+        </div>
 
         <div class='testimony__metas'>
           <time class='testimony__date' innerText={I18N.date(timestamp)} /* TODO[I18N] */ />
@@ -75,9 +80,9 @@ export default class Testimony extends Component {
     clearTimeout(this.#delayTimer)
     this.#delayTimer = setTimeout(() => {
       this.#target = this.#distance
-      this.#speed = TESTIMONY.scrollSpeed
+      this.#speed = Config.TESTIMONY.scrollSpeed
       raf.add(this.#tick)
-    }, TESTIMONY.scrollDelay)
+    }, Config.TESTIMONY.scrollDelay)
   }
 
   #resetTranscript = () => {
@@ -97,15 +102,15 @@ export default class Testimony extends Component {
     if (this.#scrolled === this.#target) raf.remove(this.#tick)
   }
 
-  #handleGamepadLeft = () => this.#scrubTranscript(-TESTIMONY.manualScrollStep)
-  #handleGamepadRight = () => this.#scrubTranscript(TESTIMONY.manualScrollStep)
+  #handleGamepadLeft = () => this.#scrubTranscript(-Config.TESTIMONY.manualScrollStep)
+  #handleGamepadRight = () => this.#scrubTranscript(Config.TESTIMONY.manualScrollStep)
 
   #scrubTranscript = delta => {
     if (!this.base.classList.contains('is-selected') || this.#distance <= 0) return
 
     clearTimeout(this.#delayTimer)
     this.#target = Math.min(Math.max(this.#scrolled + delta, 0), this.#distance)
-    this.#speed = Math.abs(delta) / (TESTIMONY.manualScrollDuration / 1000)
+    this.#speed = Math.abs(delta) / (Config.TESTIMONY.manualScrollDuration / 1000)
     raf.add(this.#tick)
   }
 }

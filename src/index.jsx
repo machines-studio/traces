@@ -4,6 +4,8 @@ import { Toast } from '@tooooools/ui/components'
 
 import * as Icons from '/data/icons'
 import App from '/components/App'
+import { loadConfig } from '/controllers/Config'
+import { loadTranslations } from '/controllers/I18N'
 
 // Display errors
 window.addEventListener('error', e => {
@@ -28,5 +30,10 @@ console.warn = (...args) => {
   })
 }
 
-// Render App
-window.App = render(<App />).components[0]
+// Fetch config, translations, and render app
+;(async () => {
+  await loadConfig()
+  await loadTranslations()
+
+  window.App = render(<App />).components[0]
+})()

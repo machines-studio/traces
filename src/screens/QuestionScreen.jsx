@@ -3,11 +3,13 @@ import './QuestionScreen.scss'
 import { Component, Props } from '@tooooools/ui'
 import { $, slot } from '@tooooools/ui/state'
 
-import I18N from '/data/I18N'
 import Artwork from '/components/Artwork'
 import Caption from '/components/Caption'
 import Eyes from '/components/Eyes'
 import GamepadRow from '/components/GamepadRow'
+import Gamepad from '/controllers/Gamepad'
+import I18N from '/controllers/I18N'
+import Quit from '/controllers/Quit'
 import widont from '/utils/string-widont'
 
 export default class QuestionScreen extends Component {
@@ -67,10 +69,15 @@ export default class QuestionScreen extends Component {
 
   afterMount () {
     this.$selection.fill(this.refs.artworksRow.$selection)
+    Gamepad.on('b', Quit.prompt)
   }
 
   #handleArtwork = artwork => async e => {
     this.props.artwork.value = artwork
     this.props.screen.value = 'artwork'
+  }
+
+  beforeDestroy () {
+    Gamepad.off('b', Quit.prompt)
   }
 }
