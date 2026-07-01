@@ -3,20 +3,13 @@ import { Component, Props } from '@tooooools/ui'
 import { Button } from '@tooooools/ui/components'
 import { $, not } from '@tooooools/ui/state'
 
-import { speak } from '/controllers/Voices'
+import Voice from '/controllers/Voice'
 
 export default class Caption extends Component {
   static props = {
-    // TODO data-dir
     text: Props.required([Props.string, Props.Signal]),
     hint: [Props.string, Props.Signal],
     position: Props.required(Props.enum('top', 'bottom'))
-  }
-
-  afterRender () {
-    this.watch($(this.props.text), text => {
-      if (text) speak(text)
-    }, { immediate: true })
   }
 
   template ({ text, hint, position }) {
@@ -52,5 +45,13 @@ export default class Caption extends Component {
         {this.props.children}
       </section>
     )
+  }
+
+  afterRender () {
+    this.watch($(this.props.text), Voice.speak, { immediate: true })
+  }
+
+  beforeDestroy () {
+    Voice.stop()
   }
 }

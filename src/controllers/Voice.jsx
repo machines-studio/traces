@@ -1,9 +1,5 @@
 import Config from './Config'
 
-const cfg = () => Config.VOICES ?? {}
-
-// --- Internal helpers ---
-
 function charFreq (ch, basePitch) {
   const code = ch.toLowerCase().charCodeAt(0)
   // Vowels sit in a lower frequency range than consonants for a more natural feel
@@ -44,16 +40,16 @@ function scheduleBlip (ctx, freq, dur, when, reverbNodes) {
   const filter = ctx.createBiquadFilter()
 
   filter.type = 'lowpass'
-  filter.frequency.value = cfg().filterFrequency ?? 900
+  filter.frequency.value = Config.VOICES.filterFrequency ?? 900
 
   // 'sine' = round/soft, 'triangle' = slightly warmer, 'sawtooth' = harsh/bright
   osc.type = 'sine'
   osc.frequency.setValueAtTime(freq, when)
   // Pitch drops over the blip duration for a percussive feel
-  osc.frequency.linearRampToValueAtTime(freq * (cfg().blipPitchDrop ?? 0.55), when + dur)
+  osc.frequency.linearRampToValueAtTime(freq * (Config.VOICES.blipPitchDrop ?? 0.55), when + dur)
 
   gain.gain.setValueAtTime(0.0001, when)
-  gain.gain.linearRampToValueAtTime(cfg().blipGain ?? 0.3, when + dur * 0.15)
+  gain.gain.linearRampToValueAtTime(Config.VOICES.blipGain ?? 0.3, when + dur * 0.15)
   gain.gain.exponentialRampToValueAtTime(0.0001, when + dur)
 
   osc.connect(filter)
@@ -76,21 +72,20 @@ function scheduleBlip (ctx, freq, dur, when, reverbNodes) {
 
 let ctx = null
 
-function stop () {
-  if (ctx) {
-    ctx.close()
-    ctx = null
-  }
+export function stop () {
+  ctx?.close()
+  ctx = null
 }
 
-export function speak (phrase, {
-  pitch = cfg().pitch ?? 1.5,
-  speed = cfg().stepMs ?? 25,
-  blipsPerWord = cfg().blipsPerWord ?? 5,
-  reverbDuration = cfg().reverbDuration ?? 0.8,
-  reverbMix = cfg().reverbMix ?? 0.5
+export function speak (phrase = '', {
+  pitch = Config.VOICES.pitch ?? 1.5,
+  speed = Config.VOICES.stepMs ?? 25,
+  blipsPerWord = Config.VOICES.blipsPerWord ?? 5,
+  reverbDuration = Config.VOICES.reverbDuration ?? 0.8,
+  reverbMix = Config.VOICES.reverbMix ?? 0.5
 } = {}) {
   stop()
+  if (!phrase.length) return
 
   ctx = new (window.AudioContext || window.webkitAudioContext)()
   if (ctx.state === 'suspended') ctx.resume()
@@ -105,7 +100,7 @@ export function speak (phrase, {
 
   for (const ch of phrase) {
     if (ch === ' ') {
-      t += speed / 1000 * (cfg().wordGapMultiplier ?? 1.4)
+      t += speed / 1000 * (Config.VOICES.wordGapMultiplier ?? 1.4)
       letterIndex = 0
       continue
     }
@@ -122,3 +117,5 @@ export function speak (phrase, {
     letterIndex++
   }
 }
+
+export default { speak, stop }
