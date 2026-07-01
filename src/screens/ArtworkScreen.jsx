@@ -165,7 +165,8 @@ export default class ArtworkScreen extends Component {
                 ref={this.refMap('rows', 'testimonies', { multiple: true })}
               >
                 <Testimony
-                  transcript={I18N.resolve(testimony.content)}
+                  index={index}
+                  transcript={I18N.translate(testimony.content)}
                   translation={testimony.transcript}
                   timestamp={testimony.timestamp}
                   location={I18N.resolve(testimony.location)}
