@@ -88,7 +88,7 @@ $fade-out: (
     $list: list.append($list,
       #{$name}
       #{$duration}
-      calc(#{$delay} + var(--animation-#{$name}-stagger, 0ms))
+      calc(#{$delay} + var(--animation-#{$name}-stagger, 0ms) + var(--animation-#{$name}-delay, 0ms))
       #{$easing}
       #{$fill-mode}
       #{$direction}
@@ -125,6 +125,23 @@ $fade-out: (
       --animation-#{$name}-stagger: #{calc(($i - 1) * $delay)};
     }
   }
+}
+
+/**
+ * Set a one-off delay for an animation by setting the
+ * `--animation-<name>-delay` custom property consumed by `use()`'s
+ * `delay`. Apply to the same selector passed to `animations.use`.
+ * `$animation` accepts either an animation name or its prop map.
+ *
+ * @include animations.delay('fade-in', 240ms);
+ * @include animations.delay(animations.$float, 240ms);
+ */
+
+@mixin delay ($animation, $delay) {
+  $is-map: meta.type-of($animation) == map;
+  $name: if($is-map, map.get($animation, name), $animation);
+
+  --animation-#{$name}-delay: #{$delay};
 }
 
 /**
