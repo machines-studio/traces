@@ -119,14 +119,15 @@ export default class ArtworkScreen extends Component {
 
         <section class='artwork-screen__testimonies'>
           {
-            Session.$artwork.value.testimonies.map(testimony => (
+            Session.$artwork.value.testimonies.map((testimony, index) => (
               <GamepadRow
                 initial='start'
                 scroll={{ block: 'center' }}
                 ref={this.refMap('rows', 'testimonies', { multiple: true })}
               >
                 <Testimony
-                  transcript={I18N.resolve(testimony.content)}
+                  index={index}
+                  transcript={I18N.translate(testimony.content)}
                   translation={testimony.transcript}
                   timestamp={testimony.timestamp}
                   location={I18N.resolve(testimony.location)}

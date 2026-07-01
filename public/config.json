@@ -59,6 +59,26 @@
         "blipPitchDrop": 0.55,
         "wordGapMultiplier": 1.4
       },
+      "testimonial": {
+        "pitch": 0.8,
+        "stepMs": 80,
+        "blipsPerWord": 8,
+        "blipGain": 0.1,
+        "blipPitchDrop": 0.9,
+        "filterFrequency": 300,
+        "reverbDuration": 1.5,
+        "reverbMix": 0.8
+      },
+      "testimonial_b": {
+        "extends": "testimonial",
+        "pitch": 1.0,
+        "blipsPerWord": 6
+      },
+      "testimonial_c": {
+        "extends": "testimonial",
+        "pitch": 1.5,
+        "blipsPerWord": 7
+      },
       "nav": {
         "pitch": 1.5,
         "stepMs": 25,

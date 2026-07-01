@@ -11,6 +11,7 @@ import Voice from '/controllers/Voice'
 
 export default class Testimony extends Component {
   static props = {
+    index: Props.number,
     transcript: Props.required(Props.string),
     timestamp: Props.required(Props.number),
     translation: Props.string,
@@ -63,8 +64,9 @@ export default class Testimony extends Component {
   }
 
   #scrollTranscript = () => {
-    // TODO randomize voice
-    Voice.speak(this.props.transcript)
+    const presets = Object.keys(Config.VOICES?.presets ?? {}).filter(k => k.startsWith('testimonial'))
+    const preset = presets[(this.props.index ?? 0) % presets.length] ?? 'testimonial'
+    Voice.speak(this.props.transcript, preset)
 
     const el = this.refs.transcript
     this.#distance = el.scrollWidth - el.clientWidth
