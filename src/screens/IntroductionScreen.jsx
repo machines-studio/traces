@@ -7,6 +7,7 @@ import { $, not } from '@tooooools/ui/state'
 import Caption from '/components/Caption'
 import Eyes from '/components/Eyes'
 import GamepadRow from '/components/GamepadRow'
+import Particles from '/components/Particles'
 import Gamepad from '/controllers/Gamepad'
 import I18N from '/controllers/I18N'
 import widont from '/utils/string-widont'
@@ -25,6 +26,7 @@ export default class IntroductionScreen extends Component {
         class='introduction-screen screen'
       >
         <Eyes />
+        <Particles />
 
         <Caption
           position='bottom'

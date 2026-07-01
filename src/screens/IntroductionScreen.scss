@@ -11,4 +11,9 @@
     top: calc(50% - var(--eyes-height));
     left: 50%;
   }
+
+  .particles {
+    // TODO handle particles mask position here
+    position: fixed;
+  }
 }
