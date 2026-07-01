@@ -1,5 +1,13 @@
 import Config from './Config'
 
+function resolveOptions (presetOrOptions = {}) {
+  const defaults = Config.VOICES?.defaults ?? {}
+  if (typeof presetOrOptions === 'string') {
+    return { ...defaults, ...(Config.VOICES?.presets?.[presetOrOptions] ?? {}) }
+  }
+  return { ...defaults, ...presetOrOptions }
+}
+
 function charFreq (ch, basePitch) {
   const code = ch.toLowerCase().charCodeAt(0)
   // Vowels sit in a lower frequency range than consonants for a more natural feel
@@ -34,22 +42,22 @@ function createReverb (ctx, duration, mix) {
   return { convolver, dryGain, wetGain }
 }
 
-function scheduleBlip (ctx, freq, dur, when, reverbNodes) {
+function scheduleBlip (ctx, freq, dur, when, reverbNodes, opts) {
   const osc = ctx.createOscillator()
   const gain = ctx.createGain()
   const filter = ctx.createBiquadFilter()
 
   filter.type = 'lowpass'
-  filter.frequency.value = Config.VOICES.filterFrequency ?? 900
+  filter.frequency.value = opts.filterFrequency
 
   // 'sine' = round/soft, 'triangle' = slightly warmer, 'sawtooth' = harsh/bright
   osc.type = 'sine'
   osc.frequency.setValueAtTime(freq, when)
   // Pitch drops over the blip duration for a percussive feel
-  osc.frequency.linearRampToValueAtTime(freq * (Config.VOICES.blipPitchDrop ?? 0.55), when + dur)
+  osc.frequency.linearRampToValueAtTime(freq * opts.blipPitchDrop, when + dur)
 
   gain.gain.setValueAtTime(0.0001, when)
-  gain.gain.linearRampToValueAtTime(Config.VOICES.blipGain ?? 0.3, when + dur * 0.15)
+  gain.gain.linearRampToValueAtTime(opts.blipGain, when + dur * 0.15)
   gain.gain.exponentialRampToValueAtTime(0.0001, when + dur)
 
   osc.connect(filter)
@@ -77,22 +85,18 @@ export function stop () {
   ctx = null
 }
 
-export function speak (phrase = '', {
-  pitch = Config.VOICES.pitch ?? 1.5,
-  speed = Config.VOICES.stepMs ?? 25,
-  blipsPerWord = Config.VOICES.blipsPerWord ?? 5,
-  reverbDuration = Config.VOICES.reverbDuration ?? 0.8,
-  reverbMix = Config.VOICES.reverbMix ?? 0.5
-} = {}) {
+export function speak (phrase = '', presetOrOptions = {}) {
   stop()
   if (!phrase.length) return
+
+  const opts = resolveOptions(presetOrOptions)
 
   ctx = new (window.AudioContext || window.webkitAudioContext)()
   if (ctx.state === 'suspended') ctx.resume()
 
-  const blips = Math.max(1, Math.round(blipsPerWord))
-  const reverbNodes = reverbDuration > 0 && reverbMix > 0
-    ? createReverb(ctx, reverbDuration, reverbMix)
+  const blips = Math.max(1, Math.round(opts.blipsPerWord))
+  const reverbNodes = opts.reverbDuration > 0 && opts.reverbMix > 0
+    ? createReverb(ctx, opts.reverbDuration, opts.reverbMix)
     : null
 
   let t = ctx.currentTime + 0.05
@@ -100,7 +104,7 @@ export function speak (phrase = '', {
 
   for (const ch of phrase) {
     if (ch === ' ') {
-      t += speed / 1000 * (Config.VOICES.wordGapMultiplier ?? 1.4)
+      t += opts.stepMs / 1000 * opts.wordGapMultiplier
       letterIndex = 0
       continue
     }
@@ -108,12 +112,12 @@ export function speak (phrase = '', {
 
     // Only play a blip every N letters
     if (letterIndex % blips === 0) {
-      const freq = charFreq(ch, pitch)
-      const dur = (speed / 1000) * 0.9
-      scheduleBlip(ctx, freq, dur, t, reverbNodes)
+      const freq = charFreq(ch, opts.pitch)
+      const dur = (opts.stepMs / 1000) * 0.9
+      scheduleBlip(ctx, freq, dur, t, reverbNodes, opts)
     }
 
-    t += speed / 1000
+    t += opts.stepMs / 1000
     letterIndex++
   }
 }

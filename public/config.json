@@ -24,15 +24,30 @@
   },
 
   "VOICES": {
-    "pitch": 1.5,
-    "stepMs": 25,
-    "blipsPerWord": 5,
-    "reverbDuration": 0.8,
-    "reverbMix": 0.5,
-    "filterFrequency": 900,
-    "blipGain": 0.3,
-    "blipPitchDrop": 0.55,
-    "wordGapMultiplier": 1.4
+    "defaults": {
+      "pitch": 1.5,
+      "stepMs": 25,
+      "blipsPerWord": 5,
+      "reverbDuration": 0.8,
+      "reverbMix": 0.5,
+      "filterFrequency": 900,
+      "blipGain": 0.3,
+      "blipPitchDrop": 0.55,
+      "wordGapMultiplier": 1.4
+    },
+    "presets": {
+      "constello": {
+        "pitch": 1.5,
+        "stepMs": 25,
+        "blipsPerWord": 5,
+        "reverbDuration": 0.8,
+        "reverbMix": 0.5,
+        "filterFrequency": 900,
+        "blipGain": 0.3,
+        "blipPitchDrop": 0.55,
+        "wordGapMultiplier": 1.4
+      }
+    }
   },
 
   "GAMEPAD": {
