@@ -23,6 +23,16 @@
     "manualScrollStep": 200
   },
   
+  "AMBIENCE": {
+    "volume": 0.4,
+    "waveform": "sine",
+    "filterFrequency": 400,
+    "attack": 0.8,
+    "release": 1.5,
+    "reverbDuration": 4.0,
+    "reverbMix": 0.65
+  },
+
   "VOICES": {
     "defaults": {
       "pitch": 1.5,

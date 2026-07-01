@@ -4,6 +4,7 @@ import { Component, Props } from '@tooooools/ui'
 import { Button } from '@tooooools/ui/components'
 
 import Config from '/controllers/Config'
+import Ambience from '/controllers/Ambience'
 import GamepadRow from '/components/GamepadRow'
 import shuffle from '/utils/array-shuffle'
 
@@ -41,6 +42,7 @@ export default class HomeScreen extends Component {
       )
     }
 
+    Ambience.start()
     this.props.screen.value = 'introduction'
   }
 }
