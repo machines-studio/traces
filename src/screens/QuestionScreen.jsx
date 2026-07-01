@@ -74,6 +74,15 @@ export default class QuestionScreen extends Component {
 
   #handleArtwork = artwork => async e => {
     this.props.artwork.value = artwork
+
+    if (!e.isTrusted) { // Only if triggered from GamepadRow.#handleGamepadA
+      // Wait for buttons transition before leaving screen
+      await new Promise(resolve => {
+        this.base.addEventListener('animationend', resolve, { once: true })
+        this.base.classList.add('is-leaving')
+      })
+    }
+
     this.props.screen.value = 'artwork'
   }
 

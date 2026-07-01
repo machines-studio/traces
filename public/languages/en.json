@@ -14,6 +14,9 @@
     "introduction.1.prev": "sorry, who are you?",
     "introduction.1.next": "let’s go",
 
+    "artwork.hint.explore": "Use the joystick to explore the artwork and other’s testimonies",
+    "artwork.hint.scroll-top": "Press <code>B</code> to scroll top",
+
     "session.quit.title": "Leave the experience?",
     "session.quit.message": "You will loose all your progress and go back to the home screen.",
     "session.quit.iddle.title": "Still there?",

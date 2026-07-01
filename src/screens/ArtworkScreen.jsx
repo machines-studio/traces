@@ -1,7 +1,7 @@
 import './ArtworkScreen.scss'
 
 import { Component, Props } from '@tooooools/ui'
-import { $, isSignal } from '@tooooools/ui/state'
+import { $, not, slot, isSignal } from '@tooooools/ui/state'
 
 import Caption from '/components/Caption'
 import GamepadRow from '/components/GamepadRow'
@@ -18,6 +18,8 @@ export default class ArtworkScreen extends Component {
     screen: Props.required(Props.Signal),
     question: Props.required(Props.Signal)
   }
+
+  $hasScrolled = slot()
 
   beforeRender () {
     // WIP[back]
@@ -78,43 +80,51 @@ export default class ArtworkScreen extends Component {
           <Caption
             position='top'
             text={$(question, question => widont(I18N.translate(question)))}
+            hint={$(this.$hasScrolled, haScrolled => haScrolled ? I18N('artwork.hint.scroll-top') : I18N('artwork.hint.explore'))}
           />
         </header>
 
         <GamepadRow
+          class='artwork-screen__content'
           initial='start'
           scroll={{ inline: 'nearest', block: 'center', ifNeeded: true }}
-          class='artwork-screen__content'
+          ref={this.ref('contentRow')}
         >
-          <article ref={this.ref('article')}>
-            <header>
-              <h1>{I18N.translate(artwork.title)}</h1>
-              <ul class='metas'>
-                <li>{I18N.translate(artwork.date)}</li>
-              </ul>
-            </header>
+          <div class='panel'>
+            <article ref={this.ref('article')}>
+              <header>
+                <h1>{I18N.translate(artwork.title)}</h1>
+                <ul class='metas'>
+                  <li>{I18N.translate(artwork.date)}</li>
+                </ul>
+              </header>
 
-            <section ref={this.ref('prose')} class='prose' innerHTML={text} />
+              <section ref={this.ref('prose')} class='prose' innerHTML={text} />
 
-            <footer>
-              {artwork.tags.map(tag => (<span innerText={I18N.translate(tag)} />))}
-            </footer>
-          </article>
+              <footer>
+                {artwork.tags.map(tag => (<span innerText={I18N.translate(tag)} />))}
+              </footer>
+            </article>
+          </div>
 
           {
             artwork.medias.map(({ type, src, caption, content }) => {
               switch (type) {
                 case 'image': return src && (
-                  <figure>
-                    <img src={src} />
-                    <figcaption innerText={I18N.translate(caption)} />
-                  </figure>
+                  <div class='panel'>
+                    <figure>
+                      <img src={src} />
+                      <figcaption innerText={I18N.translate(caption)} />
+                    </figure>
+                  </div>
                 )
 
                 case 'text': return I18N.translate(content) && (
-                  <figure>
-                    <article>{I18N.translate(content)}</article>
-                  </figure>
+                  <div class='panel'>
+                    <figure>
+                      <article>{I18N.translate(content)}</article>
+                    </figure>
+                  </div>
                 )
 
                 // TODO
@@ -148,16 +158,28 @@ export default class ArtworkScreen extends Component {
     )
   }
 
+  afterRender () {
+    Gamepad.on('a', this.#handleGamepadA)
+    Gamepad.on('b', this.#handleGamepadB)
+
+    this.$hasScrolled.fill(not(this.refs.contentRow.$hasFocus))
+  }
+
   afterMount () {
     // Set the number of columns based on how much the text overflows
     const overflowRatio = this.refs.prose.scrollHeight / this.refs.prose.clientHeight
     this.refs.article.classList.toggle('is-large', overflowRatio > 1)
     this.refs.article.style.setProperty('--cols', Math.ceil(overflowRatio + 0.5))
-
-    Gamepad.on('b', this.#handleGamepadB)
   }
 
-  // Scroll top
+  #handleGamepadA = () => {
+    // // TODO[next] enter a full-screen view of a specific panel (text, video, image, etc…)
+    // const selection = this.refs.rows.find(row => row.$hasFocus.value)?.selection
+    // if (!selection) return
+    // console.log(selection.base ?? selection)
+    // ;(selection.base ?? selection).classList.add('is-zoomed')
+  }
+
   #handleGamepadB = () => {
     if (GamepadRow.$INDEX.value > 0) {
       // Scroll top
@@ -169,6 +191,7 @@ export default class ArtworkScreen extends Component {
   }
 
   beforeDestroy () {
+    Gamepad.off('a', this.#handleGamepadA)
     Gamepad.off('b', this.#handleGamepadB)
   }
 }

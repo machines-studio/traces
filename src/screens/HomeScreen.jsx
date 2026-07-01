@@ -3,9 +3,9 @@ import './HomeScreen.scss'
 import { Component, Props } from '@tooooools/ui'
 import { Button } from '@tooooools/ui/components'
 
-import Config from '/controllers/Config'
-import Ambience from '/controllers/Ambience'
 import GamepadRow from '/components/GamepadRow'
+import Ambience from '/controllers/Ambience'
+import Config from '/controllers/Config'
 import shuffle from '/utils/array-shuffle'
 
 export default class HomeScreen extends Component {
@@ -38,7 +38,7 @@ export default class HomeScreen extends Component {
     if (!e.isTrusted) { // Only if triggered from GamepadRow.#handleGamepadA
       // Wait for buttons transition before leaving screen
       await Promise.all(
-        [...e.target.parentNode.children].map(el => new Promise(resolve => el.addEventListener('animationend', resolve)))
+        [...e.target.parentNode.children].map(el => new Promise(resolve => el.addEventListener('animationend', resolve, { once: true })))
       )
     }
 
