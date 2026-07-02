@@ -75,7 +75,16 @@ export function stop () {
   ctx = null
 }
 
+// Picks a random phrase from the array, never the same one twice in a row
+let lastPhrase = null
+function pickPhrase (phrases) {
+  const choices = phrases.length > 1 ? phrases.filter(phrase => phrase !== lastPhrase) : phrases
+  lastPhrase = choices[Math.floor(Math.random() * choices.length)]
+  return lastPhrase
+}
+
 export function speak (phrase = '', presetOrOptions = {}) {
+  if (Array.isArray(phrase)) phrase = pickPhrase(phrase)
   if (!phrase.length) return
 
   const opts = resolveOptions(presetOrOptions)
