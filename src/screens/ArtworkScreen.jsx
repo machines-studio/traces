@@ -127,7 +127,7 @@ export default class ArtworkScreen extends Component {
               >
                 <Testimony
                   index={index}
-                  transcript={I18N.translate(testimony.content)}
+                  transcript={I18N.resolve(testimony.content)}
                   translation={testimony.transcript}
                   timestamp={testimony.timestamp}
                   location={I18N.resolve(testimony.location)}
