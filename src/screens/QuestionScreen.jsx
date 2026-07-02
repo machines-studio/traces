@@ -35,9 +35,7 @@ export default class QuestionScreen extends Component {
         >
           {Session.$artworks.value.map(artwork => (
             <Artwork
-              thumbnail={artwork.thumbnail}
-              vector={artwork.vector}
-              tags={artwork.tags}
+              {...artwork}
               event-click={this.#handleArtwork(artwork)}
             />
           ))}
@@ -45,7 +43,7 @@ export default class QuestionScreen extends Component {
 
         <Caption
           position='bottom'
-          text={widont(I18N.resolve(Session.$question.value))}
+          text={widont(I18N.resolve(Session.$question.value.content))}
           hint={I18N('question.hint')}
         />
       </section>

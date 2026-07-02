@@ -1,3 +1,24 @@
+// WIP
+// {
+//     "id": 9,
+//     "keywords": "Little girl, child, bowl, fish, painting",
+//     "description": "Portrait of a girl reaching into a fishbowl. A loosely executed yet confident painting that reflects a loving observation. Hermann Courtens (1884–1956) was the son of Baron Franz Courtens. He painted landscapes, but was especially known for his still lifes with flowers, interiors, children, and young girls—often in costume and set in intimate, domestic scenes.",
+//     "description_vector": […]
+//     "media_url": "het-kind-met-de-vissen-msk-0351",
+//     "date_period": "20th century",
+//     "date_year_min": 1900,
+//     "date_year_max": 1999,
+//     "type_of_object_id": 9,
+//     "emotions": "Interest, joy",
+//     "origin": "Abby",
+//     "author_name": "Hermann",
+//     "birthday": null,
+//     "places": null,
+//     "storage_place": "Kortrijk",
+//     "popularity": 0,
+//     "question_id": 5
+// }
+
 import './ArtworkScreen.scss'
 
 import { Component } from '@tooooools/ui'
@@ -28,6 +49,10 @@ export default class ArtworkScreen extends Component {
   $recording = slot()
   $transcripting = slot()
 
+  static async load () {
+    await Session.loadTestimonies()
+  }
+
   template () {
     return (
       <section
@@ -51,9 +76,9 @@ export default class ArtworkScreen extends Component {
               switch (section) {
                 case 'content':
                 case 'testimonies':
-                  return widont(I18N.resolve(Session.$question.value))
+                  return widont(I18N.resolve(Session.$question.value.content))
                 case 'recorder':
-                  return I18N('artwork.record.cta', { question: I18N.resolve(Session.$question.value) })
+                  return I18N('artwork.record.cta', { question: I18N.resolve(Session.$question.value.content) })
               }
             })}
             hint={$([
@@ -100,20 +125,22 @@ export default class ArtworkScreen extends Component {
               />
 
               <footer>
-                {Session.$artwork.value.tags.map(tag => (<span innerText={I18N.resolve(tag)} />))}
+                // WIP
+                {/*{Session.$artwork.value.tags.map(tag => (<span innerText={I18N.resolve(tag)} />))}*/}
               </footer>
             </article>
           </div>
 
           {
-            Session.$artwork.value.medias.map(({ type, src, caption, content }) => (type in PANELS && (src || content)) && (
-              <div class='panel'>
-                <figure>
-                  {PANELS[type]?.({ src, content })}
-                  <figcaption innerText={I18N.resolve(caption)} />
-                </figure>
-              </div>
-            ))
+            // WIP
+            // Session.$artwork.value.medias.map(({ type, src, caption, content }) => (type in PANELS && (src || content)) && (
+            //   <div class='panel'>
+            //     <figure>
+            //       {PANELS[type]?.({ src, content })}
+            //       <figcaption innerText={I18N.resolve(caption)} />
+            //     </figure>
+            //   </div>
+            // ))
           }
         </GamepadRow>
 
@@ -161,7 +188,7 @@ export default class ArtworkScreen extends Component {
     // Keep track of currently focused section
     this.$currentSection.fill($([
       this.refs.rows.get('content').$hasFocus,
-      ...this.refs.rows.get('testimonies').map(row => row.$hasFocus),
+      ...(this.refs.rows.get('testimonies') ?? []).map(row => row.$hasFocus),
       this.refs.rows.get('recorder').$hasFocus,
     ], (rows) => {
       if (rows[0]) return 'content'

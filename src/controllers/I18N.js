@@ -20,24 +20,22 @@ export const loadTranslations = async () => {
 }
 
 const I18N = (key, vars = {}, fallback = key) => {
-  const lang = Session.$lang.value
-  const text = translations[lang]?.[key] ?? fallback
-
+  const text = translations[Session.$lang.value]?.[key] ?? fallback
   return typeof text === 'string'
     ? text.replace(/{{\s*(\w+)\s*}}/g, (match, name) => vars[name] ?? match)
     : text
 }
 
 I18N.resolve = translations => {
-  const lang = Session.$lang.value
   return typeof translations === 'object'
-    ? translations[lang]
+    ? translations[Session.$lang.value]
     : translations
 }
 
 I18N.date = timestamp => {
   const lang = Session.$lang.value
-  return new Intl.DateTimeFormat(lang, Config.LANGUAGES.find(({ code }) => code === lang)?.date).format(new Date(timestamp))
+  return new Intl.DateTimeFormat(lang, Config.LANGUAGES.find(({ code }) => code === lang)?.date)
+    .format(new Date(timestamp))
 }
 
 export default I18N

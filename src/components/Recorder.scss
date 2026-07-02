@@ -2,6 +2,10 @@
   --recorder-padding: 4vw;
   --recorder-icon-size: 10vw;
 
+  --recorder-progress-color: var(--color-red);
+  --recorder-progress-width: 0.6vw;
+  --recorder-progress-offset: calc(-1 * var(--recorder-progress-width) - 2px);
+
   --recorder-morse-scroll-duration: 300s;
   --recorder-morse-font-size: 4vw;
 }
@@ -11,7 +15,6 @@
 
   --ui-border-radius: 100%;
   --ui-icon-size: var(--recorder-icon-size);
-  --color: var(--color-red);
 
   position: absolute;
   padding: var(--recorder-padding);
@@ -39,11 +42,14 @@
     @include animations.use(
       (
         name: recorder-pulses,
-        duration: 3s,
+        duration: 2s,
         easing: var(--easing-ease-accelerate),
         iteration-count: infinite,
       )
     );
+
+    --color: var(--color-red);
+    overflow: visible;
 
     [class^='ui-button__icon-'] {
       @include animations.use(
@@ -53,15 +59,41 @@
           easing: var(--easing-ease-back)
         )
       );
-      transform-origin: 0 0 calc(-1 * (var(--recorder-icon-size) + var(--recorder-padding) * 2) / 2);
-    }
 
-    svg rect {
-      fill: currentcolor; // ??? Blink ? Pulse
+      position: relative;
+      transform-origin: 0 0 calc(-1 * (var(--recorder-icon-size) + var(--recorder-padding) * 2) / 2);
+
+      // Fill the mic capsule from the bottom up, behind the (unfilled) svg outline,
+      // so the outline stays crisp and only the fill level changes
+      &::after {
+        content: '';
+
+        position: absolute;
+        z-index: -1;
+        inset: 8.333% 37.5% 41.667%; // Capsule bounds within the 24x24 icon viewBox: x 9→15, y 2→14
+
+        background: currentcolor;
+        border-radius: 100vmax;
+
+        mask: linear-gradient(to top, white calc(var(--recorder-microphone-level, 0) * 100%), transparent 0);
+      }
     }
   }
 
-  &.is-waiting {
+  &__progress {
+    position: absolute;
+    inset: calc(-1 * (var(--recorder-progress-offset) + var(--recorder-progress-width)));
+    background: conic-gradient(var(--color-black) calc(100% * var(--recorder-progress, 0)), transparent 0);
+    border-radius: 100%;
+
+    // Hollow out the center
+    mask: radial-gradient(
+      transparent calc((var(--recorder-icon-size) + var(--recorder-padding) * 2) / 2 + var(--recorder-progress-offset)),
+      black 0
+    );
+  }
+
+  &.is-transcripting {
     @include animations.use(
       (
         name: recorder-shadow-pulses,
@@ -81,7 +113,10 @@
 
     --color: inherit;
 
+    overflow: hidden;
     opacity: 0.7;
+
+    [class^='ui-button__icon-'] svg { opacity: 0; }
 
     [class^='ui-button__icon-']::before {
       width: calc(var(--recorder-icon-size) + var(--recorder-padding) * 2);
@@ -96,7 +131,11 @@
     display: none;
   }
 
-  &.is-waiting &__morse {
+  &.is-transcripting &__progress {
+    display: none;
+  }
+
+  &.is-transcripting &__morse {
     @include animations.use(animations.$fade-in);
 
     position: absolute;

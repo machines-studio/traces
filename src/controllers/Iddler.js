@@ -17,7 +17,9 @@ export function bind () {
 export function reset () {
   clearTimeout(iddleTimer)
   if (DEBUG?.includes('no-iddle')) return
-  iddleTimer = setTimeout(() => quit({ fromIddle: true }), Config.SESSION.iddleDuration)
+  if (Config.SESSION.iddleDuration > 0) {
+    iddleTimer = setTimeout(() => quit({ fromIddle: true }), Config.SESSION.iddleDuration)
+  }
 }
 
 export async function quit ({ fromIddle = false } = {}) {

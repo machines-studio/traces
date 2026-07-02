@@ -28,6 +28,15 @@ export default defineConfig(({ mode }) => {
             alias: { '/test': path.join(__dirname, 'test') }
           }
         })
+      },
+      { // Reload the page when a public/config*.json file changes, since they're fetched, not bundled
+        name: 'config-json-live-reload',
+        configureServer (server) {
+          server.watcher.add(path.join(__dirname, 'public/config*.json'))
+          server.watcher.on('change', file => {
+            if (/\/config[^/]*\.json$/.test(file)) server.ws.send({ type: 'full-reload' })
+          })
+        }
       }
     ],
 

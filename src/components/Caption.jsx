@@ -48,7 +48,12 @@ export default class Caption extends Component {
   }
 
   afterRender () {
-    this.watch($(this.props.text), Voice.speak, { immediate: true })
+    this.watch($(this.props.text), this.#handleText, { immediate: true })
+  }
+
+  #handleText = text => {
+    Voice.stop()
+    Voice.speak(text)
   }
 
   beforeDestroy () {

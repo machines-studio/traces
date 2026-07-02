@@ -4,14 +4,18 @@ import { Toast } from '@tooooools/ui/components'
 
 import * as Icons from '/data/icons'
 import App from '/components/App'
+import API from '/controllers/API'
 import { loadConfig } from '/controllers/Config'
 import { loadTranslations } from '/controllers/I18N'
 import Iddler from '/controllers/Iddler'
 
-// Fetch config, translations, and render app
+// Fetch config, translations, ping server and render app
 ;(async () => {
   await loadConfig()
   await loadTranslations()
+
+  if (!await API.ping()) return displayError('Cannot reach API')
+  // TODO[API] warmup transcript by triggering a fake one (SEE pp1 README)
 
   window.App = render(<App />).components[0]
   Iddler.bind()
@@ -22,11 +26,12 @@ const displayError = error => {
   // Print the original stack only, so devtools doesn't also show this handler's frame
   console.error(error?.stack || error)
   Toast.display([
-    <p>Une erreur inconnue est survenue{error?.stack?.length ? '\u2009:' : ''}</p>,
+    error,
     error?.stack?.length && <pre>{error.stack}</pre>
   ], {
     icon: Icons.error,
-    tone: 'error'
+    tone: 'error',
+    duration: 30_000
   })
 }
 
@@ -46,6 +51,6 @@ console.warn = (...args) => {
   Toast.display(args.map(a => <p>{a}</p>), {
     icon: Icons.warning,
     tone: 'warning',
-    duration: 5000
+    duration: 5_000
   })
 }

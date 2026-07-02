@@ -1,6 +1,26 @@
 {
   "LANGUAGES": ["en", "fr", "nl"],
-  "ROUNDS": 5,
+
+  "SESSION": {
+    "rounds": 5,
+    "iddleDuration": 60000,
+    "iddleConfirmDelay": 10000
+  },
+
+  "RECORDER": {
+    "maxDuration": 30000
+  },
+
+  "API": {
+    "baseUrl": "http://localhost:8000",
+    "endpoints": {
+      "ping": "/",
+      "transcript": "/transcript",
+      "questions": "/questions",
+      "artworks": "/artworks",
+      "testimonies": "/testimonies"
+    }
+  },
   
   "COLORS": {
     "yellow": "#FC0",
@@ -31,7 +51,8 @@
     "attack": 0.8,
     "release": 1.5,
     "reverbDuration": 4.0,
-    "reverbMix": 0.65
+    "reverbMix": 0.65,
+    "fadeTime": 2.0
   },
 
   "VOICES": {
@@ -113,10 +134,5 @@
       "invertX": true,
       "invertY": true
     }
-  },
-  
-  "SESSION": {
-    "iddleDuration": 60000,
-    "iddleConfirmDelay": 10000
   }
 }

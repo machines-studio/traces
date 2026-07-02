@@ -1,62 +1,43 @@
-// WIP[back]
-export function fetchQuestions () {
-  return [
-    { fr: 'Quel est le premier souvenir qui vous vient à l’esprit lorsque vous pensez à votre enfance?', en: 'What is the first memory that comes to mind when you think about your childhood?' },
-    { fr: 'Quel est le souvenir le plus heureux ?', en: 'What is your happiest memory?' },
-    { fr: 'Quel est le souvenir le plus triste ?', en: 'What is your saddest memory?' },
-    { fr: 'Quel est le souvenir le plus effrayant ?', en: 'What is your scariest memory?' },
-    { fr: 'Quel est le souvenir le plus drôle ?', en: 'What is your funniest memory?' },
-    { fr: 'Quel est le souvenir le plus marquant ?', en: 'What is your most striking memory?' },
-    { fr: 'Quel est le souvenir le plus étrange ?', en: 'What is your strangest memory?' },
-    { fr: 'Quel est le souvenir le plus ancien ?', en: 'What is your oldest memory?' },
-    { fr: 'Quel est le souvenir le plus récent ?', en: 'What is your most recent memory?' },
-    { fr: 'Quel est le souvenir dont vous êtes le plus fier ?', en: 'What is the memory you are most proud of?' }
-  ]
+import Config from '/controllers/Config'
+
+const url = endpoint => Config.API.baseUrl + endpoint
+
+const request = async (endpoint, options, params = {}) => {
+  // Build the param urls query
+  const query = Object.entries(params)
+    .map(([key, value]) => {
+      const list = Array.isArray(value) ? value.join(',') : value
+      return `${encodeURIComponent(key)}=${encodeURIComponent(list).replaceAll('%2C', ',')}`
+    })
+    .join('&')
+
+  const response = await fetch(url(endpoint) + (query ? '?' + query : ''), options)
+  if (!response.ok) throw new Error(`API error ${response.status} on ${endpoint}: ${await response.text()}`)
+  return response.json()
 }
 
-// WIP[back]
-export function fetchArtworks (question, previousArtwork) {
-  const mock = {
-    vector: 'description',
-    thumbnail: '/dev/sample.png',
-    tags: [{ fr: 'couleur', en: 'color' }, { fr: 'image', en: 'picture' }, { fr: 'bizarre', en: 'weird' }],
-    title: { fr: 'Bébé moche', en: 'Weird Baby with a weird funnel on its weird head' },
-    date: 1928,
-    text: { fr: 'Le texte en FR', en: 'Auctor ultrices fermentum scelerisque turpis non nibh velit at sit dignissim porta, consequat vitae senectus tempus ad erat quam primis sagittis. Justo sollicitudin finibus neque proin eros euismod class sit tincidunt.' },
-    medias: [
-      { type: 'image', src: '/dev/sample.png', caption: { fr: 'bb moche', en: 'Ugly weird baby' } },
-      { type: 'image', src: '/dev/sample.png' },
-      { type: 'text', content: { en: 'Taciti vivamus turpis enim feugiat eleifend orci elit integer suscipit augue donec volutpat, tristique velit justo ex parturient senectus curae erat convallis lobortis. Adipiscing erat nullam porta pulvinar nascetur malesuada posuere ac a duis, torquent dictumst nam curae vivamus litora nibh elementum vel. In imperdiet pharetra scelerisque morbi adipiscing mi eget ornare dui sagittis ex eros congue volutpat curae finibus, nibh eu justo dis rhoncus accumsan natoque nam facilisis elementum efficitur penatibus himenaeos laoreet arcu.' } },
-      { type: 'video', src: '/dev/sample.mp4' },
-      { type: 'sound', src: '/dev/sample.mp3' }
-    ],
-    testimonies: [
-      { timestamp: Date.now(), location: 'Abby Kortrijk', transcript: 'Proin non ad dis aliquam ultrices aptent justo nibh litora pulvinar risus cursus lacus velit platea consectetur facilisis venenatis orci massa nunc porta morbi ac turpis penatibus tempor luctus neque volutpat dolor. Finibus facilisis mollis turpis purus lectus lorem eu vulputate amet, dignissim dis sociosqu enim himenaeos dictumst quisque integer, eros magnis sem magna metus consequat faucibus ridiculus. Lorem potenti turpis commodo aliquam tempor tristique morbi nec duis ornare senectus, efficitur fames tempus malesuada varius nascetur iaculis ultrices nulla facilisi.', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-      { timestamp: Date.now(), location: 'Abby Kortrijk', transcript: 'Proin non ad dis aliquam ultrices aptent justo nibh litora pulvinar risus cursus lacus velit platea consectetur facilisis venenatis orci massa nunc porta morbi ac turpis penatibus tempor luctus neque volutpat dolor. Finibus facilisis mollis turpis purus lectus lorem eu vulputate amet, dignissim dis sociosqu enim himenaeos dictumst quisque integer, eros magnis sem magna metus consequat faucibus ridiculus. Lorem potenti turpis commodo aliquam tempor tristique morbi nec duis ornare senectus, efficitur fames tempus malesuada varius nascetur iaculis ultrices nulla facilisi.', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-      { timestamp: Date.now(), location: 'Abby Kortrijk', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-      { timestamp: Date.now(), location: 'Abby Kortrijk', transcript: 'Proin non ad dis aliquam ultrices aptent justo nibh litora pulvinar risus cursus lacus velit platea consectetur facilisis venenatis orci massa nunc porta morbi ac turpis penatibus tempor luctus neque volutpat dolor. Finibus facilisis mollis turpis purus lectus lorem eu vulputate amet, dignissim dis sociosqu enim himenaeos dictumst quisque integer, eros magnis sem magna metus consequat faucibus ridiculus. Lorem potenti turpis commodo aliquam tempor tristique morbi nec duis ornare senectus, efficitur fames tempus malesuada varius nascetur iaculis ultrices nulla facilisi.', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-      { timestamp: Date.now(), location: 'Abby Kortrijk', transcript: 'Proin non ad dis aliquam ultrices aptent justo nibh litora pulvinar risus cursus lacus velit platea consectetur facilisis venenatis orci massa nunc porta morbi ac turpis penatibus tempor luctus neque volutpat dolor. Finibus facilisis mollis turpis purus lectus lorem eu vulputate amet, dignissim dis sociosqu enim himenaeos dictumst quisque integer, eros magnis sem magna metus consequat faucibus ridiculus. Lorem potenti turpis commodo aliquam tempor tristique morbi nec duis ornare senectus, efficitur fames tempus malesuada varius nascetur iaculis ultrices nulla facilisi.', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-      { timestamp: Date.now(), location: 'Abby Kortrijk', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-      { timestamp: Date.now(), location: 'Abby Kortrijk', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-      { timestamp: Date.now(), location: 'Abby Kortrijk', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-      { timestamp: Date.now(), location: 'Abby Kortrijk', transcript: 'Proin non ad dis aliquam ultrices aptent justo nibh litora pulvinar risus cursus lacus velit platea consectetur facilisis venenatis orci massa nunc porta morbi ac turpis penatibus tempor luctus neque volutpat dolor. Finibus facilisis mollis turpis purus lectus lorem eu vulputate amet, dignissim dis sociosqu enim himenaeos dictumst quisque integer, eros magnis sem magna metus consequat faucibus ridiculus. Lorem potenti turpis commodo aliquam tempor tristique morbi nec duis ornare senectus, efficitur fames tempus malesuada varius nascetur iaculis ultrices nulla facilisi.', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-      { timestamp: Date.now(), location: 'Abby Kortrijk', transcript: 'Proin non ad dis aliquam ultrices aptent justo nibh litora pulvinar risus cursus lacus velit platea consectetur facilisis venenatis orci massa nunc porta morbi ac turpis penatibus tempor luctus neque volutpat dolor. Finibus facilisis mollis turpis purus lectus lorem eu vulputate amet, dignissim dis sociosqu enim himenaeos dictumst quisque integer, eros magnis sem magna metus consequat faucibus ridiculus. Lorem potenti turpis commodo aliquam tempor tristique morbi nec duis ornare senectus, efficitur fames tempus malesuada varius nascetur iaculis ultrices nulla facilisi.', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-      { timestamp: Date.now(), location: 'Abby Kortrijk', transcript: 'Proin non ad dis aliquam ultrices aptent justo nibh litora pulvinar risus cursus lacus velit platea consectetur facilisis venenatis orci massa nunc porta morbi ac turpis penatibus tempor luctus neque volutpat dolor. Finibus facilisis mollis turpis purus lectus lorem eu vulputate amet, dignissim dis sociosqu enim himenaeos dictumst quisque integer, eros magnis sem magna metus consequat faucibus ridiculus. Lorem potenti turpis commodo aliquam tempor tristique morbi nec duis ornare senectus, efficitur fames tempus malesuada varius nascetur iaculis ultrices nulla facilisi.', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-      { timestamp: Date.now(), location: 'Abby Kortrijk', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-      { timestamp: Date.now(), location: 'Abby Kortrijk', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-      { timestamp: Date.now(), location: 'Abby Kortrijk', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-      { timestamp: Date.now(), location: 'Abby Kortrijk', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-      { timestamp: Date.now(), location: 'Abby Kortrijk', transcript: 'Proin non ad dis aliquam ultrices aptent justo nibh litora pulvinar risus cursus lacus velit platea consectetur facilisis venenatis orci massa nunc porta morbi ac turpis penatibus tempor luctus neque volutpat dolor. Finibus facilisis mollis turpis purus lectus lorem eu vulputate amet, dignissim dis sociosqu enim himenaeos dictumst quisque integer, eros magnis sem magna metus consequat faucibus ridiculus. Lorem potenti turpis commodo aliquam tempor tristique morbi nec duis ornare senectus, efficitur fames tempus malesuada varius nascetur iaculis ultrices nulla facilisi.', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-      { timestamp: Date.now(), location: 'Abby Kortrijk', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-    ]
-  }
+export default {
+  ping: async () => (await fetch(url(Config.API.endpoints.ping))).ok,
 
-  return [
-    { ...mock, vector: 'type' },
-    { ...mock, vector: 'emotion' },
-    { ...mock, vector: 'date' },
-    { ...mock, vector: 'description' }
-  ]
+  fetchTranscript: async blob => {
+    return request(Config.API.endpoints.transcript, {
+      headers: { 'Content-Type': 'audio/wav' },
+      method: 'POST',
+      body: blob
+    })
+  },
+
+  fetchQuestions: async () => request(Config.API.endpoints.questions),
+
+  fetchArtworks: async (question, artworks = []) => (
+    request(Config.API.endpoints.artworks, {}, {
+      q: question.id,
+      h: artworks.map(artwork => artwork.id)
+    })
+  ),
+
+  fetchTestimonies: async (artwork) =>
+    request(Config.API.endpoints.testimonies, {}, {
+      a: artwork.id
+    })
 }
-
-export default { fetchQuestions, fetchArtworks }

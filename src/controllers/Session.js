@@ -3,7 +3,6 @@ import { $, persist } from '@tooooools/ui/state'
 
 import API from '/controllers/API'
 import Config from '/controllers/Config'
-import lastOf from '/utils/array-last'
 import shuffle from '/utils/array-shuffle'
 
 const Session = {
@@ -21,13 +20,32 @@ const Session = {
   questions: null, // consumable questions pool
   trace: [], // [{ question, artwork }, …] committed history
 
-  loadQuestions: async () => (Session.questions ??= shuffle(await API.fetchQuestions())),
-  loadQuestion: async () => (Session.$question.value = Session.questions.pop()),
-  loadArtworks: async () => (Session.$artworks.value = await API.fetchArtworks(Session.$question.value, lastOf(Session.trace)?.artwork)),
+  loadQuestions: async () => (
+    Session.questions ??= shuffle(await API.fetchQuestions())
+  ),
+
+  loadQuestion: async () => (
+    Session.$question.value = Session.questions.pop()
+  ),
+
+  loadArtworks: async () => (
+    Session.$artworks.value = await API.fetchArtworks(
+      Session.$question.value,
+      Session.trace.map(({ artwork }) => artwork)
+    )
+  ),
+
+  loadTestimonies: async () => (
+    Session.$artwork.value = {
+      ...Session.$artwork.value,
+      testimonies: await API.fetchTestimonies(Session.$artwork.value)
+    }
+  ),
+
   commit: () => Session.trace.push({ question: Session.$question.value, artwork: Session.$artwork.value }),
 
-  // ??? Allow pushing uncomplete trace
-  isComplete: () => Session.trace.length >= Config.ROUNDS,
+  // ??? Allow pushing incomplete trace
+  isComplete: () => Session.trace.length >= Config.SESSION.rounds,
 
   // WIP[back]
   push: () => {}
