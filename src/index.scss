@@ -59,6 +59,10 @@
   --caption-line-height: 0.9;
   --caption-font-weight: 500;
 
+  // UI
+
+  --ui-z-modal: 999;
+
   @include app.debug('fast', &) {
     --easing: 0ms;
     --easing-fast: 0ms;
@@ -101,6 +105,10 @@
 [data-color='blue'] { --color: var(--color-blue); }
 [data-color='red'] { --color: var(--color-red); }
 [data-color='pink'] { --color: var(--color-pink); }
+
+[class^='ui-backdrop-'] {
+  z-index: var(--ui-z-modal);
+}
 
 [class^='ui-modal-'] {
   @include animations.use(animations.$fade-in);

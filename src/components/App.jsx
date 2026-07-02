@@ -2,16 +2,14 @@
 import './App.scss'
 
 import { Component } from '@tooooools/ui'
-import { $, persist } from '@tooooools/ui/state'
 
 import Config, { DEBUG } from '/controllers/Config'
+import Session from '/controllers/Session'
 import SVGHeadline from '/headline.svg?raw'
 import ArtworkScreen from '/screens/ArtworkScreen'
 import HomeScreen from '/screens/HomeScreen'
 import IntroductionScreen from '/screens/IntroductionScreen'
 import QuestionScreen from '/screens/QuestionScreen'
-
-// TODO goto home when more than X seconds without interaction (prompt?)
 
 const SCREENS = {
   artwork: ArtworkScreen,
@@ -21,18 +19,12 @@ const SCREENS = {
 }
 
 export default class App extends Component {
-  $screen = $(new URLSearchParams(window.location.search).get('screen') ?? 'home')
-  $language = persist('app.language')
-
-  $question = import.meta.env.DEV ? persist('app.question') : $(undefined)
-  $artwork = import.meta.env.DEV ? persist('app.artwork') : $(undefined)
-
   template () {
     return (
       <main
         class='app'
         data-debug={DEBUG}
-        data-screen={this.$screen}
+        data-screen={Session.$screen}
         style={{
           // Add all --color-<NAME> from config.json
           ...Object.entries(Config.COLORS).reduce((acc, [key, value]) => ({
@@ -69,29 +61,26 @@ export default class App extends Component {
   }
 
   afterRender () {
-    this.watch(this.$language, this.#handleLanguage, { immediate: true })
-    this.watch(this.$screen, this.#handleScreen, { immediate: true })
+    this.watch(Session.$lang, this.#handleLang, { immediate: true })
+    this.watch(Session.$screen, this.#handleScreen, { immediate: true })
   }
 
-  #handleLanguage = lang => { document.documentElement.lang = lang?.code }
+  #handleLang = lang => { document.documentElement.lang = lang }
 
-  #handleScreen = async screen => {
+  #handleScreen = async name => {
     this.refs.screen?.destroy()
+    const screen = SCREENS[name]
+    if (!screen) throw new Error(`Screen '${name}' does not exist`)
 
     this.base.classList.add('is-transitioning')
     await this.#waitForTransitions()
+    await screen.load?.()
     this.base.classList.remove('is-transitioning')
 
-    window.document.title = `TRACES → ${screen}`
+    window.document.title = `TRACES → ${name}`
 
     this.render(
-      h(SCREENS[screen], {
-        ref: this.ref('screen'),
-        screen: this.$screen,
-        language: this.$language,
-        question: this.$question,
-        artwork: this.$artwork
-      }),
+      h(screen, { ref: this.ref('screen') }),
       this.base
     )
   }

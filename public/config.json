@@ -1,5 +1,6 @@
 {
   "LANGUAGES": ["en", "fr", "nl"],
+  "ROUNDS": 5,
   
   "COLORS": {
     "yellow": "#FC0",

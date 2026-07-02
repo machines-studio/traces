@@ -6,11 +6,13 @@ import Config from '/controllers/Config'
 export default class Artwork extends Component {
   static props = {
     'event-click': Props.required(Props.function),
+    thumbnail: Props.string,
     tags: Props.array,
+    // TODO testimonies count
     vector: Props.enum('type', 'emotion', 'date', 'description')
   }
 
-  template ({ vector, tags = [] }) {
+  template ({ vector, tags = [], thumbnail = '' }) {
     return (
       <section
         class='artwork'
@@ -18,7 +20,7 @@ export default class Artwork extends Component {
         data-color={Config.COLORS.vectors[vector]}
       >
         <div class='artwork__wrapper'>
-          <img src='/images/bb.png' /* WIP[back] */ />
+          <img src={thumbnail} />
           <ul class='artwork__tags'>
             {
               tags.map(tag => (

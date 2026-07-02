@@ -1,6 +1,6 @@
 export const DEBUG = (
   new URLSearchParams(window.location.search)
-).get('debug')
+).get('debug') ?? ''
 
 const Config = {}
 export default Config

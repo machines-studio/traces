@@ -1,3 +1,15 @@
+@mixin sphere-shadows {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 60% 60%, transparent 20%, rgba(255 255 255 / 20%) 70%),
+    radial-gradient(circle at 40% 40%, transparent 30%, rgba(0 0 0 / 30%) 70%),
+    radial-gradient(circle at 50% 50%, transparent 20%, rgba(0 0 0 / 10%) 90%),
+  ;
+  border-radius: 100%;
+  mix-blend-mode: multiply;
+}
+
 /*
   Display an outline around a block to debug its layout
 */

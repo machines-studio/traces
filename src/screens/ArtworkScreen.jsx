@@ -1,102 +1,77 @@
 import './ArtworkScreen.scss'
 
-import { Component, Props } from '@tooooools/ui'
-import { $, slot, isSignal } from '@tooooools/ui/state'
+import { Component } from '@tooooools/ui'
+import { $, slot } from '@tooooools/ui/state'
 
 import Caption from '/components/Caption'
 import Eyes from '/components/Eyes'
 import GamepadRow from '/components/GamepadRow'
 import Recorder from '/components/Recorder'
 import Testimony from '/components/Testimony'
-import Config from '/controllers/Config'
+import Config, { DEBUG } from '/controllers/Config'
+import Confirm from '/controllers/Confirm'
 import Gamepad from '/controllers/Gamepad'
 import I18N from '/controllers/I18N'
+import Session from '/controllers/Session'
 import lastOf from '/utils/array-last'
 import widont from '/utils/string-widont'
 
+const PANELS = {
+  image: ({ src }) => <img src={src} />,
+  text: ({ content }) => I18N.resolve(content) && <article>{I18N.resolve(content)}</article>,
+  video: ({ src }) => <video autoplay muted><source src={src} /></video>,
+  sound: ({ src }) => <audio controls src={src} />
+}
+
 export default class ArtworkScreen extends Component {
-  static props = {
-    artwork: Props.required(Props.object),
-    language: Props.required(Props.Signal),
-    screen: Props.required(Props.Signal),
-    question: Props.required(Props.Signal)
-  }
+  $currentSection = slot(/* 'content|testimonies|recorder' */)
+  $recording = slot()
+  $transcripting = slot()
 
-  $currentSection = slot() // Will be content, testimonies, or recorder
-
-  beforeRender () {
-    // WIP[back]
-    this.props.artwork = {
-      vector: 'description',
-      tags: [{ fr: 'couleur', en: 'color' }, { fr: 'image', en: 'picture' }, { fr: 'bizarre', en: 'weird' }],
-      title: { fr: 'Bébé moche', en: 'Weird Baby with a weird funnel on its weird head' },
-      date: 1928,
-      text: { fr: 'Le texte en FR', en: 'Auctor ultrices fermentum scelerisque turpis non nibh velit at sit dignissim porta, consequat vitae senectus tempus ad erat quam primis sagittis. Justo sollicitudin finibus neque proin eros euismod class sit tincidunt.' },
-      medias: [
-        { type: 'image', src: '/images/bb.png', caption: { fr: 'bb moche', en: 'Ugly weird baby' } },
-        { type: 'image', src: '/images/bb.png' },
-        { type: 'text', content: { en: 'Taciti vivamus turpis enim feugiat eleifend orci elit integer suscipit augue donec volutpat, tristique velit justo ex parturient senectus curae erat convallis lobortis. Adipiscing erat nullam porta pulvinar nascetur malesuada posuere ac a duis, torquent dictumst nam curae vivamus litora nibh elementum vel. In imperdiet pharetra scelerisque morbi adipiscing mi eget ornare dui sagittis ex eros congue volutpat curae finibus, nibh eu justo dis rhoncus accumsan natoque nam facilisis elementum efficitur penatibus himenaeos laoreet arcu.' } },
-        // WIP
-        // { type: 'video', src: '/images/bb.png' },
-        // { type: 'sound', src: '/images/bb.png' }
-      ],
-      testimonies: [
-        { timestamp: Date.now(), location: 'Abby Kortrijk', transcript: 'Proin non ad dis aliquam ultrices aptent justo nibh litora pulvinar risus cursus lacus velit platea consectetur facilisis venenatis orci massa nunc porta morbi ac turpis penatibus tempor luctus neque volutpat dolor. Finibus facilisis mollis turpis purus lectus lorem eu vulputate amet, dignissim dis sociosqu enim himenaeos dictumst quisque integer, eros magnis sem magna metus consequat faucibus ridiculus. Lorem potenti turpis commodo aliquam tempor tristique morbi nec duis ornare senectus, efficitur fames tempus malesuada varius nascetur iaculis ultrices nulla facilisi.', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-        { timestamp: Date.now(), location: 'Abby Kortrijk', transcript: 'Proin non ad dis aliquam ultrices aptent justo nibh litora pulvinar risus cursus lacus velit platea consectetur facilisis venenatis orci massa nunc porta morbi ac turpis penatibus tempor luctus neque volutpat dolor. Finibus facilisis mollis turpis purus lectus lorem eu vulputate amet, dignissim dis sociosqu enim himenaeos dictumst quisque integer, eros magnis sem magna metus consequat faucibus ridiculus. Lorem potenti turpis commodo aliquam tempor tristique morbi nec duis ornare senectus, efficitur fames tempus malesuada varius nascetur iaculis ultrices nulla facilisi.', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-        { timestamp: Date.now(), location: 'Abby Kortrijk', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-        { timestamp: Date.now(), location: 'Abby Kortrijk', transcript: 'Proin non ad dis aliquam ultrices aptent justo nibh litora pulvinar risus cursus lacus velit platea consectetur facilisis venenatis orci massa nunc porta morbi ac turpis penatibus tempor luctus neque volutpat dolor. Finibus facilisis mollis turpis purus lectus lorem eu vulputate amet, dignissim dis sociosqu enim himenaeos dictumst quisque integer, eros magnis sem magna metus consequat faucibus ridiculus. Lorem potenti turpis commodo aliquam tempor tristique morbi nec duis ornare senectus, efficitur fames tempus malesuada varius nascetur iaculis ultrices nulla facilisi.', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-        { timestamp: Date.now(), location: 'Abby Kortrijk', transcript: 'Proin non ad dis aliquam ultrices aptent justo nibh litora pulvinar risus cursus lacus velit platea consectetur facilisis venenatis orci massa nunc porta morbi ac turpis penatibus tempor luctus neque volutpat dolor. Finibus facilisis mollis turpis purus lectus lorem eu vulputate amet, dignissim dis sociosqu enim himenaeos dictumst quisque integer, eros magnis sem magna metus consequat faucibus ridiculus. Lorem potenti turpis commodo aliquam tempor tristique morbi nec duis ornare senectus, efficitur fames tempus malesuada varius nascetur iaculis ultrices nulla facilisi.', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-        { timestamp: Date.now(), location: 'Abby Kortrijk', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-        { timestamp: Date.now(), location: 'Abby Kortrijk', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-        { timestamp: Date.now(), location: 'Abby Kortrijk', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-        { timestamp: Date.now(), location: 'Abby Kortrijk', transcript: 'Proin non ad dis aliquam ultrices aptent justo nibh litora pulvinar risus cursus lacus velit platea consectetur facilisis venenatis orci massa nunc porta morbi ac turpis penatibus tempor luctus neque volutpat dolor. Finibus facilisis mollis turpis purus lectus lorem eu vulputate amet, dignissim dis sociosqu enim himenaeos dictumst quisque integer, eros magnis sem magna metus consequat faucibus ridiculus. Lorem potenti turpis commodo aliquam tempor tristique morbi nec duis ornare senectus, efficitur fames tempus malesuada varius nascetur iaculis ultrices nulla facilisi.', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-        { timestamp: Date.now(), location: 'Abby Kortrijk', transcript: 'Proin non ad dis aliquam ultrices aptent justo nibh litora pulvinar risus cursus lacus velit platea consectetur facilisis venenatis orci massa nunc porta morbi ac turpis penatibus tempor luctus neque volutpat dolor. Finibus facilisis mollis turpis purus lectus lorem eu vulputate amet, dignissim dis sociosqu enim himenaeos dictumst quisque integer, eros magnis sem magna metus consequat faucibus ridiculus. Lorem potenti turpis commodo aliquam tempor tristique morbi nec duis ornare senectus, efficitur fames tempus malesuada varius nascetur iaculis ultrices nulla facilisi.', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-        { timestamp: Date.now(), location: 'Abby Kortrijk', transcript: 'Proin non ad dis aliquam ultrices aptent justo nibh litora pulvinar risus cursus lacus velit platea consectetur facilisis venenatis orci massa nunc porta morbi ac turpis penatibus tempor luctus neque volutpat dolor. Finibus facilisis mollis turpis purus lectus lorem eu vulputate amet, dignissim dis sociosqu enim himenaeos dictumst quisque integer, eros magnis sem magna metus consequat faucibus ridiculus. Lorem potenti turpis commodo aliquam tempor tristique morbi nec duis ornare senectus, efficitur fames tempus malesuada varius nascetur iaculis ultrices nulla facilisi.', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-        { timestamp: Date.now(), location: 'Abby Kortrijk', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-        { timestamp: Date.now(), location: 'Abby Kortrijk', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-        { timestamp: Date.now(), location: 'Abby Kortrijk', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-        { timestamp: Date.now(), location: 'Abby Kortrijk', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-        { timestamp: Date.now(), location: 'Abby Kortrijk', transcript: 'Proin non ad dis aliquam ultrices aptent justo nibh litora pulvinar risus cursus lacus velit platea consectetur facilisis venenatis orci massa nunc porta morbi ac turpis penatibus tempor luctus neque volutpat dolor. Finibus facilisis mollis turpis purus lectus lorem eu vulputate amet, dignissim dis sociosqu enim himenaeos dictumst quisque integer, eros magnis sem magna metus consequat faucibus ridiculus. Lorem potenti turpis commodo aliquam tempor tristique morbi nec duis ornare senectus, efficitur fames tempus malesuada varius nascetur iaculis ultrices nulla facilisi.', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-        { timestamp: Date.now(), location: 'Abby Kortrijk', content: { en: 'Magna nisi arcu euismod pretium habitasse fames cubilia malesuada eget maecenas elementum volutpat ut vestibulum, enim pellentesque nunc eros potenti semper aliquet dolor montes cursus accumsan varius quisque. Dis mattis suspendisse natoque penatibus litora primis purus nam eleifend vivamus sagittis ante nec sem volutpat, felis dignissim taciti iaculis egestas maximus habitant eros conubia inceptos odio vel bibendum habitasse. Mauris sollicitudin sed libero quis a est sapien id vestibulum dictumst luctus, aliquam massa maecenas viverra fringilla purus semper fusce in.' } },
-      ]
-    }
-
-    // Ensure prop.artwork is not a Signal to avoid unecessary rendering overhead
-    this.props.artwork = isSignal(this.props.artwork)
-      ? this.props.artwork.value
-      : this.props.artwork
-  }
-
-  template ({ artwork, question }) {
-    if (!artwork) return 'No artwork found.'
-
-    const text = I18N.resolve(artwork.text)
-
+  template () {
     return (
       <section
-        class='artwork-screen screen'
+        class={[
+          'artwork-screen screen',
+          { 'has-transcript': this.$transcript }
+        ]}
         data-section={this.$currentSection}
-        data-color={Config.COLORS.vectors[artwork.vector]}
+        data-color={Config.COLORS.vectors[Session.$artwork.value.vector]}
       >
         <header class='artwork-screen__header'>
           {/* TODO constellation */}
 
           <Caption
             position='top'
-            text={$([this.$currentSection, question], ([section, question]) => {
+            text={$([
+              this.$currentSection,
+              this.$recording,
+              this.$transcripting,
+            ], ([section, recording, transcripting]) => {
               switch (section) {
                 case 'content':
-                case 'testimonies': return I18N.resolve(question)
-
-                case 'recorder': return I18N('artwork.record.0', { question: I18N.resolve(question) })
+                case 'testimonies':
+                  return widont(I18N.resolve(Session.$question.value))
+                case 'recorder':
+                  return I18N('artwork.record.cta', { question: I18N.resolve(Session.$question.value) })
               }
-              widont(I18N.resolve(question))
             })}
-            hint={$(this.$currentSection, section => {
+            hint={$([
+              this.$currentSection,
+              this.$recording,
+              this.$transcripting,
+            ], ([section, recording, transcripting]) => {
               switch (section) {
-                case 'content': return I18N('artwork.hint.explore')
-                case 'testimonies': return I18N('artwork.hint.scroll-top')
-                case 'recorder': return I18N('TODO')
+                case 'content':
+                  return I18N('artwork.hint.explore')
+                case 'testimonies':
+                  return I18N('artwork.hint.scroll-top')
+                case 'recorder':
+                  return recording
+                    ? I18N('artwork.hint.recording', {}, null)
+                    : transcripting
+                      ? I18N('artwork.hint.transcripting', {}, null)
+                      : I18N('artwork.hint.record-cta', {}, null)
               }
             })}
           />
@@ -112,53 +87,39 @@ export default class ArtworkScreen extends Component {
           <div class='panel'>
             <article ref={this.ref('article')}>
               <header>
-                <h1>{I18N.resolve(artwork.title)}</h1>
+                <h1>{I18N.resolve(Session.$artwork.value.title)}</h1>
                 <ul class='metas'>
-                  <li>{I18N.resolve(artwork.date)}</li>
+                  <li>{Session.$artwork.value.date}</li>
                 </ul>
               </header>
 
-              <section ref={this.ref('prose')} class='prose' innerHTML={text} />
+              <section
+                ref={this.ref('prose')}
+                class='prose'
+                innerHTML={I18N.resolve(Session.$artwork.value.text)}
+              />
 
               <footer>
-                {artwork.tags.map(tag => (<span innerText={I18N.resolve(tag)} />))}
+                {Session.$artwork.value.tags.map(tag => (<span innerText={I18N.resolve(tag)} />))}
               </footer>
             </article>
           </div>
 
           {
-            artwork.medias.map(({ type, src, caption, content }) => {
-              switch (type) {
-                case 'image': return src && (
-                  <div class='panel'>
-                    <figure>
-                      <img src={src} />
-                      <figcaption innerText={I18N.resolve(caption)} />
-                    </figure>
-                  </div>
-                )
-
-                case 'text': return I18N.resolve(content) && (
-                  <div class='panel'>
-                    <figure>
-                      <article>{I18N.resolve(content)}</article>
-                    </figure>
-                  </div>
-                )
-
-                // TODO
-                case 'video':
-                case 'sound':
-                default:
-                  return null
-              }
-            })
+            Session.$artwork.value.medias.map(({ type, src, caption, content }) => (type in PANELS && (src || content)) && (
+              <div class='panel'>
+                <figure>
+                  {PANELS[type]?.({ src, content })}
+                  <figcaption innerText={I18N.resolve(caption)} />
+                </figure>
+              </div>
+            ))
           }
         </GamepadRow>
 
         <section class='artwork-screen__testimonies'>
           {
-            artwork.testimonies.map(testimony => (
+            Session.$artwork.value.testimonies.map(testimony => (
               <GamepadRow
                 initial='start'
                 scroll={{ block: 'center' }}
@@ -191,6 +152,11 @@ export default class ArtworkScreen extends Component {
     Gamepad.on('a', this.#handleGamepadA)
     Gamepad.on('b', this.#handleGamepadB)
 
+    // Connect to recorder state
+    this.$recording.fill(this.refs.recorder.$recording)
+    this.$transcripting.fill(this.refs.recorder.$transcripting)
+    this.watch(this.refs.recorder.$transcript, this.#handleTranscript)
+
     // Keep track of currently focused section
     this.$currentSection.fill($([
       this.refs.rows.get('content').$hasFocus,
@@ -209,15 +175,16 @@ export default class ArtworkScreen extends Component {
     this.refs.article.classList.toggle('is-large', overflowRatio > 1)
     this.refs.article.style.setProperty('--cols', Math.ceil(overflowRatio + 0.5))
 
-    // DEBUG
-    // GamepadRow.$INDEX.value = GamepadRow.$ROWS.value.indexOf(this.refs.rows.get('recorder'))
+    // Jump to recorder section
+    if (DEBUG.includes('recorder')) {
+      GamepadRow.$INDEX.value = GamepadRow.$ROWS.value.indexOf(this.refs.rows.get('recorder'))
+    }
   }
 
   #handleGamepadA = () => {
     // // TODO[next] enter a full-screen view of a specific panel (text, video, image, etc…)
     // const selection = this.refs.rows.find(row => row.$hasFocus.value)?.selection
     // if (!selection) return
-    // console.log(selection.base ?? selection)
     // ;(selection.base ?? selection).classList.add('is-zoomed')
   }
 
@@ -227,8 +194,27 @@ export default class ArtworkScreen extends Component {
       GamepadRow.$INDEX.value = 0
     } else {
       // Go back to question screen if already on top
-      this.props.screen.value = 'question'
+      Session.$screen.value = 'question'
     }
+  }
+
+  #handleTranscript = async transcript => {
+    if (!transcript?.length) return
+
+    const ok = await Confirm({
+      title: I18N('artwork.transcript-modal.title'),
+      message: transcript,
+      yes: { label: I18N('artwork.transcript-modal.yes') },
+      no: { label: I18N('artwork.transcript-modal.no') }
+    })
+
+    // Cleanup transcript so that user can re-record
+    if (!ok) return this.refs.recorder.$transcript.reset()
+
+    // WIP save transcript
+    // await API.save(Session.$artwork.value, transcript)
+    Session.commit()
+    Session.$screen.value = Session.isComplete() ? 'end' : 'question' // WIP 'end' screen not implemented yet
   }
 
   beforeDestroy () {

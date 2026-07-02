@@ -52,8 +52,10 @@ export default defineConfig(({ mode }) => {
     },
 
     esbuild: {
-      jsxInject: "import { h } from '@tooooools/ui'",
-      jsxFactory: 'h'
+      jsxInject: "import { h, Fragment } from '@tooooools/ui'",
+      jsxFactory: 'h',
+      jsxFragment: 'Fragment',
+      minifyIdentifiers: false
     }
   }
 })

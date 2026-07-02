@@ -1,6 +1,6 @@
 import './IntroductionScreen.scss'
 
-import { Component, Props } from '@tooooools/ui'
+import { Component } from '@tooooools/ui'
 import { Button } from '@tooooools/ui/components'
 import { $, not } from '@tooooools/ui/state'
 
@@ -10,14 +10,10 @@ import GamepadRow from '/components/GamepadRow'
 import Particles from '/components/Particles'
 import Gamepad from '/controllers/Gamepad'
 import I18N from '/controllers/I18N'
+import Session from '/controllers/Session'
 import widont from '/utils/string-widont'
 
 export default class IntroductionScreen extends Component {
-  static props = {
-    language: Props.required(Props.Signal),
-    screen: Props.required(Props.Signal)
-  }
-
   $step = $(0)
 
   template () {
@@ -48,7 +44,7 @@ export default class IntroductionScreen extends Component {
   }
 
   #handleGamepadB = () => {
-    this.props.screen.value = 'home'
+    Session.$screen.value = 'home'
   }
 
   #handleNo = () => {
@@ -61,7 +57,7 @@ export default class IntroductionScreen extends Component {
 
     // Go to next screen when no more text to show
     if (I18N(`introduction.${this.$step.value}`, {}, false)) return
-    this.props.screen.value = 'question'
+    Session.$screen.value = 'question'
   }
 
   #handleStep = step => {

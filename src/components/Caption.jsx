@@ -15,7 +15,7 @@ export default class Caption extends Component {
   template ({ text, hint, position }) {
     const $tokens = $(text, (text = '') => text
       ?.replace(/\n/g, '<br>') // Handle line-breaks
-      .split(/(<[^>]+>|\s+)/) // Split by words or tags
+      .split(/(<pre>.*?<\/pre>|<[^>]+>|\s+)/) // Split by words, tags, or whole <pre> blocks
       .filter(token => token && !/^\s+$/.test(token))
       .map((token, index) => /^<[^>]+>$/.test(token)
         ? token

@@ -1,7 +1,7 @@
 import './QuestionScreen.scss'
 
-import { Component, Props } from '@tooooools/ui'
-import { $, slot } from '@tooooools/ui/state'
+import { Component } from '@tooooools/ui'
+import { slot } from '@tooooools/ui/state'
 
 import Artwork from '/components/Artwork'
 import Caption from '/components/Caption'
@@ -9,36 +9,20 @@ import Eyes from '/components/Eyes'
 import GamepadRow from '/components/GamepadRow'
 import Gamepad from '/controllers/Gamepad'
 import I18N from '/controllers/I18N'
+import Iddler from '/controllers/Iddler'
 import Session from '/controllers/Session'
 import widont from '/utils/string-widont'
 
 export default class QuestionScreen extends Component {
-  static props = {
-    language: Props.required(Props.Signal),
-    screen: Props.required(Props.Signal),
-    artwork: Props.required(Props.Signal),
-    question: Props.required(Props.Signal)
-  }
-
   $selection = slot(null)
 
-  beforeRender () {
-    // WIP[back]
-    this.props.question.value = {
-      fr: 'Quel est le premier souvenir qui vous vient à l’esprit lorsque vous pensez à votre enfance?',
-      en: 'What is the first memory that comes to mind when you think about your childhood?'
-    }
+  static async load () {
+    await Session.loadQuestions()
+    await Session.loadQuestion()
+    await Session.loadArtworks()
   }
 
-  template ({ question, language }) {
-    // WIP[back]
-    const mockArtworks = [
-      { vector: 'type', tags: ['color', 'picture', 'weird'], },
-      { vector: 'emotion', tags: ['color', 'picture', 'weird'], },
-      { vector: 'date', tags: ['color', 'picture', 'weird'], },
-      { vector: 'description', tags: ['color', 'picture', 'weird'], },
-    ]
-
+  template () {
     return (
       <section class='question-screen screen'>
         <Eyes lookAt={this.$selection} />
@@ -49,8 +33,9 @@ export default class QuestionScreen extends Component {
           class='artworks'
           ref={this.ref('artworksRow')}
         >
-          {mockArtworks.map(artwork => (
+          {Session.$artworks.value.map(artwork => (
             <Artwork
+              thumbnail={artwork.thumbnail}
               vector={artwork.vector}
               tags={artwork.tags}
               event-click={this.#handleArtwork(artwork)}
@@ -60,7 +45,7 @@ export default class QuestionScreen extends Component {
 
         <Caption
           position='bottom'
-          text={$(question, question => widont(I18N.resolve(question)))}
+          text={widont(I18N.resolve(Session.$question.value))}
           hint={I18N('question.hint')}
         />
       </section>
@@ -69,11 +54,11 @@ export default class QuestionScreen extends Component {
 
   afterMount () {
     this.$selection.fill(this.refs.artworksRow.$selection)
-    Gamepad.on('b', Session.quit)
+    Gamepad.on('b', Iddler.quit)
   }
 
   #handleArtwork = artwork => async e => {
-    this.props.artwork.value = artwork
+    Session.$artwork.value = artwork
 
     if (!e.isTrusted) { // Only if triggered from GamepadRow.#handleGamepadA
       // Wait for buttons transition before leaving screen
@@ -83,10 +68,10 @@ export default class QuestionScreen extends Component {
       })
     }
 
-    this.props.screen.value = 'artwork'
+    Session.$screen.value = 'artwork'
   }
 
   beforeDestroy () {
-    Gamepad.off('b', Session.quit)
+    Gamepad.off('b', Iddler.quit)
   }
 }
