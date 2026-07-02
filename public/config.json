@@ -31,7 +31,8 @@
     "attack": 0.8,
     "release": 1.5,
     "reverbDuration": 4.0,
-    "reverbMix": 0.65
+    "reverbMix": 0.65,
+    "fadeTime": 2.0
   },
 
   "VOICES": {
