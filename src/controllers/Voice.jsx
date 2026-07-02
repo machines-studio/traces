@@ -1,4 +1,5 @@
-import Config from './Config'
+import Config from '/controllers/Config'
+import createReverb from '/utils/audio-reverb'
 
 function resolvePreset (name) {
   const preset = Config.VOICES?.presets?.[name] ?? {}
@@ -21,31 +22,6 @@ function charFreq (ch, basePitch) {
   // Deterministic variation per character so each letter has its own pitch
   const variation = (code % 13) * 30
   return (base + variation) * basePitch
-}
-
-// Builds a short reverb impulse response via noise decay
-function createReverb (ctx, duration, mix) {
-  const sampleRate = ctx.sampleRate
-  const length = sampleRate * duration
-  const impulse = ctx.createBuffer(2, length, sampleRate)
-  for (let c = 0; c < 2; c++) {
-    const data = impulse.getChannelData(c)
-    for (let i = 0; i < length; i++) {
-      // White noise decaying exponentially over the duration
-      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, 2)
-    }
-  }
-
-  const convolver = ctx.createConvolver()
-  convolver.buffer = impulse
-
-  // Dry/wet mix: dryGain passes the original signal, wetGain passes reverb
-  const dryGain = ctx.createGain()
-  const wetGain = ctx.createGain()
-  dryGain.gain.value = 1 - mix
-  wetGain.gain.value = mix
-
-  return { convolver, dryGain, wetGain }
 }
 
 function scheduleBlip (ctx, freq, dur, when, reverbNodes, opts) {

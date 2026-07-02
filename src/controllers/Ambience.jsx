@@ -1,7 +1,7 @@
-import Config from './Config'
+import Config from '/controllers/Config'
+import createReverb from '/utils/audio-reverb'
 
-// --- AudioContext singleton (shared with Voice.jsx) ---
-
+// AudioContext singleton
 let ctx = null
 
 function getCtx () {
@@ -12,35 +12,11 @@ function getCtx () {
   return ctx
 }
 
-// --- Reverb impulse response ---
-
-function createReverb (ctx, duration, mix) {
-  const sampleRate = ctx.sampleRate
-  const length = sampleRate * duration
-  const impulse = ctx.createBuffer(2, length, sampleRate)
-  for (let c = 0; c < 2; c++) {
-    const data = impulse.getChannelData(c)
-    for (let i = 0; i < length; i++) {
-      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, 2)
-    }
-  }
-
-  const convolver = ctx.createConvolver()
-  convolver.buffer = impulse
-
-  const dryGain = ctx.createGain()
-  const wetGain = ctx.createGain()
-  dryGain.gain.value = 1 - mix
-  wetGain.gain.value = mix
-
-  return { convolver, dryGain, wetGain }
-}
-
-// --- Melody definition ---
+// Melody definition
 // Each note: [timeOffset (s), frequency (Hz), duration (s), gain (0–1)]
-// The melody loops every LOOP_DURATION seconds.
+// Loops every LOOP_DURATION seconds
 
-// D Dorian: D2–A3 — mysterious but not oppressive, has forward motion
+// D Dorian: D2–A3
 const SCALE = [
   73.42,  // D2
   82.41,  // E2
@@ -55,9 +31,7 @@ const SCALE = [
   220.00  // A3
 ]
 
-// Base layer — melodic, grave, with contour and narrative shape.
-// Each phrase has a recognisable arc (motif, tension, resolution).
-// Notes are longer to let them sing; gaps between phrases give breathing room.
+// Base layer — melodic, grave, with phrases arcing from motif to resolution
 const NOTES = [
   // phrase 1 — opening motif: D→A→G→A→D (question, lands back home) (0–22s)
   [0.0,  SCALE[0], 4.0, 0.30],   // D2  — root, anchor
@@ -99,8 +73,7 @@ const NOTES = [
   [113.0, SCALE[0], 8.0, 0.28]   // D2  — long held root, breathes into loop
 ]
 
-// Aerial accents — triangle wave, highpass filtered, very reverberant, sparse
-// Same scale but 2–3 octaves higher. Placed in the gaps between phrases.
+// Aerial accents — triangle wave, highpass, reverberant, sparse; same scale 2–3 octaves up
 const ACCENTS = [
   [11.5,  SCALE[7] * 4, 3.5, 0.09],  // after phrase 1 climax
   [38.5,  SCALE[4] * 4, 4.0, 0.07],  // end of phrase 2
@@ -112,15 +85,14 @@ const ACCENTS = [
 
 const LOOP_DURATION = 120 // seconds
 
-// --- Node graph ---
-
+// Node graph
 let masterGain = null
 let reverbNodes = null
 let lookaheadTimer = null
 let loopStart = null  // AudioContext time when loop began
 let running = false
 
-// Fades a GainNode smoothly to avoid clicks
+// Ramp a GainNode to avoid clicks
 function fadeTo (gainNode, value, duration) {
   const audioCtx = getCtx()
   gainNode.gain.cancelScheduledValues(audioCtx.currentTime)
@@ -128,32 +100,26 @@ function fadeTo (gainNode, value, duration) {
   gainNode.gain.linearRampToValueAtTime(value, audioCtx.currentTime + duration)
 }
 
-// Schedule one oscillator note
+// Schedule one melody note
 function scheduleNote (audioCtx, freq, startTime, duration, noteGain) {
-  const cfg = Config.AMBIENCE ?? {}
-  const waveform = cfg.waveform ?? 'sine'
-  const filterFreq = cfg.filterFrequency ?? 400
-  const attack = cfg.attack ?? 0.8
-  const release = cfg.release ?? 1.2
-
   const osc = audioCtx.createOscillator()
   const gain = audioCtx.createGain()
   const filter = audioCtx.createBiquadFilter()
 
-  osc.type = waveform
+  osc.type = Config.AMBIENCE.waveform
   osc.frequency.value = freq
 
   // Slight sub-octave detuning for warmth
   osc.detune.value = -4
 
   filter.type = 'lowpass'
-  filter.frequency.value = filterFreq
+  filter.frequency.value = Config.AMBIENCE.filterFrequency
   filter.Q.value = 0.7
 
   // Envelope: fade in → sustain → fade out
   gain.gain.setValueAtTime(0.0001, startTime)
-  gain.gain.linearRampToValueAtTime(noteGain, startTime + attack)
-  gain.gain.setValueAtTime(noteGain, startTime + duration - release)
+  gain.gain.linearRampToValueAtTime(noteGain, startTime + Config.AMBIENCE.attack)
+  gain.gain.setValueAtTime(noteGain, startTime + duration - Config.AMBIENCE.release)
   gain.gain.linearRampToValueAtTime(0.0001, startTime + duration)
 
   osc.connect(filter)
@@ -175,7 +141,7 @@ function scheduleNote (audioCtx, freq, startTime, duration, noteGain) {
   osc.stop(startTime + duration + 0.05)
 }
 
-// Aerial accent — triangle wave, highpass, long reverb tail
+// Schedule one aerial accent — long reverb tail
 function scheduleAccent (audioCtx, freq, startTime, duration, noteGain) {
   const osc = audioCtx.createOscillator()
   const gain = audioCtx.createGain()
@@ -190,7 +156,7 @@ function scheduleAccent (audioCtx, freq, startTime, duration, noteGain) {
   filter.frequency.value = 1200
   filter.Q.value = 0.5
 
-  // Very slow attack, long release — floats in and out
+  // Slow attack, long release — floats in and out
   gain.gain.setValueAtTime(0.0001, startTime)
   gain.gain.linearRampToValueAtTime(noteGain, startTime + 1.5)
   gain.gain.setValueAtTime(noteGain, startTime + duration - 2.0)
@@ -209,7 +175,7 @@ function scheduleAccent (audioCtx, freq, startTime, duration, noteGain) {
   osc.stop(startTime + duration + 0.1)
 }
 
-// Schedule all notes for one loop cycle starting at `cycleStart`
+// Schedule notes and accents for one loop cycle starting at `cycleStart`
 function scheduleCycle (audioCtx, cycleStart) {
   for (const [offset, freq, dur, gain] of NOTES) {
     scheduleNote(audioCtx, freq, cycleStart + offset, dur, gain)
@@ -219,23 +185,19 @@ function scheduleCycle (audioCtx, cycleStart) {
   }
 }
 
-// Lookahead scheduler — re-schedules next cycle 5s before loop end
+// Lookahead scheduler — schedules the next cycle 5s before loop end
 function tick () {
   if (!running) return
   const audioCtx = getCtx()
-  const cfg = Config.AMBIENCE ?? {}
-  const volume = cfg.volume ?? 0.4
 
   if (masterGain === null) {
     masterGain = audioCtx.createGain()
-    masterGain.gain.value = volume
+    masterGain.gain.value = Config.AMBIENCE.volume
     masterGain.connect(audioCtx.destination)
   }
 
   if (reverbNodes === null) {
-    const reverbDuration = cfg.reverbDuration ?? 4.0
-    const reverbMix = cfg.reverbMix ?? 0.65
-    reverbNodes = createReverb(audioCtx, reverbDuration, reverbMix)
+    reverbNodes = createReverb(audioCtx, Config.AMBIENCE.reverbDuration, Config.AMBIENCE.reverbMix)
   }
 
   const now = audioCtx.currentTime
@@ -244,46 +206,35 @@ function tick () {
   const nextCycleStart = loopStart + (cyclesElapsed + 1) * LOOP_DURATION
   const timeUntilNextCycle = nextCycleStart - now
 
-  // Schedule the upcoming cycle with a 5s lookahead window
   if (timeUntilNextCycle < 5) {
     scheduleCycle(audioCtx, nextCycleStart)
   }
 
-  // Re-check every 4 seconds
   lookaheadTimer = setTimeout(tick, 4000)
 }
 
-// --- Public API ---
+// Public API
 
 export function start () {
   if (running) return
   running = true
 
   const audioCtx = getCtx()
-  const cfg = Config.AMBIENCE ?? {}
-  const volume = cfg.volume ?? 0.4
 
   masterGain = audioCtx.createGain()
   masterGain.gain.value = 0.0001
   masterGain.connect(audioCtx.destination)
 
-  const reverbDuration = cfg.reverbDuration ?? 4.0
-  const reverbMix = cfg.reverbMix ?? 0.65
-  reverbNodes = createReverb(audioCtx, reverbDuration, reverbMix)
+  reverbNodes = createReverb(audioCtx, Config.AMBIENCE.reverbDuration, Config.AMBIENCE.reverbMix)
 
   loopStart = audioCtx.currentTime
-
-  // Schedule first cycle immediately
   scheduleCycle(audioCtx, loopStart)
+  fadeTo(masterGain, Config.AMBIENCE.volume, Config.AMBIENCE.fadeTime)
 
-  // Fade in
-  fadeTo(masterGain, volume, 2.0)
-
-  // Start lookahead scheduler
   lookaheadTimer = setTimeout(tick, 4000)
 }
 
-export function stop (fadeOut = 2.0) {
+export function stop (fadeOut = Config.AMBIENCE.fadeTime) {
   if (!running) return
   running = false
 
@@ -301,7 +252,7 @@ export function stop (fadeOut = 2.0) {
   }
 }
 
-export function setVolume (value, fadeTime = 1.0) {
+export function setVolume (value, fadeTime = Config.AMBIENCE.fadeTime) {
   if (!masterGain) return
   fadeTo(masterGain, value, fadeTime)
 }
