@@ -20,9 +20,12 @@ export default class HomeScreen extends Component {
       <section class='home-screen screen'>
         <Particles
           free
-          count={200}
-          radius={0.5}
-          floatAmount={60}
+          count={400}
+          radius={0.75}
+          minDistance={2}
+          floatAmountX={0.75}
+          enterStagger={1.5}
+          floatAmountY={0.5}
           leaving={this.$particlesLeaving}
           ref={this.ref('particles')}
         />

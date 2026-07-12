@@ -124,13 +124,15 @@
   "PARTICLES": {
     "count": 60,
     "radius": 2,
+    "minDistance": 2,
     "spawnMargin": 150,
     "innerWidth": 34,
     "innerHeight": 12,
-    "outerWidth": 70,
+    "outerWidth": 80,
     "outerHeight": 30,
-    "enterDelay": 0,
-    "enterStagger": 2,
-    "floatAmount": 20
+    "enterDelay": 0.5,
+    "enterStagger": 10,
+    "floatAmountY": 0.4,
+    "floatAmountX": 0.3
   }
 }
