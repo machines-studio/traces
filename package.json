@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@internet/raf": "^0.2.1",
-    "@tooooools/ui": "^2.9.0",
+    "@tooooools/ui": "^2.9.1",
     "iconoir": "^7.11.0",
     "missing-math": "^3.5.1",
     "tiny-emitter": "^2.1.0"

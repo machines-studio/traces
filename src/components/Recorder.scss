@@ -1,3 +1,163 @@
+:root {
+  --recorder-padding: 4vw;
+  --recorder-icon-size: 10vw;
+
+  --recorder-morse-scroll-duration: 300s;
+  --recorder-morse-font-size: 4vw;
+}
+
 .recorder {
-  // WIP
+  @include easing((opacity, transform, background-color, outline-color, box-shadow));
+
+  --ui-border-radius: 100%;
+  --ui-icon-size: var(--recorder-icon-size);
+  --color: var(--color-red);
+
+  position: absolute;
+  padding: var(--recorder-padding);
+
+  &::before {
+    @include sphere-shadows;
+    content: '';
+  }
+
+  &.is-selected {
+    @include animations.use(
+      (
+        name: recorder-shadow-pulses,
+        duration: var(--easing),
+        iteration-count: infinite,
+        direction: alternate,
+      )
+    );
+
+    outline-offset: -2px;
+    transform: none;
+  }
+
+  &.is-recording {
+    @include animations.use(
+      (
+        name: recorder-pulses,
+        duration: 3s,
+        easing: var(--easing-ease-accelerate),
+        iteration-count: infinite,
+      )
+    );
+
+    [class^='ui-button__icon-'] {
+      @include animations.use(
+        (
+          name: recorder-icon-appears,
+          duration: var(--easing),
+          easing: var(--easing-ease-back)
+        )
+      );
+      transform-origin: 0 0 calc(-1 * (var(--recorder-icon-size) + var(--recorder-padding) * 2) / 2);
+    }
+
+    svg rect {
+      fill: currentcolor; // ??? Blink ? Pulse
+    }
+  }
+
+  &.is-waiting {
+    @include animations.use(
+      (
+        name: recorder-shadow-pulses,
+        duration: 1s,
+        easing: var(--easing-ease-accelerate),
+        iteration-count: infinite,
+        direction: alternate,
+      ),
+      (
+        name: recorder-pulses,
+        duration: 2s,
+        easing: var(--easing-ease-accelerate),
+        iteration-count: infinite,
+        direction: reverse,
+      )
+    );
+
+    --color: inherit;
+
+    opacity: 0.7;
+
+    [class^='ui-button__icon-']::before {
+      width: calc(var(--recorder-icon-size) + var(--recorder-padding) * 2);
+      height: calc(var(--recorder-icon-size) + var(--recorder-padding) * 2);
+      border-top-color: var(--color-white);
+      border-left-color: var(--color-white);
+      opacity: 0.3;
+    }
+  }
+
+  &__morse {
+    display: none;
+  }
+
+  &.is-waiting &__morse {
+    @include animations.use(animations.$fade-in);
+
+    position: absolute;
+    z-index: -1;
+    top: calc(50% - 0.25em);
+
+    display: block !important;
+    width: 100%;
+    contain: layout;
+
+    font-family: monospace;
+    font-size: var(--recorder-morse-font-size);
+    line-height: 0;
+    color: var(--color-white);
+
+    transform: rotate(-15deg);
+
+    span {
+      @include animations.use(
+        (
+          name: recorder-morse-scroll,
+          duration: var(--recorder-morse-scroll-duration),
+          easing: linear,
+          iteration-count: infinite
+        )
+      );
+      display: inline-block;
+      text-shadow: 0 0 1em;
+      white-space: nowrap;
+    }
+  }
+}
+
+@keyframes recorder-pulses {
+  from {
+    outline: 2px solid var(--color);
+    outline-offset: -2px;
+  }
+
+  to {
+    outline: 2px solid transparent;
+    outline-offset: 6vw;
+  }
+}
+
+@keyframes recorder-icon-appears {
+  from {
+    opacity: 0;
+    transform: rotate3d(1, 0, 0, 180deg);
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes recorder-shadow-pulses {
+  from { box-shadow: var(--box-shadow) var(--color); }
+  to { box-shadow: 0 0 10vw var(--color); }
+}
+
+@keyframes recorder-morse-scroll {
+  to { transform: translateX(-50%); }
 }

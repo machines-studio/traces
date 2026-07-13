@@ -5,6 +5,7 @@ import { $ } from '@tooooools/ui/state'
 import { clamp } from 'missing-math'
 
 import Gamepad from '/controllers/Gamepad'
+import Voice from '/controllers/Voice'
 import noop from '/utils/noop'
 import scrollIntoViewNearest from '/utils/scroll-into-view-nearest'
 
@@ -88,7 +89,11 @@ export default class Row extends Component {
     this.unregister()
   }
 
-  #handleGamepadA = () => (this.selection?.base ?? this.selection)?.click()
+  #handleGamepadA = () => {
+    if (!this.selection) return
+    Voice.speak('a', 'yes')
+    ;(this.selection.base ?? this.selection).click()
+  }
 
   #handleGamepadLeft = () => {
     if (!this.$hasFocus.value) return
@@ -141,6 +146,9 @@ export default class Row extends Component {
 
       if (this.$hasFocus.value && index === this.$index.value) {
         element.classList.add('is-selected')
+
+        // Play a random sound
+        Voice.speak(['nav', 'blip', 'dop', 'tik', 'vro'], 'nav')
 
         if (this.props.scroll) {
           scrollIntoViewNearest(element, this.props.scroll)

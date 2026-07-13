@@ -1,5 +1,6 @@
 {
   "LANGUAGES": ["en", "fr", "nl"],
+  "ROUNDS": 5,
   
   "COLORS": {
     "yellow": "#FC0",
@@ -30,7 +31,8 @@
     "attack": 0.8,
     "release": 1.5,
     "reverbDuration": 4.0,
-    "reverbMix": 0.65
+    "reverbMix": 0.65,
+    "fadeTime": 2.0
   },
 
   "VOICES": {
@@ -117,5 +119,20 @@
   "SESSION": {
     "iddleDuration": 60000,
     "iddleConfirmDelay": 10000
+  },
+
+  "PARTICLES": {
+    "count": 60,
+    "radius": 2,
+    "minDistance": 2,
+    "spawnMargin": 150,
+    "innerWidth": 34,
+    "innerHeight": 12,
+    "outerWidth": 80,
+    "outerHeight": 30,
+    "enterDelay": 0.5,
+    "enterStagger": 10,
+    "floatAmountY": 0.4,
+    "floatAmountX": 0.3
   }
 }

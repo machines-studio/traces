@@ -9,6 +9,12 @@
   align-items: center;
   height: 100vh;
 
+  .particles {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+  }
+
   .gamepad-row {
     gap: var(--space-2);
     margin-top: 30vw;
