@@ -1,3 +1,139 @@
+:root {
+  // Overridden per-instance from Config.PARTICLES.radius, see Particles.jsx
+  --particles-radius: 1.4vw;
+
+  // Strong ease-out: fast start, heavily braking towards the end (steeper
+  // tail than --easing-ease-smooth), used for the particles' arrival
+  --particles-easing-decelerate: cubic-bezier(0.05, 0.8, 0.15, 1);
+}
+
 .particles {
-  // TODO[particles]
+  // Position (fixed/absolute + top/left) is left to the screen using this
+  // component (see HomeScreen.scss/IntroductionScreen.scss), since it needs
+  // to be centered relative to whatever this instance wraps (the eyes mask,
+  // the whole viewport, ...)
+  width: 0;
+  height: 0;
+
+  &__particle {
+    @include easing((top, left), calc(var(--easing) * 2), var(--particles-easing-decelerate));
+    @include animations.use(
+      (
+        name: particle-appears,
+        duration: var(--easing),
+        easing: var(--easing-ease-smooth),
+        delay: var(--particle-delay),
+        fill-mode: backwards
+      ),
+      // X/Y run as two separate animations (own duration/delay each, see
+      // Particles.jsx) rather than a single one animating both, so they
+      // drift out of phase with one another instead of always peaking
+      // together on a fixed diagonal
+      (
+        name: particle-float-x,
+        duration: var(--particle-float-duration-x),
+        easing: ease-in-out,
+        direction: alternate,
+        iteration-count: infinite,
+        delay: var(--particle-float-delay-x)
+      ),
+      (
+        name: particle-float-y,
+        duration: var(--particle-float-duration-y),
+        easing: ease-in-out,
+        direction: alternate,
+        iteration-count: infinite,
+        delay: var(--particle-float-delay-y)
+      )
+    );
+
+    // --particle-float-amount-x/y, --particle-float-duration-x/y and
+    // --particle-float-delay-x/y are all set inline per-particle (see
+    // Particles.jsx), independently randomized so the idle motion looks
+    // organic rather than a single mechanical diagonal wave
+    position: absolute;
+    top: var(--particle-origin-y);
+    left: var(--particle-origin-x);
+    transition-delay: var(--particle-delay);
+
+    width: var(--particles-radius);
+    height: var(--particles-radius);
+
+    background: var(--color);
+    border-radius: 100%;
+    box-shadow: var(--box-shadow) var(--color);
+
+    // particle-appears must replace (the default) rather than add, or its
+    // "from" opacity: 0 would add onto the element's base opacity: 1 and
+    // never actually go transparent. particle-float-x/y still need to add
+    // so their transforms combine instead of one overriding the other.
+    animation-composition: replace, add, add;
+  }
+
+  &.is-entered &__particle {
+    top: calc(50% + var(--particle-target-y));
+    left: calc(50% + var(--particle-target-x));
+  }
+
+  // --particle-target-x/y is reassigned to a fresh random nearby point
+  // right before this class is toggled on (see
+  // Particles.jsx#handleLeaving), so particles drift a short distance away
+  // while fading out, rather than simply fading in place or travelling
+  // all the way back to their entering origin
+  &.is-leaving &__particle {
+    @include easing((top, left, opacity), var(--easing), var(--easing-ease-accelerate));
+
+    top: calc(50% + var(--particle-target-y));
+    left: calc(50% + var(--particle-target-x));
+    transition-delay: 0s;
+    opacity: 0;
+    animation: none;
+  }
+
+  @include app.debug('particles') {
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border: 1px dashed red;
+      transform: translate(-50%, -50%);
+    }
+
+    // Outer rect: particles land within this frame
+    &::before {
+      width: var(--particles-outer-width);
+      height: var(--particles-outer-height);
+    }
+
+    // Inner rect: the mask itself, particles never land inside it
+    &::after {
+      width: var(--particles-inner-width);
+      height: var(--particles-inner-height);
+    }
+  }
+}
+
+@keyframes particle-appears {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+// Same idea as animations.$float (see _animations.scss), split into two
+// independent axis animations (see the `animations.use` call above) so X
+// and Y drift out of phase with one another instead of a single shared
+// diagonal wave. Both use absolute vw amounts (not %, unlike
+// animations.$float) so the drift stays visible regardless of the
+// particle's own (tiny) size. animation-composition: add (set on
+// &__particle) sums both transforms together, along with the entering
+// transition's own translateX/Y once settled
+@keyframes particle-float-x {
+  from { transform: translateX(var(--particle-float-amount-x, 0vw)); }
+  to { transform: translateX(calc(-1 * var(--particle-float-amount-x, 0vw))); }
+}
+
+@keyframes particle-float-y {
+  from { transform: translateY(var(--particle-float-amount-y, 1vw)) rotate(-1deg); }
+  to { transform: translateY(calc(-1 * var(--particle-float-amount-y, 1vw))) rotate(1deg); }
 }
