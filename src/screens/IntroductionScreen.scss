@@ -13,7 +13,11 @@
   }
 
   .particles {
-    // TODO handle particles mask position here
+    // Same visual center as .eyes: .eyes sits at `top: 50% - eyes-height`,
+    // then shifts up by another `eyes-height * 0.5` via margin-top (see
+    // Eyes.scss), so its actual vertical center is `50% - eyes-height`
     position: fixed;
+    top: calc(50% - var(--eyes-height));
+    left: 50%;
   }
 }

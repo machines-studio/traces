@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(list\\(d.keys\\(\\)\\)\\); print\\(json.dumps\\(d.get\\('COLORS'\\), indent=2\\)\\)\")",
+      "Bash(yarn dev *)",
+      "Bash(disown)",
+      "Bash(curl -s http://localhost:5183 -o /dev/null -w \"%{http_code}\\\\n\")",
+      "Bash(python3 -c \"import json,sys; print\\(json.load\\(sys.stdin\\)['scripts']\\)\")",
+      "Bash(yarn start *)",
+      "Read(//private/tmp/**)",
+      "Bash(curl -s http://localhost:8080/ -o /dev/null -w \"%{http_code}\\\\n\")",
+      "Bash(lsof -iTCP:8080 -sTCP:LISTEN -n -P)",
+      "Bash(pkill -f \"vite --port 5183\")",
+      "Bash(lsof -iTCP:5183 -sTCP:LISTEN -n -P)"
+    ]
+  }
+}
