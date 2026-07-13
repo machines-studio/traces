@@ -1,24 +1,26 @@
 import './Artwork.scss'
 import { Component, Props } from '@tooooools/ui'
 
-import { COLORS } from '/app.config'
+import Config from '/controllers/Config'
 
 export default class Artwork extends Component {
   static props = {
     'event-click': Props.required(Props.function),
+    thumbnail: Props.string,
     tags: Props.array,
+    // TODO testimonies count
     vector: Props.enum('type', 'emotion', 'date', 'description')
   }
 
-  template ({ vector, tags = [] }) {
+  template ({ vector, tags = [], thumbnail = '' }) {
     return (
       <section
         class='artwork'
         event-click={this.props['event-click']}
-        data-color={COLORS.vectors[vector]}
+        data-color={Config.COLORS.vectors[vector]}
       >
         <div class='artwork__wrapper'>
-          <img src='/images/bb.png' />
+          <img src={thumbnail} />
           <ul class='artwork__tags'>
             {
               tags.map(tag => (

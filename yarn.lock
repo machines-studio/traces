@@ -273,17 +273,10 @@
     estraverse "^5.3.0"
     picomatch "^4.0.2"
 
-"@tooooools/ui@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.npmjs.org/@tooooools/ui/-/ui-2.4.0.tgz"
-  integrity sha512-TZeK/8se05CK4gyzl6e21MDsw38mc2GlKi7SH0XgQoSULW9aJhqymLqzo1JR1nhO+6IUBZv7nplM+tkJRFOpGg==
-  dependencies:
-    debounce "^1.2.1"
-
-"@tooooools/ui@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@tooooools/ui/-/ui-2.5.0.tgz#f7400cdc977d0c359798f185f1c5a594d94aa4fb"
-  integrity sha512-Q5bGqNUXNVZXeh3w2oMDqNyFa62redu0UdWuHr9KzgerM/CgLfkAgx7iL3cTi7DODzs1TliBL6iqAx/s+os08w==
+"@tooooools/ui@^2.9.1":
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/@tooooools/ui/-/ui-2.9.1.tgz#f13196b1a9c9b749595d2d56225684b49d57a706"
+  integrity sha512-vZNNXS1TSMUxhLkB/VPGDo9rpfToTghQOgBZfiytocewiTWlaffIvYFi51y93KMz72sY9us8IYXh7pWfwTl7AQ==
   dependencies:
     debounce "^1.2.1"
 
@@ -794,7 +787,7 @@ data-view-byte-offset@^1.0.1:
 
 debounce@^1.2.1:
   version "1.2.1"
-  resolved "https://registry.npmjs.org/debounce/-/debounce-1.2.1.tgz"
+  resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.2.1.tgz#38881d8f4166a5c5848020c11827b834bcb3e0a5"
   integrity sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==
 
 debug@^3.2.7:

@@ -1,24 +1,37 @@
 import './HomeScreen.scss'
 
-import { Component, Props } from '@tooooools/ui'
+import { Component } from '@tooooools/ui'
 import { Button } from '@tooooools/ui/components'
+import { $ } from '@tooooools/ui/state'
 
-import { COLORS, LANGUAGES } from '/app.config'
 import GamepadRow from '/components/GamepadRow'
+import Particles from '/components/Particles'
+import Ambience from '/controllers/Ambience'
+import Config from '/controllers/Config'
+import Session from '/controllers/Session'
 import shuffle from '/utils/array-shuffle'
 
 export default class HomeScreen extends Component {
-  static props = {
-    language: Props.required(Props.Signal),
-    screen: Props.required(Props.Signal)
-  }
+  $particlesLeaving = $(false)
 
   template () {
-    const colors = shuffle(Object.keys(COLORS))
+    const colors = shuffle(Object.keys(Config.COLORS))
     return (
       <section class='home-screen screen'>
+        <Particles
+          free
+          count={400}
+          radius={0.75}
+          minDistance={2}
+          floatAmountX={0.75}
+          enterStagger={1.5}
+          floatAmountY={0.5}
+          leaving={this.$particlesLeaving}
+          ref={this.ref('particles')}
+        />
+
         <GamepadRow initial='start' loop>
-          {LANGUAGES.map((language, index) => (
+          {Config.LANGUAGES.map((language, index) => (
             <Button
               data-color={colors[index]}
               label={language.name}
@@ -31,16 +44,21 @@ export default class HomeScreen extends Component {
   }
 
   #handleLanguage = language => async e => {
-    this.props.language.value = language
+    Session.$lang.value = language.code
     this.base.classList.add('is-leaving')
+    this.$particlesLeaving.value = true
 
     if (!e.isTrusted) { // Only if triggered from GamepadRow.#handleGamepadA
-      // Wait for buttons transition before leaving screen
-      await Promise.all(
-        [...e.target.parentNode.children].map(el => new Promise(resolve => el.addEventListener('animationend', resolve)))
-      )
+      // Wait for buttons and particles transitions before leaving screen
+      // (all particles share the same fade-out duration/delay, so waiting
+      // on any single one is enough)
+      await Promise.all([
+        ...[...e.target.parentNode.children].map(el => new Promise(resolve => el.addEventListener('animationend', resolve, { once: true }))),
+        new Promise(resolve => this.refs.particles.base.firstElementChild.addEventListener('transitionend', resolve, { once: true }))
+      ])
     }
 
-    this.props.screen.value = 'introduction'
+    Ambience.start()
+    Session.$screen.value = 'introduction'
   }
 }

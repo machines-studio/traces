@@ -26,17 +26,19 @@
   &__wrapper {
     @include easing(transform, var(--easing-fast), var(--easing-ease-back));
 
-    // Sphere shadows
-    &::after {
+    // Sphere color
+    &::before {
       content: '';
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(circle at 60% 60%, transparent 60%, rgba(255 255 255 / 60%) 70%),
-        radial-gradient(circle at 40% 40%, transparent 60%, rgba(0 0 0 / 40%) 70%),
-        radial-gradient(circle at 50% 50%, transparent 50%, rgba(0 0 0 / 20%) 90%),
-      ;
       border-radius: 100%;
+      box-shadow: inset 0 0 calc(var(--artwork-size) * 0.1) var(--color);
+    }
+
+    // Sphere shadows
+    &::after {
+      @include sphere-shadows;
+      content: '';
     }
   }
 
@@ -47,7 +49,7 @@
   img {
     @include easing((transform, box-shadow));
     border-radius: 100%;
-    box-shadow: 0 0 2vw var(--color);
+    box-shadow: var(--box-shadow) var(--color);
   }
 
   &.is-selected img {
@@ -82,14 +84,14 @@
     left: 50%;
 
     width: min-content;
-    padding: 0.5em;
+    padding: 0.3em 0.5em;
 
     color: var(--ui-color-text);
 
     background: var(--color);
-    border-radius: var(--ui-border-radius);
+    border-radius: var(--border-radius);
     transform: translateX(-50%) translateY(-50%);
-    box-shadow: 0 0 4vw var(--color);
+    box-shadow: var(--box-shadow) var(--color);
 
     animation-composition: add, accumulate;
   }

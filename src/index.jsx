@@ -4,17 +4,39 @@ import { Toast } from '@tooooools/ui/components'
 
 import * as Icons from '/data/icons'
 import App from '/components/App'
+import { loadConfig } from '/controllers/Config'
+import { loadTranslations } from '/controllers/I18N'
+import Iddler from '/controllers/Iddler'
+
+// Fetch config, translations, and render app
+;(async () => {
+  await loadConfig()
+  await loadTranslations()
+
+  window.App = render(<App />).components[0]
+  Iddler.bind()
+})()
 
 // Display errors
-window.addEventListener('error', e => {
-  console.error(e.error)
+const displayError = error => {
+  // Print the original stack only, so devtools doesn't also show this handler's frame
+  console.error(error?.stack || error)
   Toast.display([
-    <p>Une erreur inconnue est survenue{e.error.stack?.length ? '\u2009:' : ''}</p>,
-    e.error.stack?.length && <pre>{e.error.stack}</pre>
+    <p>Une erreur inconnue est survenue{error?.stack?.length ? '\u2009:' : ''}</p>,
+    error?.stack?.length && <pre>{error.stack}</pre>
   ], {
     icon: Icons.error,
     tone: 'error'
   })
+}
+
+window.addEventListener('error', e => {
+  e.preventDefault()
+  displayError(e.error)
+})
+window.addEventListener('unhandledrejection', e => {
+  e.preventDefault()
+  displayError(e.reason)
 })
 
 // Display warnings
@@ -27,6 +49,3 @@ console.warn = (...args) => {
     duration: 5000
   })
 }
-
-// Render App
-window.App = render(<App />).components[0]

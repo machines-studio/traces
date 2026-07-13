@@ -1,0 +1,138 @@
+{
+  "LANGUAGES": ["en", "fr", "nl"],
+  "ROUNDS": 5,
+  
+  "COLORS": {
+    "yellow": "#FC0",
+    "green": "#00B944",
+    "blue": "#007FFF",
+    "red": "#FF4F00",
+    "pink": "#FF83FE",
+    
+    "vectors": {
+      "type": "green",
+      "emotion": "red",
+      "date": "yellow",
+      "description": "blue"
+    }
+  },
+  
+  "TESTIMONY": {
+    "scrollDelay": 500,
+    "scrollSpeed": 40,
+    "manualScrollDuration": 600,
+    "manualScrollStep": 200
+  },
+  
+  "AMBIENCE": {
+    "volume": 0.4,
+    "waveform": "sine",
+    "filterFrequency": 400,
+    "attack": 0.8,
+    "release": 1.5,
+    "reverbDuration": 4.0,
+    "reverbMix": 0.65,
+    "fadeTime": 2.0
+  },
+
+  "VOICES": {
+    "defaults": {
+      "pitch": 1.5,
+      "stepMs": 25,
+      "blipsPerWord": 5,
+      "reverbDuration": 0.8,
+      "reverbMix": 0.5,
+      "filterFrequency": 900,
+      "blipGain": 0.3,
+      "blipPitchDrop": 0.55,
+      "wordGapMultiplier": 1.4,
+      "allowOverlap": true
+    },
+    "presets": {
+      "constello": {
+        "pitch": 1.5,
+        "stepMs": 25,
+        "blipsPerWord": 5,
+        "reverbDuration": 0.8,
+        "reverbMix": 0.5,
+        "filterFrequency": 900,
+        "blipGain": 0.3,
+        "blipPitchDrop": 0.55,
+        "wordGapMultiplier": 1.4
+      },
+      "testimonial": {
+        "pitch": 0.8,
+        "stepMs": 80,
+        "blipsPerWord": 8,
+        "blipGain": 0.1,
+        "blipPitchDrop": 0.9,
+        "filterFrequency": 300,
+        "reverbDuration": 1.5,
+        "reverbMix": 0.8
+      },
+      "testimonial_b": {
+        "extends": "testimonial",
+        "pitch": 1.0,
+        "blipsPerWord": 6
+      },
+      "testimonial_c": {
+        "extends": "testimonial",
+        "pitch": 1.5,
+        "blipsPerWord": 7
+      },
+      "nav": {
+        "pitch": 1.5,
+        "stepMs": 25,
+        "blipsPerWord": 5,
+        "reverbDuration": 0.8,
+        "reverbMix": 0.5,
+        "filterFrequency": 900,
+        "blipGain": 0.3,
+        "blipPitchDrop": 0.55,
+        "wordGapMultiplier": 1.4
+      },
+      "yes": {
+        "extends": "nav",
+        "pitch": 4.0
+      },
+      "no": {
+        "extends": "nav",
+        "pitch": 0.2
+      }
+    }
+  },
+  
+  "GAMEPAD": {
+    "buttons": {
+      "a": 10,
+      "b": 11
+    },
+    
+    "axes": {
+      "x": 0,
+      "y": 1,
+      "invertX": true,
+      "invertY": true
+    }
+  },
+  
+  "SESSION": {
+    "iddleDuration": 60000,
+    "iddleConfirmDelay": 10000
+  },
+
+  "PARTICLES": {
+    "count": 60,
+    "radius": 2,
+    "minDistance": 2,
+    "spawnMargin": 150,
+    "innerWidth": 34,
+    "innerHeight": 12,
+    "outerWidth": 80,
+    "outerHeight": 30,
+    "enterDelay": 0.5,
+    "enterStagger": 10,
+    "floatAmountY": 0.4,
+    "floatAmountX": 0.3
+  }
+}

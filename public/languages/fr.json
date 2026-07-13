@@ -1,0 +1,18 @@
+{
+  "name": "français",
+  "locale": "fr_FR",
+  "date": {
+    "year": "numeric",
+    "month": "long",
+    "day": "numeric"
+  },
+
+  "translations": {
+    "introduction.0": "Bienvenue à toi, ô visiteur·euse.\nJe serais ton compagnon de mémoire pour cette expérience",
+    "introduction.0.next": "je t’écoute",
+    "introduction.1": "Tu vas vivre une expérience unique et magnifique",
+    "introduction.1.next": "continuer",
+    "introduction.2": "Je vais te poser des questions auxquelles tu vas devoir répondre",
+    "introduction.2.next": "j’accepte la mission"
+  }
+}

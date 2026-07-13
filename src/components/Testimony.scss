@@ -1,0 +1,92 @@
+:root {
+  @include font('ui', 'testimony');
+  --testimony-font-size: 1.8vw;
+  --testimony-font-weight: 450;
+  --testimony-icon-size: 1.4em;
+
+  --testimony-trim: 4vw;
+}
+
+.testimony {
+  @include font('testimony');
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  color: var(--color-black);
+
+  background: var(--color);
+  border-radius: var(--border-radius);
+
+  &__icon {
+    position: relative;
+    padding: var(--space-gutter);
+    flex-shrink: 0;
+
+    svg {
+      width: auto;
+      height: var(--testimony-icon-size);
+    }
+
+    &::after {
+      @include easing(opacity);
+      content: '';
+
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 100%;
+
+      width: var(--testimony-trim);
+
+      background: linear-gradient(to right, var(--color), transparent);
+      opacity: 0;
+    }
+  }
+
+  &__icon:has(+ &__transcript.is-scrolling)::after {
+    opacity: 1;
+  }
+
+  &__transcript {
+    @include invisible-scroll(x);
+    padding-block: var(--space-gutter);
+    padding-right: var(--testimony-trim);
+    white-space: nowrap;
+  }
+
+  &:has(&__translation:not(:empty)) &__vo {
+    font-style: italic;
+    font-weight: 400;
+    opacity: 0.4;
+  }
+
+  &__metas {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    align-self: stretch;
+
+    flex-shrink: 0;
+
+    padding: var(--space-gutter);
+
+    font-size: 60%;
+
+    &::before {
+      content: '';
+
+      position: absolute;
+      top: 0;
+      right: 100%;
+      bottom: 0;
+
+      width: var(--testimony-trim);
+
+      background: linear-gradient(to left, var(--color), transparent);
+    }
+  }
+}

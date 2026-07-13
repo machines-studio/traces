@@ -18,7 +18,7 @@ export default class Eyes extends Component {
     mirror: [Props.boolean, Props.Signal],
     // Element to look at, or null/undefined to keep the default
     // gamepad/idle-driven behaviour
-    lookAt: [Props.object, Props.Signal]
+    lookAt: [Props.Element, Props.Signal]
   }
 
   $direction = $(0) // -1 left, 0 center, 1 right

@@ -1,2 +1,6 @@
+export { default as a } from 'iconoir/icons/xbox-a.svg?raw'
+export { default as b } from 'iconoir/icons/xbox-b.svg?raw'
+export { default as testimony } from 'iconoir/icons/chat-lines.svg?raw'
 export { default as error } from 'iconoir/icons/emoji-sad.svg?raw'
 export { default as warning } from 'iconoir/icons/warning-triangle.svg?raw'
+export { default as record } from 'iconoir/icons/microphone.svg?raw'

@@ -1,4 +1,6 @@
 :root {
+  --caption-width: 80vw;
+  --caption-background-direction: to top;
   --caption-word-duration: 900ms;
   --caption-word-delay: 100ms;
   --caption-hint-delay: 600ms;
@@ -12,66 +14,89 @@
   }
 }
 
-@keyframes caption-word {
-  from {
-    opacity: 0;
-    filter: blur(16px);
-    transform: translateY(50%);
-  }
-
-  to {
-    opacity: 1;
-    filter: none;
-    transform: none;
-  }
-}
-
 .caption {
   --tokens-length: 1;
-
-  position: fixed;
-  inset: auto 0 0;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: var(--space-gutter);
+  gap: var(--space-2);
   padding: var(--space-2);
-  padding-top: var(--space-3);
 
   text-align: center;
 
-  background: linear-gradient(to top, rgba(0 0 0 / 90%) 75%, transparent);
+  background: smooth-gradient(var(--caption-background-direction), 0 0 0, transparent);
+
+  &[data-position='top'] {
+    --caption-background-direction: to bottom;
+    padding-block: var(--space-2);
+  }
+
+  &[data-position='bottom'] {
+    --caption-background-direction: to top;
+    padding-top: var(--space-3);
+  }
 
   &__text {
     @include font('caption');
+    text-wrap: balance;
+    width: var(--caption-width);
   }
 
   &__text > * {
-    @include animations.use((animations.$float));
+    @include animations.use(
+      (
+        name: caption-word,
+        duration: var(--caption-word-duration),
+        delay: calc(var(--token-index) * var(--caption-word-delay))
+      )
+    );
     --token-index: 0;
     --animation-float-amount: 100%;
 
     display: inline-block;
     white-space: pre;
-    animation: caption-word var(--caption-word-duration) calc(var(--token-index) * var(--caption-word-delay)) var(--easing-ease-smooth) both;
   }
 
   &__hint {
     @include animations.use(
-      animations.$fade-in,
+      (
+        preset: animations.$fade-in,
+        delay: calc(var(--caption-hint-delay) + (var(--tokens-length) + 1) * var(--caption-word-delay))
+      ),
       animations.$float
     );
+
+    code {
+      font-family: monospace;
+      font-size: larger;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
   }
 
   .gamepad-row > * {
     @include animations.use(
       (
         preset: animations.$fade-in,
-        delay: calc(var(--caption-buttons-delay) + (var(--tokens-length) + 1) * var(--caption-word-delay))
+        delay: calc(var(--caption-buttons-delay) + (var(--tokens-length) + 1) * var(--caption-word-delay)),
+        stagger: (delay: 100ms, length: 3)
       )
     );
-    @include animations.stagger(animations.$fade-in, 100ms, 3);
+  }
+}
+
+@keyframes caption-word {
+  from {
+    opacity: 0;
+    filter: blur(16px);
+    transform: translateY(0.5em);
+  }
+
+  to {
+    opacity: 1;
+    filter: none;
+    transform: none;
   }
 }
