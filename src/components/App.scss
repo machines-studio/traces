@@ -1,0 +1,116 @@
+.app {
+  &__title {
+    position: fixed;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+
+    width: 75vw;
+    contain: layout paint;
+
+    transform: translateX(-50%) translateY(-70%);
+    will-change: transform, filter, opacity;
+
+    @include app.screen('home') {
+      @include easing(transform, var(--easing), var(--easing-ease-smooth));
+      filter: none;
+    }
+
+    @include app.screen('introduction') {
+      @include easing((transform, opacity, filter), var(--easing-slow), var(--easing-ease-accelerate));
+      opacity: 0;
+      filter: blur(128px);
+      transform: translateX(-50%) translateY(-70%) scale(10);
+    }
+
+    @include app.screens(
+      'question',
+      'artwork',
+      'constellation',
+      'end',
+      'credits'
+    ) {
+      display: none;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  &__stars {
+    position: fixed;
+    z-index: -1;
+    top: 50%;
+    left: 50%;
+
+    width: 100vw;
+    height: 100vw;
+    contain: layout paint;
+
+    transform: translateX(-50%) translateY(-50%);
+
+    img {
+      @include animations.stagger(fade-in, -1s, 3);
+      @include animations.use(
+        (
+          preset: animations.$fade-in,
+          duration: 3s,
+          easing: linear,
+          iteration-count: infinite,
+          direction: alternate
+        )
+      );
+      position: absolute;
+
+      @include app.screen('home') {
+        @include easing(transform, var(--easing), var(--easing-ease-smooth));
+
+        @for $i from 0 through 3 {
+          &:nth-child(#{$i}) {
+            transform: rotate(calc(10deg * #{0.5 * $i}));
+          }
+        }
+      }
+
+      @include app.screens(
+        'introduction',
+        'question',
+        'artwork',
+        'constellation',
+        'end'
+      ) {
+        @include easing((transform, opacity), var(--easing-slow), var(--easing-ease-accelerate));
+        opacity: 1;
+
+        @for $i from 0 through 3 {
+          &:nth-child(#{$i}) {
+            transform: scale(calc(2 + #{0.5 * $i}));
+          }
+        }
+      }
+    }
+
+    img:first-child {
+      animation: none;
+    }
+  }
+
+  &__version {
+    @include easing(opacity);
+
+    position: fixed;
+    right: var(--space-gutter);
+    bottom: var(--space-gutter);
+
+    display: none;
+
+    font-family: monospace;
+    font-size: small;
+
+    @include app.screen('home') {
+      display: block;
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "name": "TRACES",
+  "version": "0.0.0",
+  "description": "Opinionated Vite boilerplate to build reactive webapps",
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview --open",
+    "test": "vite --mode test",
+    "deploy": "vite build && ghp build --a .github -f -b production -m 'Deploy to production'",
+    "deploy:staging": "vite build --mode staging && ghp build -a .github -f -b staging -m 'Deploy to staging'",
+    "postversion": "git push && git push --tags && npm run deploy"
+  },
+  "author": "Arnaud Juracek",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tooooools/boilerplate.git"
+  },
+  "devDependencies": {
+    "eslint": "^9.23.0",
+    "ghp": "^1.7.0",
+    "neostandard": "^0.12.1",
+    "sass": "^1.59.3",
+    "stylelint": "^15.3.0",
+    "stylelint-config-standard-scss": "^7.0.1",
+    "stylelint-order": "^6.0.3",
+    "stylelint-scss": "^4.5.0",
+    "vite": "^4.2.1"
+  },
+  "dependencies": {
+    "@internet/raf": "^0.2.1",
+    "@tooooools/html-to-svg": "^1.17.1",
+    "@tooooools/ui": "^2.10.0",
+    "iconoir": "^7.11.0",
+    "missing-math": "^3.6.0",
+    "tiny-emitter": "^2.1.0"
+  }
+}

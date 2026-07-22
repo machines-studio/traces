@@ -1,0 +1,65 @@
+.constellation-screen {
+  .caption {
+    position: fixed;
+    inset: auto 0 0;
+  }
+
+  .constellation {
+    position: fixed;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+
+    width: 60vw;
+    height: 60vh;
+
+    transform: translate(-50%, -50%);
+  }
+
+  .particles {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+  }
+
+  &.is-leaving .caption {
+    @include animations.use(animations.$fade-out);
+  }
+
+  &.is-leaving .constellation {
+    @include animations.use(
+      (
+        preset: animations.$fade-out,
+        duration: var(--easing-slow),
+        easing: var(--easing-ease-accelerate),
+      )
+    );
+  }
+
+  &.is-complete.is-leaving .constellation {
+    @include animations.use(
+      (
+        name: end-screen-constellation-appears,
+        duration: var(--easing-slow),
+        easing: var(--easing-ease-accelerate)
+      )
+    );
+  }
+
+  &.is-leaving .constellation .artwork__wrapper {
+    @include animations.use(
+      (
+        name: constellation-screen-artwork-leave,
+        duration: var(--easing-slow),
+      )
+    );
+  }
+}
+
+@keyframes constellation-screen-artwork-leave {
+  to {
+    opacity: 0;
+    filter: blur(64px);
+    transform: scale(2);
+  }
+}

@@ -1,0 +1,70 @@
+.testimonies {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-gutter);
+  padding: var(--space-gutter);
+
+  h1 {
+    @include font('ui');
+    width: 100%;
+    margin-top: var(--space-gutter);
+    overflow: hidden;
+
+    &::before {
+      @include animations.use(animations.$float);
+      content: '↓';
+      display: inline-block;
+      margin-right: 1ch;
+    }
+  }
+
+  &__page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-gutter);
+
+    .gamepad-row.is-ignored {
+      display: none;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-3);
+
+    [class^='ui-button-'] {
+      --color: inherit;
+      &:first-child { transform-origin: left top; }
+      &:last-child { transform-origin: right top; }
+    }
+
+    .page-count {
+      @include font('ui');
+      display: flex;
+      font-variant-numeric: tabular-nums;
+
+      span:last-child::before {
+        content: '\00A0/\00A0';
+      }
+    }
+  }
+
+  .gamepad-row {
+    // Due to pagination, stagger is done in JS
+    @include animations.use(animations.$fade-in);
+
+    .testimony {
+      @include easing((opacity, box-shadow));
+      opacity: var(--artwork-screen-testimony-faded);
+      box-shadow: var(--box-shadow-none) var(--color);
+
+      &.is-selected {
+        z-index: 1;
+        opacity: 1;
+        box-shadow: var(--box-shadow) var(--color);
+      }
+    }
+  }
+}

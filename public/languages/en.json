@@ -1,0 +1,61 @@
+{
+  "name": "english",
+  "locale": "en_US",
+  "date": {
+    "year": "numeric",
+    "month": "long",
+    "day": "numeric"
+  },
+
+  "translations": {
+    "confirm.yes": "yes",
+    "confirm.no": "no",
+
+    "city.tourcoing": "Tourcoing",
+    "city.kortrijk": "Kortrijk",
+    "city.mons": "Mons",
+
+    "introduction.0": "Hello stranger, welcome to TRACES.\nI’ll be your companion memory",
+    "introduction.0.next": "tell me more",
+    "introduction.1": "I am the cosmic being handling all memories, and I need your help to gather new ones",
+    "introduction.1.next": "ok",
+    "introduction.2": "Do you want to continue?",
+    "introduction.2.prev": "sorry, who are you again?",
+    "introduction.2.next": "let’s go!!",
+
+    "question.hint": "use the joystick to choose the best matching artwork",
+
+    "artwork.hint.explore": "use the joystick to explore the artwork and other’s testimonies",
+    "artwork.hint.scroll-top": "press <code>B</code> to scroll top",
+    "artwork.testimony": "One testimony has already been left",
+    "artwork.testimonies": "{{count}} testimonies have already been left",
+    "artwork.testimonies.prev": "See the previous {{count}} testimonies",
+    "artwork.testimonies.next": "See the next {{count}} testimonies",
+    "artwork.hint.record-cta": "press <code>A</code> to record your memory",
+    "artwork.hint.recording": "press <code>A</code> to finish recording",
+    "artwork.record.cta": "Use your own voice now:\n{{question}}",
+    "artwork.transcript-modal.title": "Share your memory",
+    "artwork.transcript-modal.yes": "ok let’s go",
+    "artwork.transcript-modal.no": "no thanks",
+
+    "constellation.1": "Look! You’re building your own constellation!",
+    "constellation.2": "Beautiful, your constellation is growing",
+    "constellation.3": "You’re helping me so much, your constellation is beautiful!",
+    "constellation.4": "Almost done…",
+    "constellation.5": "Your constellation is done! Marvellous!",
+
+    "end": "Thank you so much",
+    "end.hint": "Your data log is printing, take it!",
+
+    "credits": "TRACES is a pilot project being implemented as part of the Creativ’Up cross-border project",
+
+    "session.quit.title": "Leave the experience?",
+    "session.quit.message": "You will loose all your progress and go back to the home screen.",
+    "session.quit.iddle.title": "Still there?",
+    "session.quit.iddle.message": "You have been inactive for a while, you will be sent back to the home screen.",
+    "session.quit.cancel": "I want to continue",
+    "session.quit.cancel.color": "blue",
+    "session.quit.confirm": "I want to quit",
+    "session.quit.confirm.color": "yellow"
+  }
+}

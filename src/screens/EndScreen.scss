@@ -1,0 +1,48 @@
+.end-screen {
+  .caption {
+    position: fixed;
+    inset: auto 0 0;
+  }
+
+  > .constellation {
+    @include animations.use(
+      (
+        name: end-screen-constellation-appears,
+        duration: -1ms,
+        fill-mode: forwards
+      )
+    );
+
+    --constellation-link-fade-in-duration: -999s;
+    --constellation-slot-fade-in-duration: -999s;
+
+    position: fixed;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+
+    width: 60vw;
+    height: 60vh;
+
+    transform: translate(-50%, -50%);
+
+    .artwork {
+      display: none;
+    }
+  }
+
+  .receipt {
+    position: absolute;
+    right: 100vw;
+
+    @include app.debug('receipt') {
+      z-index: 1;
+      right: 50vw;
+      transform: translateX(50%);
+    }
+  }
+}
+
+@keyframes end-screen-constellation-appears {
+  to { transform: translateX(-50%) translateY(calc(-85%)) rotate(10deg) scale(0.75); }
+}

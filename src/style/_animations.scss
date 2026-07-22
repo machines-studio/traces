@@ -1,0 +1,185 @@
+@use 'sass:map';
+@use 'sass:list';
+@use 'sass:meta';
+@use 'sass:math';
+
+$float: (
+  name: float,
+  duration: 3s,
+  easing: ease-in-out,
+  direction: alternate,
+  iteration-count: infinite
+);
+
+@keyframes float {
+  from {
+    transform:
+      translateX(var(--animation-float-offset-x, 0))
+      translateY(calc(var(--animation-float-amount, 10%) + var(--animation-float-offset-y, 0px)))
+      rotate(-1deg)
+    ;
+  }
+
+  to {
+    transform:
+      translateX(var(--animation-float-offset-x, 0))
+      translateY(calc(-1 * var(--animation-float-amount, 10%) + var(--animation-float-offset-y, 0px)))
+      rotate(1deg)
+    ;
+  }
+}
+
+$fade-in: (
+  name: fade-in
+);
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+$fade-out: (
+  name: fade-out
+);
+
+@keyframes fade-out {
+  from { opacity: 1; filter: none; }
+  to { opacity: 0; filter: blur(16px); }
+}
+
+/**
+ * Apply one or more @keyframes animations, composing them onto a single
+ * `animation` shorthand. Each animation is a map with a required `name`
+ * (must match an existing @keyframes) and optional `duration`, `easing`,
+ * `delay`, `direction`, `fill-mode`.
+ *
+ * An animation can also be a map with a `preset` key (an existing
+ * animation map) plus overrides, which are merged onto the preset.
+ *
+ * @include animations.use(('name': fade-in));
+ * @include animations.use(
+ *   ('name': fade-in),
+ *   ('name': float, 'duration': 3s, 'fill-mode': both)
+ * );
+ * @include animations.use(
+ *   (preset: $fade-in, delay: var(--caption-buttons-delay))
+ * );
+ */
+
+@mixin use ($animations...) {
+  $list: ();
+
+  @each $animation in $animations {
+    @if map.has-key($animation, preset) {
+      $animation: map.merge(map.get($animation, preset), map.remove($animation, preset));
+    }
+
+    $name: map.get($animation, name);
+    $stagger: map.get($animation, stagger);
+
+    @if $stagger {
+      @include stagger($name, map.get($stagger, delay), map.get($stagger, length));
+    }
+
+    $duration: map.get($animation, duration) or var(--easing);
+    $easing: map.get($animation, easing) or var(--easing-ease-smooth);
+    $delay: map.get($animation, delay) or 0ms;
+    $direction: map.get($animation, direction) or normal;
+    $iteration-count: map.get($animation, iteration-count) or 1;
+    $fill-mode: map.get($animation, fill-mode) or both;
+    $list: list.append($list,
+      #{$name}
+      #{$duration}
+      calc(#{$delay} + var(--animation-#{$name}-stagger, 0ms) + var(--animation-#{$name}-delay, 0ms))
+      #{$easing}
+      #{$fill-mode}
+      #{$direction}
+      #{$iteration-count},
+      comma
+    );
+  }
+
+  animation: $list;
+}
+
+/**
+ * Stagger an animation's start across `$len` siblings by setting the
+ * `--animation-<name>-stagger` custom property consumed by `use()`'s
+ * `delay`. Apply to the same selector passed to `animations.use`.
+ * `$animation` accepts either an animation name or its prop map.
+ *
+ * @include animations.stagger('artwork-appears', 120ms, 4);
+ * @include animations.stagger(animations.$float, 120ms, 4);
+ */
+
+@mixin stagger ($animation, $delay, $len) {
+  $is-map: meta.type-of($animation) == map;
+  $name: if($is-map, map.get($animation, name), $animation);
+  $iteration-count: if($is-map, map.get($animation, iteration-count), null);
+
+  @if $iteration-count == infinite {
+    // Use a negative delay to allow staggering without initial delay
+    $delay: -$delay;
+  }
+
+  @for $i from 1 through $len { // stylelint-disable-line order/order
+    &:nth-child(#{$i}) {
+      --animation-#{$name}-stagger: #{calc(($i - 1) * $delay)};
+    }
+  }
+}
+
+/**
+ * Set a one-off delay for an animation by setting the
+ * `--animation-<name>-delay` custom property consumed by `use()`'s
+ * `delay`. Apply to the same selector passed to `animations.use`.
+ * `$animation` accepts either an animation name or its prop map.
+ *
+ * @include animations.delay('fade-in', 240ms);
+ * @include animations.delay(animations.$float, 240ms);
+ */
+
+@mixin delay ($animation, $delay) {
+  $is-map: meta.type-of($animation) == map;
+  $name: if($is-map, map.get($animation, name), $animation);
+
+  --animation-#{$name}-delay: #{$delay};
+}
+
+/**
+ * Same as `stagger()`, except the generated delays are shuffled between
+ * siblings instead of being assigned in order.
+ *
+ * @include animations.shuffle('artwork-appears', 120ms, 4);
+ * @include animations.shuffle(animations.$float, 120ms, 4);
+ */
+
+@mixin shuffle ($animation, $delay, $len) {
+  $is-map: meta.type-of($animation) == map;
+  $name: if($is-map, map.get($animation, name), $animation);
+  $iteration-count: if($is-map, map.get($animation, iteration-count), null);
+  $indices: ();
+
+  @if $iteration-count == infinite {
+    // Use a negative delay to allow staggering without initial delay
+    $delay: -$delay;
+  }
+
+  @for $i from 1 through $len {
+    $indices: list.append($indices, $i);
+  }
+
+  // Fisher-Yates shuffle
+  @for $i from $len through 2 {
+    $j: math.floor(math.random() * $i) + 1;
+    $tmp: list.nth($indices, $i);
+    $indices: list.set-nth($indices, $i, list.nth($indices, $j));
+    $indices: list.set-nth($indices, $j, $tmp);
+  }
+
+  @for $i from 1 through $len { // stylelint-disable-line order/order
+    &:nth-child(#{$i}) {
+      --animation-#{$name}-stagger: #{calc((list.nth($indices, $i) - 1) * $delay)};
+    }
+  }
+}

@@ -1,0 +1,44 @@
+.credits-screen {
+  @include animations.use(animations.$fade-in);
+
+  --color: var(--color-white);
+
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  padding: var(--space-gutter);
+
+  figure {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    max-height: calc(100vh - var(--space-gutter));
+
+    img {
+      width: 80vw;
+      min-height: 0;
+      margin-inline: auto;
+
+      object-fit: contain;
+
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow) var(--color);
+    }
+
+    figcaption {
+      @include animations.use(animations.$float);
+      @include font('ui');
+
+      padding: 0.3em 0.5em;
+      margin-inline: auto;
+      overflow: hidden;
+
+      color: var(--ui-color-text);
+      white-space: nowrap;
+
+      background: var(--color);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow) var(--color);
+    }
+  }
+}

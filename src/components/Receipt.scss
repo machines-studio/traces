@@ -1,0 +1,91 @@
+:root {
+  --receipt-width: 8cm;
+
+  --receipt-space-0: 3mm;
+  --receipt-space-1: 5mm;
+  --receipt-space-2: 12mm;
+
+  --receipt-gap: 10mm;
+
+  --receipt-font-family: cabinet;
+  --receipt-font-size: 4mm;
+  --receipt-line-height: 1.05;
+  --receipt-letter-spacing: 0.05ch;
+  --receipt-font-weight: 500;
+}
+
+.receipt {
+  @include font('receipt');
+
+  width: var(--receipt-width);
+  padding-bottom: var(--receipt-space-1);
+
+  color: black;
+
+  background: white;
+  outline: 4mm solid white;
+  outline-offset: -1px;
+
+  &, * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  h1 {
+    width: 90%;
+    margin-inline: auto;
+    margin-bottom: var(--receipt-space-2);
+
+    svg {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  header {
+    margin-bottom: var(--receipt-space-1);
+    text-align: center;
+    text-wrap: balance;
+
+    code {
+      font-family: mono; // stylelint-disable-line
+      font-weight: bold;
+    }
+  }
+
+  .constellation {
+    --constellation-slot-size: 3mm;
+    --constellation-link-color: currentcolor;
+    --constellation-link-width: 0.5mm;
+    --constellation-link-undiscovered-color: currentcolor;
+    --constellation-link-undiscovered-width: var(--constellation-link-width / 2);
+
+    width: calc(100% - var(--constellation-slot-size));
+    aspect-ratio: 16/9;
+    margin-block: var(--receipt-space-2);
+    margin-inline: calc(var(--constellation-slot-size) / 2);
+
+    * {
+      filter: none !important;
+      box-shadow: none !important;
+    }
+
+    .artwork {
+      display: none;
+    }
+  }
+
+  article {
+    margin-top: var(--receipt-space-1);
+
+    p {
+      margin-bottom: var(--receipt-space-0);
+    }
+  }
+
+  footer {
+    width: 100%;
+    height: auto;
+    margin-top: var(--receipt-space-1);
+  }
+}

@@ -1,0 +1,37 @@
+@font-face {
+  font-family: mono;
+  font-display: auto;
+  font-style: normal;
+  src: url('/fonts/dm-mono-regular.ttf') format('opentype');
+}
+
+@font-face {
+  font-family: mono;
+  font-display: auto;
+  font-style: bold;
+  src: url('/fonts/dm-mono-medium.ttf') format('opentype');
+}
+
+@font-face {
+  font-family: inter;
+  font-display: auto;
+  font-style: normal;
+  font-weight: 100 900;
+  src: url('/fonts/inter-variable.ttf') format('opentype');
+}
+
+@font-face {
+  font-family: inter;
+  font-display: auto;
+  font-style: italic;
+  font-weight: 100 900;
+  src: url('/fonts/inter-variable-italic.ttf') format('opentype');
+}
+
+@font-face {
+  font-family: cabinet;
+  font-display: auto;
+  font-style: normal;
+  font-weight: 100 900;
+  src: url('/fonts/cabinetgrotesk-variable.ttf') format('opentype');
+}

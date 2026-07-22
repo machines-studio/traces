@@ -1,0 +1,50 @@
+@import '@tooooools/ui/style';
+@import '/style/reset';
+
+:root {
+  --color-text: #111;
+  --color-background: #f5f5f5;
+  --color-border: #ddd;
+
+  // Same lightness/saturation range so validate/censor/accent read as one coherent
+  // palette instead of clashing saturated primaries — clear/legible, not neon.
+  --color-green: #2f8f6f;
+  --color-red: #d1495b;
+  --color-accent: #3d7ab5;
+
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+
+  --border-radius: 0.5rem;
+
+  // Toggles' active-tab highlight (defaults to the framework's bright yellow).
+  --ui-color-accent: var(--color-accent);
+  --ui-color-accent-contrast: white;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  font-size: 1.6rem;
+  line-height: 1.4;
+  color: var(--color-text);
+  background: var(--color-background);
+}
+
+[class^='ui-button-'] {
+  align-items: center;
+}
+
+.moderation__item[data-status='pending'] [class^='ui-button-'][data-color='green'] {
+  --ui-color-background: var(--color-green);
+  --ui-color-text: white;
+}
+
+.moderation__item[data-status='pending'] [class^='ui-button-'][data-color='red'] {
+  --ui-color-background: var(--color-red);
+  --ui-color-text: white;
+}

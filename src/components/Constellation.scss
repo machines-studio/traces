@@ -1,0 +1,137 @@
+:root {
+  --constellation-artwork-size: 6vw;
+  --constellation-slot-size: 2vw;
+
+  --constellation-link-color: var(--color-white);
+  --constellation-link-width: 8px;
+  --constellation-link-undiscovered-color: #51565F;
+  --constellation-link-undiscovered-width: 0.5vw;
+
+  --constellation-link-fade-in-duration: var(--easing-slow);
+  --constellation-slot-fade-in-duration: var(--easing);
+}
+
+.constellation {
+  // Sized by whatever contains it (see ConstellationScreen.scss)
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  &__links {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+
+    line {
+      @include animations.use(
+        (
+          preset: animations.$fade-in,
+          duration: var(--constellation-link-fade-in-duration),
+          delay: var(--easing),
+          stagger: (
+            delay: 25ms,
+            length: 10
+          )
+        )
+      );
+
+      vector-effect: non-scaling-stroke;
+      stroke: var(--constellation-link-undiscovered-color);
+      stroke-width: var(--constellation-link-undiscovered-width);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 1 10;
+    }
+
+    line.is-discovered {
+      stroke: var(--constellation-link-color);
+      stroke-width: var(--constellation-link-width);
+      stroke-dasharray: 0;
+      filter: blur(1px);
+    }
+  }
+
+  // Undiscovered placeholder (a plain circle, not an Artwork component)
+  &__slot {
+    @include animations.use(
+      (
+        preset: animations.$fade-in,
+        duration: var(--constellation-slot-fade-in-duration),
+        stagger: (
+          delay: 50ms,
+          length: 10
+        )
+      )
+    );
+
+    position: absolute;
+    top: calc(50% + var(--constellation-artwork-y) - var(--constellation-slot-size) / 2);
+    left: calc(50% + var(--constellation-artwork-x) - var(--constellation-slot-size) / 2);
+
+    width: var(--constellation-slot-size);
+    height: var(--constellation-slot-size);
+
+    background: var(--constellation-link-color);
+    border-radius: 100%;
+    box-shadow: var(--box-shadow) var(--constellation-link-color);
+  }
+
+  .artwork {
+    --artwork-size: var(--constellation-artwork-size);
+
+    position: absolute;
+    top: calc(50% + var(--constellation-artwork-y) - var(--constellation-artwork-size) / 2);
+    left: calc(50% + var(--constellation-artwork-x) - var(--constellation-artwork-size) / 2);
+    width: var(--constellation-artwork-size);
+    height: var(--constellation-artwork-size);
+
+    &.is-discovered {
+      @include animations.use(
+        (
+          name: artwork-discovered,
+          duration: var(--easing),
+          easing: var(--easing-ease-back),
+          stagger: (
+            delay: 100ms,
+            length: 5
+          )
+        )
+      );
+    }
+
+    &.is-selected {
+      @include animations.use(
+        (
+          name: artwork-selected,
+          duration: var(--easing-slow),
+          easing: linear,
+          iteration-count: infinite,
+          direction: alternate,
+        ),
+        (
+          name: artwork-discovered,
+          duration: var(--easing),
+          easing: var(--easing-ease-back),
+          delay: 1s,
+        )
+      );
+    }
+
+    &__tag {
+      font-size: 0.4vw;
+      color: var(--color);
+    }
+  }
+}
+
+@keyframes artwork-discovered {
+  from { opacity: 0; transform: scale(0); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes artwork-selected {
+  from { transform: scale(1.5); }
+  to { transform: scale(2); }
+}

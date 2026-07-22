@@ -1,0 +1,216 @@
+{
+  "LANGUAGES": ["en", "fr", "nl"],
+
+  "SESSION": {
+    "rounds": 5,
+    "iddleDuration": 60000,
+    "iddleConfirmDelay": 10000,
+    "city": "tourcoing"
+  },
+
+  "GAMEPAD": {
+    "buttons": {
+      "a": 0,
+      "b": 1
+    },
+
+    "axes": {
+      "x": 0,
+      "y": 1,
+      "invertX": false,
+      "invertY": true
+    }
+  },
+
+  "COLORS": {
+    "yellow": "#FC0",
+    "green": "#00B944",
+    "blue": "#007FFF",
+    "red": "#FF4F00",
+    "pink": "#FF83FE",
+
+    "criterions": {
+      "random": "pink",
+      "type_of_object_scoring": "green",
+      "emotions_scoring": "red",
+      "year_scoring": "yellow",
+      "description_vector_scoring": "blue"
+    }
+  },
+
+  "PARTICLES": {
+    "presets": {
+      "home": {
+        "count": 500,
+        "radius": 0.5,
+        "minDistance": 4,
+        "enterDelay": 0,
+        "enterStagger": 15,
+        "floatAmountX": 1,
+        "floatAmountY": 1,
+        "exitDrift": 20,
+        "scattered": true
+      },
+      "introduction": {
+        "count": 60,
+        "radius": 1.5,
+        "minDistance": 4,
+        "spawnMargin": 15,
+        "enterStagger": 5,
+        "floatAmountX": 0.5,
+        "floatAmountY": 0.5
+      },
+      "constellation": {
+        "count": 50,
+        "radius": 0.5,
+        "minDistance": 8,
+        "spawnMargin": 4,
+        "enterDelay": 200,
+        "enterStagger": 10,
+        "floatAmountX": 0.1,
+        "floatAmountY": 1.1,
+        "exitDrift": 6,
+        "scattered": true
+      },
+      "end": {
+        "count": 60,
+        "radius": 1.5,
+        "minDistance": 4,
+        "spawnMargin": 15,
+        "enterStagger": 5,
+        "floatAmountX": 0.5,
+        "floatAmountY": 0.5
+      }
+    }
+  },
+
+  "VOICES": {
+    "defaults": {
+      "pitch": 1.5,
+      "stepMs": 25,
+      "blipsPerWord": 5,
+      "reverbDuration": 0.8,
+      "reverbMix": 0.5,
+      "filterFrequency": 900,
+      "blipGain": 0.3,
+      "blipPitchDrop": 0.55,
+      "wordGapMultiplier": 1.4,
+      "allowOverlap": true
+    },
+    "presets": {
+      "constello": {
+        "pitch": 1.5,
+        "stepMs": 25,
+        "blipsPerWord": 5,
+        "reverbDuration": 0.8,
+        "reverbMix": 0.5,
+        "filterFrequency": 900,
+        "blipGain": 0.3,
+        "blipPitchDrop": 0.55,
+        "wordGapMultiplier": 1.4
+      },
+      "testimonial": {
+        "pitch": 0.8,
+        "stepMs": 80,
+        "blipsPerWord": 8,
+        "blipGain": 0.1,
+        "blipPitchDrop": 0.9,
+        "filterFrequency": 300,
+        "reverbDuration": 1.5,
+        "reverbMix": 0.8
+      },
+      "testimonial_b": {
+        "extends": "testimonial",
+        "pitch": 1.0,
+        "blipsPerWord": 6
+      },
+      "testimonial_c": {
+        "extends": "testimonial",
+        "pitch": 1.5,
+        "blipsPerWord": 7
+      },
+      "nav": {
+        "pitch": 1.5,
+        "stepMs": 25,
+        "blipsPerWord": 5,
+        "reverbDuration": 0.8,
+        "reverbMix": 0.5,
+        "filterFrequency": 900,
+        "blipGain": 0.3,
+        "blipPitchDrop": 0.55,
+        "wordGapMultiplier": 1.4
+      },
+      "yes": {
+        "extends": "nav",
+        "pitch": 4.0
+      },
+      "no": {
+        "extends": "nav",
+        "pitch": 0.2
+      }
+    }
+  },
+
+  "AMBIENCE": {
+    "volume": 0.7,
+    "waveform": "sine",
+    "filterFrequency": 400,
+    "attack": 0.8,
+    "release": 1.5,
+    "reverbDuration": 4.0,
+    "reverbMix": 0.65,
+    "fadeTime": 2.0
+  },
+
+  "RECORDER": {
+    "maxDuration": 30000
+  },
+
+  "ARTWORK": {
+    "maxTestimonies": 10,
+    "maxEmotions": 2,
+    "maxKeywords": 2
+  },
+
+  "TESTIMONIES": {
+    "pageSize": 5,
+    "scrollDelay": 500,
+    "scrollSpeed": 40,
+    "manualScrollDuration": 600,
+    "manualScrollStep": 200
+  },
+
+  "CONSTELLATION": {
+    "displayDuration": 5000
+  },
+
+  "END": {
+    "displayDuration": 5000
+  },
+
+  "PRINTER": {
+    "dots": 576,
+    "darknessThreshold": 200
+  },
+
+  "CREDITS": {
+    "displayDuration": 5000
+  },
+
+  "API": {
+    "mock": false,
+    "baseUrl": "http://localhost:8000",
+    "endpoints": {
+      "assets": "/assets",
+      "ping": "/api",
+      "transcript": "/api/transcript",
+      "questions": "/api/questions",
+      "artworks": "/api/artworks",
+      "testimonies": "/api/testimonies",
+      "testimoniesAll": "/api/testimonies/all",
+      "testimony": "/api/testimony",
+      "print": "/api/print_png",
+      "summary": "/api/summary"
+    }
+  }
+}

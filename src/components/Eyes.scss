@@ -1,0 +1,97 @@
+:root {
+  --eyes-delay: 1000ms;
+  --eyes-width: 15vw;
+  --eyes-height: calc(var(--eyes-width) * 0.5);
+  --eyes-gap: 2.5vw;
+  --eyes-pupil-range-x: calc(var(--eyes-width) * 0.2);
+  --eyes-pupil-range-y: calc(var(--eyes-height) * 0.2);
+}
+
+.eyes {
+  display: flex;
+  align-items: center;
+  gap: var(--eyes-gap);
+
+  // Position from center
+  margin-top: calc(var(--eyes-height) * -0.5);
+  margin-left: calc((var(--eyes-width) * 2 + var(--eyes-gap)) * -0.5);
+
+  &__eye {
+    @include animations.use(
+      (
+        name: eye-appears,
+        duration: var(--easing-fast),
+        easing: var(--easing-ease-back),
+        delay: var(--eyes-delay),
+        stagger: (delay: 50ms, length: 2)
+      )
+    );
+    width: var(--eyes-width);
+    height: var(--eyes-height);
+
+    svg {
+      overflow: visible;
+    }
+  }
+
+  &__lid {
+    @include easing(transform, 220ms, var(--easing-ease-smooth));
+
+    --blink-y: 0;
+
+    transform-box: fill-box;
+    transform: translateY(var(--blink-y));
+
+    &.is-blinking {
+      @include easing(transform, 90ms, var(--easing-ease-accelerate));
+
+      --blink-y: calc(var(--eyes-height) / 2);
+    }
+  }
+
+  &__pupil {
+    @include easing(transform, var(--easing-fast), var(--easing-ease-smooth));
+
+    --position-x: 0; // -1 (left) to 1 (right)
+    --position-y: 0; // -1 (up) to 1 (down)
+
+    transform-box: fill-box;
+    transform-origin: center;
+    transform:
+      translateX(calc(var(--position-x) * var(--eyes-pupil-range-x)))
+      translateY(calc(var(--position-y) * var(--eyes-pupil-range-y)))
+    ;
+
+    &.is-left {
+      --position-x: -1;
+    }
+
+    &.is-right {
+      --position-x: 1;
+    }
+  }
+
+  // When the eyes section is in mirror mode, the right eye's pupil
+  // moves in the opposite horizontal direction of the left eye's.
+  &.mirror &__eye--right &__pupil {
+    &.is-left {
+      --position-x: 1;
+    }
+
+    &.is-right {
+      --position-x: -1;
+    }
+  }
+}
+
+@keyframes eye-appears {
+  from {
+    opacity: 0;
+    transform: scaleX(1.3) scaleY(0);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

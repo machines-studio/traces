@@ -1,0 +1,25 @@
+@mixin screen ($screen) {
+  @at-root .app[data-screen*='#{$screen}'] & {
+    @content;
+  }
+}
+
+@mixin screens ($screens...) {
+  @each $screen in $screens {
+    @at-root .app[data-screen*='#{$screen}'] & {
+      @content;
+    }
+  }
+}
+
+@mixin debug ($debug: '', $root: null) {
+  @if $root {
+    @at-root #{$root}:has(main[data-debug*='#{$debug}']) {
+      @content;
+    }
+  } @else {
+    @at-root main[data-debug*='#{$debug}'] & {
+      @content;
+    }
+  }
+}

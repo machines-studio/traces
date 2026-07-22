@@ -1,0 +1,13 @@
+@import '/index';
+
+body {
+  display: grid;
+  align-items: start;
+  grid-template-columns: repeat(3, var(--receipt-width));
+  gap: 10mm;
+
+  > *:not(:hover) {
+    outline: 4mm solid white;
+    outline-offset: -1px;
+  }
+}

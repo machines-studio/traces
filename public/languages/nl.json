@@ -1,0 +1,13 @@
+{
+  "name": "nederlands",
+  "locale": "nl_NL",
+  "date": {
+    "year": "numeric",
+    "month": "long",
+    "day": "numeric"
+  },
+
+  "translations": {
+    "credits": "TRACES is een proefproject dat wordt uitgevoerd in het kader van het grensoverschrijdende project Creativ’Up"
+  }
+}
