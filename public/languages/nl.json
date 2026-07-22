@@ -8,6 +8,66 @@
   },
 
   "translations": {
-    "credits": "TRACES is een proefproject dat wordt uitgevoerd in het kader van het grensoverschrijdende project Creativ’Up"
+    "confirm.yes": "ja",
+    "confirm.no": "nee",
+
+    "city.tourcoing": "Tourcoing",
+    "city.kortrijk": "Kortrijk",
+    "city.mons": "Bergen",
+
+    "introduction.0": "Welkom bij TRACES, bezoeker; ik zal je gids zijn tijdens deze collectieve en participatieve ervaring…",
+    "introduction.0.prev": "Taal wijzigen",
+    "introduction.0.next": "Verder gaan",
+
+    "introduction.1": "Zie je deze fragmenten? Ze vormen het weefsel dat onze jeugdherinneringen verbindt met museumcollecties.",
+    "introduction.1.prev": "Waar staan we alweer?",
+    "introduction.1.next": "Maar wat heeft dat voor zin?",
+
+    "introduction.2": "TRACES is een programma om dit weefsel te verkennen, en ik heb je hulp nodig om er nieuwe verbindingen in te ontdekken…",
+    "introduction.2.prev": "Kan je dat herhalen?",
+    "introduction.2.next": "Wat moet ik doen?",
+
+    "introduction.3": "Ik ga je een reeks van {{rounds}} vragen stellen; het is aan u om ze te beantwoorden en uw stem toe te voegen aan deze gezamenlijke inspanning.",
+    "introduction.3.prev": "Wat is TRACES?",
+    "introduction.3.next": "Ik ben klaar",
+
+    "question.hint": "gebruik de joystick om de planeet te kiezen die volgens jou het beste antwoord geeft op de vraag",
+
+    "artwork.hint.explore": "Gebruik de joystick om de planeet en de berichten van andere bezoekers te verkennen.",
+    "artwork.testimony": "Er is al een getuigenis achtergelaten.",
+    "artwork.testimonies": "Er zijn al {{count}} getuigen achtergelaten.",
+    "artwork.testimonies.prev": "←",
+    "artwork.testimonies.next": "→",
+    "artwork.hint.testimonies": "scroll naar beneden langs de getuigenissen om verder te verkennen",
+    "artwork.hint.record-cta": "Druk op <code>(A)</code> om je getuigenis op te nemen.",
+    "artwork.hint.recording": "Druk nogmaals op <code>(A)</code> om de opname te beeindigen.",
+    "artwork.record.cta": "Nu is het jouw beurt:\n{{question}}",
+    "artwork.record.skip": "Je leent me liever niet je stem? Ik respecteer je besluit, o bezoeker, en ik hoop dat een andere vraag van mij je nieuwsgierigheid zal wekken…",
+    "artwork.record.skip-cta": "Verder gaan zonder je eigen getuigenis achter te laten",
+    "artwork.transcript-modal.title": "Hier is wat ik heb begrepen:",
+    "artwork.transcript-modal.yes": "Prima, we gaan verder!",
+    "artwork.transcript-modal.no": "Ik begin liever opnieuw",
+
+    "constellation.1": "Kijk! De geboorte van je eigen sterrenbeeld!",
+    "constellation.2": "Geweldig, je sterrenbeeld groeit…",
+    "constellation.3": "Herinneringen aan jouw sterrenbeeld resoneren met het universum van TRACES!",
+    "constellation.4": "Nog één klein herinnering…",
+    "constellation.5": "Je sterrenbeeld is compleet – goed gedaan!",
+
+    "end": "Hartelijk dank, bezoeker! Dankzij jou zijn er nieuwe herinneringsbanden gesmeed. Als dank voor je hulp heb ik een geschenk voor je: het verhaal van onze ontmoeting, waarin herinneringen aan jouw reis door de TRACES-collecties samenkomen!",
+    "end.hint": "je mag sterrenbeeld op zakformaat pakken zodra het volledig uit de printer is gekomen.",
+
+    "receipt.header": "Bezoeker <code>[{{id}}]</code>, dit is wat TRACES heeft onthuld over de verbanden tussen je jeugdherinneringen en de voorwerpen die je hebt ontdekt.",
+
+    "credits": "TRACES is een proefproject dat wordt uitgevoerd in het kader van het grensoverschrijdende project Creativ’Up",
+
+    "session.quit.title": "Ga je nu al weg?",
+    "session.quit.message": "Je voortgang gaat definitief verloren en je keert terug naar het startscherm.",
+    "session.quit.iddle.title": "Ben je er nog?",
+    "session.quit.iddle.message": "Je hebt een tijdje niets gedaan; het ervaring staat op het punt weer te beginnen.",
+    "session.quit.cancel": "Ik wil doorgaan",
+    "session.quit.cancel.color": "blue",
+    "session.quit.confirm": "Ik wil op nieuw starten",
+    "session.quit.confirm.color": "yellow"
   }
 }

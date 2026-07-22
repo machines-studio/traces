@@ -20,18 +20,18 @@
     "introduction.0.next": "continuer",
 
     "introduction.1": "Tu vois ces fragments ? Ils constituent le tissu qui relie nos souvenirs d’enfance aux collections des musées.",
-    "introduction.1.prev": "on est où déjà ?",
-    "introduction.1.next": "mais à quoi ça sert ?",
+    "introduction.1.prev": "on est où déjà&nbsp;?",
+    "introduction.1.next": "mais à quoi ça sert&nbsp;?",
 
     "introduction.2": "TRACES est un programme d’exploration de ce tissu, et j’ai besoin de toi pour m’aider à y découvrir de nouveaux liens…",
-    "introduction.2.prev": "tu peux répeter ?",
-    "introduction.2.next": "que dois-je faire ?",
+    "introduction.2.prev": "tu peux répeter&nbsp;?",
+    "introduction.2.next": "que dois-je faire&nbsp;?",
 
     "introduction.3": "Je vais te poser une série de {{rounds}} questions, à toi d’y répondre pour ajouter ta voix à ce travail collectif",
-    "introduction.3.next": "c’est quoi TRACES ?",
+    "introduction.3.prev": "c’est quoi TRACES&nbsp;?",
     "introduction.3.next": "je suis prêt",
 
-    "question.hint": "à l’aide du joystick, sélectionne la planète qui répond le mieux à la question",
+    "question.hint": "à l’aide du joystick, sélectionne la planète qui selon toi répond le mieux à la question",
 
     "artwork.hint.explore": "à l’aide du joystick, explore la planète et les témoignages laissés par les autres visiteur·euses",
     "artwork.testimony": "Un témoignage a déjà été laissé",
@@ -40,10 +40,10 @@
     "artwork.testimonies.next": "→",
     "artwork.hint.testimonies": "descends sous les témoignages pour continuer l’exploration",
     "artwork.hint.record-cta": "appuie sur <code>(A)</code> pour enregistrer ton témoignage",
-    "artwork.hint.recording": "appuie de nouveau sur <code>A</code> pour finir l’enregistrement",
+    "artwork.hint.recording": "appuie de nouveau sur <code>A</code> pour terminer l’enregistrement",
     "artwork.record.cta": "À toi maintenant :\n{{question}}",
     "artwork.record.skip": "Tu préfères ne pas me prêter ta voix ? Je respecte ta décision ô visiteur·euse, et j’espère qu’une autre de mes questions éveillera ta curiosité…",
-    "artwork.record.skip-cta": "avancer sans laisser de témoignage",
+    "artwork.record.skip-cta": "avancer sans laisser ton propre témoignage",
     "artwork.transcript-modal.title": "Voici ce que j’ai compris :",
     "artwork.transcript-modal.yes": "parfait, on continue !",
     "artwork.transcript-modal.no": "je préfère recommencer",
@@ -54,10 +54,10 @@
     "constellation.4": "Encore un petit souvenir…",
     "constellation.5": "Ta constellation est achevée, bravo !",
 
-    "end": "Merci beaucoup ô visiteur·euse ! Grâce à toi, de nouveaux liens de mémoires ont été tissés.\n\nEn remerciement de ton aide, j’ai un présent pour toi :\nle récit de notre rencontre, qui mélange les souvenirs de&nbsp;ton&nbsp;voyage dans les collections de TRACES !",
-    "end.hint": "récupère le message après sa sortie complète",
+    "end": "Merci beaucoup ô visiteur·euse ! Grâce à toi, de nouveaux liens de mémoires ont été tissés.\n\nEn remerciement de ton aide, j’ai un présent pour toi :\nle récit de notre rencontre, qui mélange les souvenirs de&nbsp;ton&nbsp;voyage dans les constellations de TRACES !",
+    "end.hint": "tu peux récupérer ta constellation de poche après sa sortie complète de l’imprimante",
 
-    "receipt.header": "Ô visiteur·euse <code>[{{id}}]</code>, voici ce que TRACES a pu révéler des liens entre tes mémoires d’enfance et les œuvres que tu as découvertes.",
+    "receipt.header": "Ô visiteur·euse <code>[{{id}}]</code>, voici ce que TRACES a pu révéler des liens entre tes souvenirs d’enfance et les artefacts que tu as découverts.",
 
     "credits": "TRACES est un projet pilote réalisé dans le cadre du projet transfrontalier Creativ’Up",
 
