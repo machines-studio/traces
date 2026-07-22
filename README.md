@@ -22,14 +22,20 @@ $ yarn install
 $ yarn start
 $ yarn test
 
-# Staging
+# Preview a production build locally
 $ yarn build
 $ yarn preview
-$ yarn deploy:staging
 
-# Production
+# Release
 $ yarn version
 ```
+
+`yarn version` bumps `package.json`, tags the commit, and pushes both
+(`postversion`). Pushing a tag triggers a GitHub Actions workflow
+(`.github/workflows/bump-monorepo.yml`) that automatically opens a commit
+on the [Traces monorepo](https://github.com/Creativ-Up/Traces) bumping
+this project's submodule pointer to the new tag — no separate deploy step
+needed, the monorepo picks up the new version on its own shortly after.
 
 ## Browser support
 
