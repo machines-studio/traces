@@ -37,6 +37,23 @@ on the [Traces monorepo](https://github.com/Creativ-Up/Traces) bumping
 this project's submodule pointer to the new tag — no separate deploy step
 needed, the monorepo picks up the new version on its own shortly after.
 
+## Content and configuration
+
+Two files under `public/` (copied verbatim into the build by Vite, at
+`build/config.json` and `build/languages/*.json`) drive the deployed
+kiosk's behavior and content without touching any component code:
+
+| File | Effect |
+|---|---|
+| `public/config.json` | Kiosk tuning: session length, gamepad button mapping, particle/voice presets, printer settings, `API.mock`, etc. Loaded once at boot (`Config.js`'s `loadConfig`) and deep-merged into the `Config` module every other file imports from. |
+| `public/config.dev.json` | Dev-only overrides on top of `config.json` — deep-merged in *only* when `import.meta.env.DEV` is true (i.e. `yarn start`, never in a production build). Absent/404 is fine, it's optional. |
+| `public/languages/{en,fr,nl}.json` | All on-screen and printed text, one file per code listed in `config.json`'s `LANGUAGES` array. `en.json` is the source of truth — with `?debug=translations` in the URL, `checkMissingTranslations()` (`I18N.js`) warns in the console about any key present in `en` but missing from another language. |
+
+Editing the built copies directly (`build/config.json`,
+`build/languages/*.json`) works on a deployed kiosk without a rebuild, but
+gets overwritten by the next `yarn build` — edit the `public/` source
+files instead for a change that should survive a rebuild.
+
 ## Browser support
 
 ```
