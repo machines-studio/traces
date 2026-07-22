@@ -4,7 +4,7 @@
   "SESSION": {
     "rounds": 5,
     "iddleDuration": 60000,
-    "iddleConfirmDelay": 10000,
+    "iddleConfirmDelay": 9000,
     "city": "tourcoing"
   },
 
@@ -41,11 +41,10 @@
   "PARTICLES": {
     "presets": {
       "home": {
-        "count": 500,
+        "count": 300,
         "radius": 0.5,
         "minDistance": 4,
         "enterDelay": 0,
-        "enterStagger": 15,
         "floatAmountX": 1,
         "floatAmountY": 1,
         "exitDrift": 20,

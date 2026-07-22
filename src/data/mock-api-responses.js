@@ -120,9 +120,9 @@ const sqliteDatetime = date => date.toISOString().replace('T', ' ').replace(/\.\
 const testimony = (id, artworkId, { content, status = 'validated', city, visitorId = null } = {}) => {
   const lang = LANGS[id % LANGS.length]
   const fallback = {
-    en: `This is a mock testimony #${id} for artwork ${artworkId}, used for local debugging.`,
-    fr: `Ceci est un témoignage factice #${id} pour l'œuvre ${artworkId}, utilisé pour le débogage local.`,
-    nl: `Dit is een mock getuigenis #${id} voor kunstwerk ${artworkId}, gebruikt voor lokaal debuggen.`
+    en: `This is a mock testimony #${id} for artwork ${artworkId}, used for local debugging. It exists purely as placeholder content so that layout, scrolling, and text wrapping can be checked without a real visitor recording. The length is intentionally padded out to resemble a longer spoken testimony, since real ones can run for several sentences once someone starts describing what a piece made them think or feel.`,
+    fr: `Ceci est un témoignage factice #${id} pour l'œuvre ${artworkId}, utilisé pour le débogage local. Il sert uniquement de contenu de remplacement afin de vérifier la mise en page, le défilement et le retour à la ligne du texte sans avoir besoin d'un véritable enregistrement de visiteur. Sa longueur est volontairement étirée pour ressembler à un témoignage oral plus long, les vrais témoignages pouvant s'étendre sur plusieurs phrases une fois que quelqu'un commence à décrire ce qu'une œuvre lui a fait penser ou ressentir.`,
+    nl: `Dit is een mock getuigenis #${id} voor kunstwerk ${artworkId}, gebruikt voor lokaal debuggen. Het dient uitsluitend als plaatshoudende inhoud om de lay-out, het scrollen en de tekstterugloop te controleren zonder een echte bezoekersopname. De lengte is bewust opgerekt om te lijken op een langere gesproken getuigenis, aangezien echte getuigenissen zich over meerdere zinnen kunnen uitstrekken zodra iemand begint te beschrijven wat een kunstwerk hem of haar deed denken of voelen.`
   }
 
   return {

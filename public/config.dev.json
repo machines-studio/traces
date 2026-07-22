@@ -1,10 +1,9 @@
 {
   "SESSION": {
-    "rounds": 5,
-    "iddleDuration": -1
+    "rounds": 5
   },
 
   "API": {
-    "mock": false
+    "mock": true
   }
 }

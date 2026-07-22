@@ -46,7 +46,7 @@
 
   --ui-font-family: var(--body-font-family);
   --ui-font-weight: 500;
-  --ui-font-size: 1.2vw;
+  --ui-font-size: 0.8vw;
   --ui-height: auto;
   --ui-line-height: 1.1;
   --ui-font-variant-numeric: tabular-nums;
@@ -110,13 +110,10 @@
   @include animations.use(animations.$fade-in);
   @include font('ui');
 
-  --ui-font-size: 2vw;
+  --ui-font-size: 1vw;
 
+  max-width: min-content;
   box-shadow: var(--box-shadow) var(--color-white);
-
-  header {
-    border-bottom: 2px solid var(--color-white);
-  }
 
   header [class^='ui-button-'] {
     --ui-color-background: var(--color-white);
@@ -124,8 +121,8 @@
 
   .gamepad-row {
     justify-content: center;
-    gap: calc(var(--space-gutter) * 2);
+    gap: var(--space-gutter);
     padding: var(--space-gutter);
-    margin-top: calc(var(--space-gutter) * 2);
+    margin-top: var(--space-gutter);
   }
 }
