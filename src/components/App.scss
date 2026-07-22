@@ -114,3 +114,7 @@
     }
   }
 }
+
+body[data-env='production'] {
+  cursor: none;
+}
