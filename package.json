@@ -1,6 +1,6 @@
 {
   "name": "TRACES",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Opinionated Vite boilerplate to build reactive webapps",
   "scripts": {
     "start": "vite",
