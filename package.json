@@ -9,7 +9,7 @@
     "test": "vite --mode test",
     "deploy": "vite build && ghp build --a .github -f -b production -m 'Deploy to production'",
     "deploy:staging": "vite build --mode staging && ghp build -a .github -f -b staging -m 'Deploy to staging'",
-    "postversion": "git push && git push --tags && npm run deploy"
+    "postversion": "git push && git push --tags"
   },
   "author": "Arnaud Juracek",
   "license": "MIT",

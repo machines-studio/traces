@@ -1,0 +1,28 @@
+name: Bump frontend submodule in the monorepo
+
+on:
+  push:
+    tags: [ '*' ]
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout monorepo
+      uses: actions/checkout@v3
+      with:
+        repository: Creativ-Up/Traces
+        token: ${{ secrets.MONOREPO_PUSH_TOKEN }}
+        submodules: false
+
+    - name: Point frontend submodule at the new tag
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git submodule update --init frontend
+        git -C frontend fetch --tags origin
+        git -C frontend checkout "${GITHUB_REF_NAME}"
+        git add frontend
+        git diff --cached --quiet && echo "Already at ${GITHUB_REF_NAME}, nothing to commit." && exit 0
+        git commit -m "Bump frontend submodule to ${GITHUB_REF_NAME}"
+        git push
