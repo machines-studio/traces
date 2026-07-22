@@ -19,6 +19,7 @@
   --animation-float-amount: 2%;
 
   position: relative;
+  isolation: isolate;
   width: var(--artwork-size);
   height: var(--artwork-size);
   animation-composition: add;
@@ -28,6 +29,7 @@
 
     position: absolute;
     inset: 0;
+    will-change: transform;
 
     // Sphere color
     &::before {
