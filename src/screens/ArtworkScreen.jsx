@@ -90,7 +90,7 @@ export default class ArtworkScreen extends Component {
                 case 'content':
                   return I18N('artwork.hint.explore')
                 case 'testimonies':
-                  return null
+                  return I18N('artwork.hint.testimonies')
                 case 'recorder':
                   return recording
                     ? I18N('artwork.hint.recording', {}, null)

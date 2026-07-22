@@ -38,6 +38,7 @@
     "artwork.testimonies": "{{count}} témoignages ont déjà été laissés",
     "artwork.testimonies.prev": "←",
     "artwork.testimonies.next": "→",
+    "artwork.hint.testimonies": "descends sous les témoignages pour continuer l’exploration",
     "artwork.hint.record-cta": "appuie sur <code>(A)</code> pour enregistrer ton témoignage",
     "artwork.hint.recording": "appuie de nouveau sur <code>A</code> pour finir l’enregistrement",
     "artwork.record.cta": "À toi maintenant :\n{{question}}",
