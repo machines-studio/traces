@@ -198,7 +198,7 @@
 
   "API": {
     "mock": false,
-    "baseUrl": "http://localhost:8000",
+    "baseUrl": "",
     "endpoints": {
       "assets": "/assets",
       "ping": "/api",

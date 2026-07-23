@@ -4,6 +4,7 @@
   },
 
   "API": {
-    "mock": true
+    "mock": false,
+    "baseUrl": "http://localhost:8000"
   }
 }
