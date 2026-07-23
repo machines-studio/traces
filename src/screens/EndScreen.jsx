@@ -42,6 +42,11 @@ export default class EndScreen extends Component {
   }
 
   async afterMount () {
+    // Attach the animation listener now, in parallel with printing: printing can easily
+    // outlast the caption's word-reveal animation, and waitForAnimationEnd() would then
+    // miss the (already fired) event and hang forever if awaited only after the print.
+    const captionDone = this.refs.caption.waitForAnimationEnd()
+
     await Session.prefetchSummary()
 
     try {
@@ -51,7 +56,7 @@ export default class EndScreen extends Component {
       throw new Error('Cannot print receipt', { cause: error })
     }
 
-    await this.refs.caption.waitForAnimationEnd()
+    await captionDone
     await delay(Config.END.displayDuration)
 
     this.base.classList.add('is-leaving')
