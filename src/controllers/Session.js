@@ -44,7 +44,7 @@ const Session = {
   ),
 
   loadQuestion: async () => (
-    Session.$question.value = Session.questions.pop()
+    Session.$question.value ??= Session.questions.pop()
   ),
 
   loadArtworks: async () => {
@@ -66,7 +66,11 @@ const Session = {
     Session.$artworks.value = CACHE.get(key)
   },
 
-  commit: () => Session.trace.push({ question: Session.$question.value, artwork: Session.$artwork.value }),
+  commit: () => {
+    Session.trace.push({ question: Session.$question.value, artwork: Session.$artwork.value })
+    Session.$question.value = null
+    Session.$artwork.value = null
+  },
   isComplete: () => Session.trace.length >= Config.SESSION.rounds,
 
   // Fired early (see ConstellationScreen) so it's ready by EndScreen; safe to call twice.
