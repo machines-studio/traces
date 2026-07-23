@@ -60,6 +60,10 @@
     padding-right: var(--testimony-trim);
 
     white-space: nowrap;
+
+    br {
+      display: none;
+    }
   }
 
   &:has(&__translation:not(:empty)) &__vo {
