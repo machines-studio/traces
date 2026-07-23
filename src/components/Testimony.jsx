@@ -55,7 +55,7 @@ export default class Testimony extends Component {
 
         <div class='testimony__metas'>
           <time class='testimony__date' innerText={I18N.date(createdAt)} />
-          <div class='testimony__location' innerText={I18N(`city.${city}`)} />
+          <div class='testimony__location' innerText={I18N(`city.${(city ?? '').toLowerCase()}`, {}, null)} />
         </div>
       </section>
     )
