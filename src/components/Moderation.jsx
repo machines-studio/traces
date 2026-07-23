@@ -8,7 +8,8 @@ import * as Icons from '/data/icons'
 import API from '/controllers/API'
 
 // No I18N here: runs on a moderator's phone, not the kiosk session.
-const resolve = content => (typeof content === 'object' ? content?.en ?? content?.fr ?? content?.nl : content)
+// Empty strings (untranslated slots), not just null/undefined, must fall through.
+const resolve = content => (typeof content === 'object' ? content?.en || content?.fr || content?.nl : content)
 const formatDate = timestamp => new Intl.DateTimeFormat('en', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(timestamp))
 
 const STATUSES = [
