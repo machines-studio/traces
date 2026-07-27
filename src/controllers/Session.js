@@ -35,6 +35,9 @@ const Session = {
     Session.id = id(seed)
     Session.questions = null
     Session.trace.length = 0
+    Session.$question.value = null
+    Session.$artwork.value = null
+    Session.$artworks.value = []
     Session.$summary.value = null
     summaryPromise = null
   },
