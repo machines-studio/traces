@@ -30,6 +30,7 @@ export default class ArtworkScreen extends Component {
   $currentSection = slot(/* 'content|testimonies|recorder' */)
   $recording = slot()
   $transcripting = slot()
+  $recorderUnavailable = slot()
 
   template () {
     const artwork = Session.$artwork.value
@@ -70,28 +71,34 @@ export default class ArtworkScreen extends Component {
               this.$currentSection,
               this.$recording,
               this.$transcripting,
-            ], ([section, recording, transcripting]) => {
+              this.$recorderUnavailable,
+            ], ([section, recording, transcripting, unavailable]) => {
               switch (section) {
                 case 'content':
                 case 'testimonies':
                   return widont(I18N.resolve(Session.$question.value.content))
                 case 'recorder':
+                  if (unavailable) return I18N('artwork.record.unavailable')
                   return I18N('artwork.record.cta', { question: I18N.resolve(Session.$question.value.content) })
                 case 'skip':
-                  return I18N('artwork.record.skip')
+                  return unavailable ? I18N('artwork.record.unavailable') : I18N('artwork.record.skip')
               }
             })}
             hint={$([
               this.$currentSection,
               this.$recording,
               this.$transcripting,
-            ], ([section, recording, transcripting]) => {
+              this.$recorderUnavailable,
+            ], ([section, recording, transcripting, unavailable]) => {
               switch (section) {
                 case 'content':
                   return I18N('artwork.hint.explore')
                 case 'testimonies':
                   return I18N('artwork.hint.testimonies')
                 case 'recorder':
+                case 'skip':
+                  if (unavailable) return I18N('artwork.hint.record-unavailable', {}, null)
+                  if (section === 'skip') return null
                   return recording
                     ? I18N('artwork.hint.recording', {}, null)
                     : transcripting
@@ -152,9 +159,10 @@ export default class ArtworkScreen extends Component {
             event-focus={() => window.requestAnimationFrame(() => window.scrollTo(0, document.body.scrollHeight))}
             class='recorder-wrapper'
             capture={any(this.$recording, this.$transcripting)}
+            ignore={this.$recorderUnavailable}
             ref={this.refMap('rows', 'recorder')}
           >
-            <Recorder ref={this.ref('recorder')} />
+            <Recorder ref={this.ref('recorder')} class={{ 'is-hidden': this.$recorderUnavailable }} />
             <Eyes />
           </GamepadRow>
 
@@ -182,6 +190,7 @@ export default class ArtworkScreen extends Component {
     // Connect to recorder state
     this.$recording.fill(this.refs.recorder.$recording)
     this.$transcripting.fill(this.refs.recorder.$transcripting)
+    this.$recorderUnavailable.fill(this.refs.recorder.$unavailable)
     this.watch(this.refs.recorder.$transcript, this.#handleTranscript)
   }
 

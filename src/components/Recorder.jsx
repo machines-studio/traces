@@ -18,11 +18,12 @@ export default class Recorder extends Component {
   $transcript = $(null)
   $transcripting = $(false)
   get $recording () { return this.#recorder.$recording }
+  get $unavailable () { return this.#recorder.$unavailable }
 
   template () {
     return (
       <Button
-        class={['recorder', {
+        class={['recorder', this.props.class, {
           'is-recording': this.#recorder.$recording,
           'is-transcripting': this.$transcripting
         }]}
@@ -43,6 +44,13 @@ export default class Recorder extends Component {
 
   async afterRender () {
     this.watch(this.#recorder.$duration, this.#handleDuration)
+
+    // Simulate a kiosk with no microphone plugged in
+    if (DEBUG.includes('no-mic')) {
+      this.#recorder.$unavailable.value = true
+      return
+    }
+
     await this.#recorder.init()
   }
 

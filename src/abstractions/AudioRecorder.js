@@ -7,6 +7,8 @@ export default class AudioRecorder {
   $ready = $(false)
   $recording = $(false)
 
+  $unavailable = $(false) // no mic available: unsupported API, no device, permission denied…
+
   $level = $(0) // RMS volume of the input stream, from 0 to 1
   $duration = $(0)
 
@@ -16,16 +18,21 @@ export default class AudioRecorder {
   analyser
   analyserBuffer
 
-  constructor () {
-    if (!navigator?.mediaDevices?.getUserMedia) {
-      throw new Error('getUserMedia not supported')
-    }
-  }
-
   async init (stream = undefined, { force = false } = {}) {
     if (this.$ready.value && !force) return
 
-    stream ??= await navigator.mediaDevices.getUserMedia({ audio: true })
+    if (!navigator?.mediaDevices?.getUserMedia) {
+      this.$unavailable.value = true
+      return
+    }
+
+    try {
+      stream ??= await navigator.mediaDevices.getUserMedia({ audio: true })
+    } catch (error) {
+      this.$unavailable.value = true
+      return
+    }
+
     this.mediaRecorder = new MediaRecorder(stream)
     this.mediaRecorder.ondataavailable = e => this.chunks.push(e.data)
 
@@ -35,6 +42,7 @@ export default class AudioRecorder {
     this.analyserBuffer = new Uint8Array(this.analyser.frequencyBinCount)
     this.audioContext.createMediaStreamSource(stream).connect(this.analyser)
 
+    this.$unavailable.value = false
     this.$ready.value = true
   }
 

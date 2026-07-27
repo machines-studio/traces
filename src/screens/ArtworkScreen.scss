@@ -186,6 +186,10 @@
       justify-content: center;
       align-items: center;
 
+      .is-hidden {
+        display: none;
+      }
+
       .eyes {
         --eyes-delay: 0ms;
         position: absolute;
