@@ -31,7 +31,7 @@
   "dependencies": {
     "@internet/raf": "^0.2.1",
     "@tooooools/html-to-svg": "^1.17.1",
-    "@tooooools/ui": "^2.10.0",
+    "@tooooools/ui": "^2.10.1",
     "iconoir": "^7.11.0",
     "missing-math": "^3.6.0",
     "tiny-emitter": "^2.1.0"

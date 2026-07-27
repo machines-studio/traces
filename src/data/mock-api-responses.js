@@ -96,11 +96,6 @@ const artwork = (id, criterion) => ({
 //   - 'pending': just submitted, awaiting moderation (fresh POST /testimony insert).
 //   - 'validated': reviewed and approved.
 //   - 'censored': reviewed and rejected.
-// XXX[back] Testimonies::read_matching_artwork_id has NO status filter today — GET
-// /testimonies actually returns rows of any status (checked in testimonies.rs READ_QUERY).
-// This mock still only ever produces 'validated' testimonies, since displaying
-// pending/censored content to this client is presumably a bug to fix backend-side,
-// not behavior to replicate.
 // consent_given: INTEGER CHECK IN (0, 1) — visitor consent to publish/quote; Rocket route
 //   new_testimony_route always inserts 1 (see Testimonies::new_testimony).
 // moderated_at / moderated_by: null until a staff member reviews the testimony.

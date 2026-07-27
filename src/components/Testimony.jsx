@@ -12,9 +12,9 @@ import Voice from '/controllers/Voice'
 export default class Testimony extends Component {
   static props = {
     index: Props.number,
-    content: Props.required(Props.object, Props.string), // {fr, en, nl}
+    content: Props.required([Props.string, Props.object]), // {fr, en, nl}
     status: Props.enum('pending', 'validated', 'censored'),
-    created_at: Props.required(Props.string, Props.number),
+    created_at: Props.required([Props.string, Props.number]),
 
     city: Props.string,
     lang: Props.string,
