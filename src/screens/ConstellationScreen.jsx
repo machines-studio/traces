@@ -59,18 +59,8 @@ export default class ConstellationScreen extends Component {
   async afterMount () {
     await Promise.all([
       delay(Config.CONSTELLATION.displayDuration),
-      // Resolves once the caption's last word has finished appearing
-      new Promise(resolve => {
-        const words = this.refs.caption.base.querySelectorAll('.caption__text > *')
-        const el = words[words.length - 1]
-        if (!el) return resolve()
-
-        el.addEventListener('animationend', function done (e) {
-          if (e.target !== el) return
-          el.removeEventListener('animationend', done)
-          resolve()
-        })
-      })
+      // Resolves once the caption's last word has finished appearing (or was skipped)
+      this.refs.caption.waitForAnimationEnd()
     ])
 
     this.base.classList.add('is-leaving')
