@@ -221,7 +221,9 @@ export default class ArtworkScreen extends Component {
     // TODO[next] enter a full-screen view of a specific panel (text, video, image, etc…)
   }
 
-  #handleGamepadB = () => {
+  #handleGamepadB = async () => {
+    if (this.$recording.value) return this.refs.recorder.stop()
+
     if (GamepadRow.$INDEX.value > 0) {
       // Scroll top
       GamepadRow.$INDEX.value = 0

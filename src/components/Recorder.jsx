@@ -54,13 +54,16 @@ export default class Recorder extends Component {
     await this.#recorder.init()
   }
 
-  #handleClick = async e => {
-    // Start recording
-    if (!this.$recording.value) {
-      Voice.stop()
-      Ambience.setVolume(0, 0.5)
-      return this.#recorder.start()
-    }
+  async start () {
+    if (this.$recording.value) return
+
+    Voice.stop()
+    Ambience.setVolume(0, 0.5)
+    return this.#recorder.start()
+  }
+
+  async stop () {
+    if (!this.$recording.value) return
 
     // End recording and fetch transcript
     this.$transcripting.value = true
@@ -85,6 +88,10 @@ export default class Recorder extends Component {
       this.#recorder.reset()
     }
   }
+
+  #handleClick = async e => this.$recording.value
+    ? this.stop()
+    : this.start()
 
   #handleDuration = duration => {
     if (duration >= Config.RECORDER.maxDuration) this.#handleClick()
