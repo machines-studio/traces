@@ -33,8 +33,6 @@ export default class Testimonies extends Component {
       return index >= start && index < start + Config.TESTIMONIES.pageSize
     }
 
-    const isFirstOfPage = index => index === 0 || (Config.TESTIMONIES.pageSize && index % Config.TESTIMONIES.pageSize === 0)
-
     return (
       <section class={['testimonies', { 'has-focus': this.$hasFocus }]}>
         <h1 innerText={I18N('artwork.' + (testimonies.length === 1 ? 'testimony' : 'testimonies'), { count: testimonies.length })} />
@@ -44,11 +42,7 @@ export default class Testimonies extends Component {
             testimonies.map((testimony, index) => (
               <GamepadRow
                 initial='start'
-                scroll={
-                  isFirstOfPage(index)
-                    ? { block: 'center' }
-                    : { block: 'end', ifNeeded: true }
-                }
+                scroll={{ block: 'center' }}
                 ignore={paginated ? $(this.$page, page => !isOnPage(index, page)) : false}
                 ref={this.refArray('rows')}
                 style={{
@@ -68,7 +62,7 @@ export default class Testimonies extends Component {
           <GamepadRow
             class='testimonies__nav'
             initial='end'
-            scroll={{ block: 'end', ifNeeded: true }}
+            scroll={{ block: 'center' }}
             ref={this.ref('nav')}
           >
             <Button
@@ -110,11 +104,11 @@ export default class Testimonies extends Component {
 
   #handlePrev = () => {
     this.$page.value = Math.max(0, this.$page.value - 1)
-    // this.#focusCurrentPage()
+    this.#focusCurrentPage()
   }
 
   #handleNext = () => {
     this.$page.value = Math.min(this.$page.value + 1, this.$pageCount.value - 1)
-    // this.#focusCurrentPage()
+    this.#focusCurrentPage()
   }
 }

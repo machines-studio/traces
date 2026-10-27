@@ -109,6 +109,11 @@ export default class ArtworkScreen extends Component {
           />
         </header>
 
+        <div class='artwork-screen__arrows'>
+          <Button label={I18N('artwork.hint.scroll-down', {}, null)} />
+          {new Array(3).fill(true).map(_ => <div class='arrow'>↓</div>)}
+        </div>
+
         <GamepadRow
           class='artwork-screen__content'
           initial='start'

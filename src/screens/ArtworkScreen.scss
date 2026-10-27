@@ -172,6 +172,48 @@
     opacity: var(--artwork-screen-content-faded);
   }
 
+  &__arrows {
+    @include easing(opacity);
+
+    position: fixed;
+    z-index: calc(var(--artwork-screen-z-header) + 1);
+    inset: auto 0 0;
+
+    display: flex;
+    justify-content: center;
+    padding: var(--space-3);
+
+    [class^='ui-button-'] {
+      @include animations.use(animations.$fade-in, animations.$float);
+
+      position: absolute;
+      z-index: 1;
+      margin-top: -1em;
+    }
+
+    .arrow {
+      @include animations.use(
+        (
+          name: artwork-screen-arrows,
+          duration: var(--easing-slow),
+          easing: linear,
+          stagger: (delay: calc(var(--easing-slow) / 3), length: 3),
+          iteration-count: infinite
+        )
+      );
+
+      position: absolute;
+      font-size: 3vw;
+      font-weight: bold;
+      color: var(--color-white);
+    }
+  }
+
+  &[data-section='recorder'] &__arrows,
+  &[data-section='skip'] &__arrows { opacity: 0; }
+  &[data-section='content'] &__arrows [class^='ui-button-'] { display: none; }
+
+
   &__recorder {
     @include easing(opacity);
     position: relative;
@@ -210,7 +252,6 @@
     }
   }
 
-
   &[data-section='skip'] .recorder { opacity: 0; }
   &[data-section='skip'] &__recorder .eyes { display: flex; }
 }
@@ -228,5 +269,27 @@
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+@keyframes artwork-screen-arrows {
+  0% {
+    opacity: 0;
+    transform: translateY(-2em);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  60% {
+    opacity: 0;
+    transform: translateY(0.5em);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-1em);
   }
 }

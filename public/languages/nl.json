@@ -42,6 +42,7 @@
     "artwork.hint.record-cta": "Druk op <code>(A)</code> om je getuigenis op te nemen.",
     "artwork.hint.recording": "Druk nogmaals op <code>(A)</code> om de opname te beëindigen.",
     "artwork.hint.record-unavailable": "geen microfoon gedetecteerd",
+    "artwork.hint.scroll-down": "Scroll naar beneden om je stem op te nemen",
     "artwork.record.cta": "Nu is het jouw beurt:\n{{question}}",
     "artwork.record.unavailable": "Het lukt me niet om mijn microfoon aan de praat te krijgen, dus ik kan je stem vandaag helaas niet opnemen…",
     "artwork.record.skip": "Je leent me liever niet je stem? Ik respecteer je besluit, o bezoeker, en ik hoop dat een andere vraag van mij je nieuwsgierigheid zal wekken…",

@@ -42,6 +42,7 @@
     "artwork.hint.record-cta": "appuie sur <code>(A)</code> pour enregistrer ton témoignage",
     "artwork.hint.recording": "appuie de nouveau sur <code>A</code> pour terminer l’enregistrement",
     "artwork.hint.record-unavailable": "aucun micro détecté",
+    "artwork.hint.scroll-down": "descends pour enregistrer ta voix",
     "artwork.record.cta": "À toi maintenant :\n{{question}}",
     "artwork.record.unavailable": "Je n’arrive pas à faire fonctionner mon microphone, je ne peux malheureusement pas enregistrer ta voix aujourd’hui…",
     "artwork.record.skip": "Tu préfères ne pas me prêter ta voix ? Je respecte ta décision ô visiteur·euse, et j’espère qu’une autre de mes questions éveillera ta curiosité…",
